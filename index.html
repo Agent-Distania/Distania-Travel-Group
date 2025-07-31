@@ -5,52 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Distania Travel Group</title>
   <style>
+    /* Global tech panel background */
     body {
       margin: 0;
       padding: 0;
       height: 100vh;
-      background: #02030a;
+      background: #01040a;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(15, 64, 64, 0.2) 10px, rgba(15, 64, 64, 0.2) 11px),
+        repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(15, 64, 64, 0.2) 10px, rgba(15, 64, 64, 0.2) 11px);
       font-family: 'Orbitron', sans-serif;
       color: #8dfd8d;
       display: flex;
       justify-content: center;
       align-items: center;
     }
+    /* Frame around screens with decorative corners */
+    .panel-frame {
+      position: relative;
+      padding: 1.5rem;
+      background: rgba(0, 20, 40, 0.8);
+      border: 3px solid #0f4;
+      box-shadow: 0 0 30px rgba(15, 255, 15, 0.3);
+    }
+    .panel-frame::before, .panel-frame::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #0f4;
+    }
+    .panel-frame::before {
+      top: -3px; left: -3px;
+      border-right: none;
+      border-bottom: none;
+    }
+    .panel-frame::after {
+      bottom: -3px; right: -3px;
+      border-left: none;
+      border-top: none;
+    }
     .screen {
       width: 90vw;
-      max-width: 800px;
-      height: 70vh;
-      background: rgba(5, 10, 30, 0.9);
-      border: 2px solid #0f4;
-      box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
-      padding: 2rem;
+      max-width: 780px;
+      height: 68vh;
+      background: linear-gradient(135deg, rgba(5,10,30,0.9) 0%, rgba(0,50,80,0.7) 100%);
+      border: 1px solid #0a3;
+      box-shadow: inset 0 0 15px rgba(0,255,140,0.2);
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
+      position: relative;
     }
     .hidden { display: none; }
     h1 {
       font-size: 2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(15,255,15,0.5);
     }
     .btn, .dest-list button {
       padding: 0.75rem 1.5rem;
       font-size: 1rem;
-      color: #02030a;
+      color: #01040a;
       background: #8dfd8d;
       border: none;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
     .btn:hover, .dest-list button:hover {
       transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(15,255,15,0.5);
     }
     .dest-list button {
       width: 100%;
       margin: 0.5rem 0;
-      border: 1px solid #0f4;
+      border: 1px solid #0a3;
       background: transparent;
       color: #8dfd8d;
     }
@@ -72,6 +105,8 @@
       font-size: 0.9rem;
       width: 100%;
       text-align: left;
+      padding-left: 0.5rem;
+      text-shadow: 0 0 4px rgba(0,255,140,0.3);
     }
     .console {
       width: 100%;
@@ -81,47 +116,51 @@
       gap: 1rem;
     }
     .panel {
-      border: 1px solid #0f4;
+      border: 1px solid #0a3;
       padding: 1rem;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      background: rgba(0,10,20,0.5);
     }
     .panel h2 {
       margin-top: 0;
       font-size: 1.2rem;
-      border-bottom: 1px solid #0f4;
+      border-bottom: 1px solid #0a3;
       padding-bottom: 0.5rem;
       width: 100%;
+      text-shadow: 0 0 6px rgba(15,255,15,0.4);
     }
   </style>
 </head>
 <body>
-  <!-- Login Screen -->
-  <div id="loginScreen" class="screen">
-    <h1>Distania Travel Group</h1>
-    <p>Your journey is our guarantee</p>
-    <button id="onBtn" class="btn">On</button>
-  </div>
+  <div class="panel-frame">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen">
+      <h1>Distania Travel Group</h1>
+      <p>Your journey is our guarantee</p>
+      <button id="onBtn" class="btn">On</button>
+    </div>
 
-  <!-- Travel Console Screen -->
-  <div id="travelScreen" class="screen hidden">
-    <div class="console">
-      <!-- Destination selection panel -->
-      <div class="panel dest-list">
-        <h2>Select Destination</h2>
-        <button data-dest="Earth">Earth Command Center</button>
-        <button data-dest="Mars">Mars Colony Alpha</button>
-        <button data-dest="Jupiter">Jupiter Orbital Station</button>
-        <button data-dest="Europa">Europa Research Base</button>
-        <button data-dest="Andromeda">Andromeda Outpost</button>
-        <button data-dest="Vega">Vega Prime</button>
-      </div>
-      <!-- Navigation log panel -->
-      <div class="panel">
-        <h2>Navigation Log</h2>
-        <div id="log" class="log"></div>
+    <!-- Travel Console Screen -->
+    <div id="travelScreen" class="screen hidden">
+      <div class="console">
+        <!-- Destination selection panel -->
+        <div class="panel dest-list">
+          <h2>Select Destination</h2>
+          <button data-dest="Earth">Earth Command Center</button>
+          <button data-dest="Mars">Mars Colony Alpha</button>
+          <button data-dest="Jupiter">Jupiter Orbital Station</button>
+          <button data-dest="Europa">Europa Research Base</button>
+          <button data-dest="Andromeda">Andromeda Outpost</button>
+          <button data-dest="Vega">Vega Prime</button>
+        </div>
+        <!-- Navigation log panel -->
+        <div class="panel">
+          <h2>Navigation Log</h2>
+          <div id="log" class="log"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -150,12 +189,9 @@
 
     buttons.forEach(btn => {
       btn.addEventListener('click', () => {
-        // Prevent new selection if already traveling
         if (traveling) return;
         traveling = true;
-        // disable all buttons during travel
         buttons.forEach(b => b.disabled = true);
-        // mark selection
         buttons.forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
 
@@ -164,7 +200,6 @@
 
         setTimeout(() => {
           appendLog(`System: Zero-point travel finished, welcome to ${dest}. Enjoy your expedition.`);
-          // travel complete, re-enable buttons
           traveling = false;
           buttons.forEach(b => b.disabled = false);
         }, 3000);
