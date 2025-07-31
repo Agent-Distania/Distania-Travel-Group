@@ -39,6 +39,7 @@
     const destList = document.querySelector('.dest-list');
     const logEl = document.getElementById('log');
     let traveling = false;
+    let currentLocation = null; // Track current location for sub-destination logic
 
     const mainDestinations = [
       { name: "Earth Command Center", key: "Earth" },
@@ -49,7 +50,7 @@
       { name: "Vega Prime", key: "Vega" },
     ];
 
-    // Replaced "Lunar Colony" with "Earth Space Port"
+    // Earth sub-destinations, with Lunar replaced by Earth Space Port
     const earthSubDestinations = [
       { name: "Return to Ship", key: "Return" },
       { name: "New York Sector", key: "NewYork" },
@@ -69,17 +70,46 @@
           if (traveling) return;
 
           if (dest.key === 'Return') {
+            currentLocation = null;
             populateDestinations(mainDestinations);
             appendLog("System: Returning to ship. Please select a destination.");
             return;
           }
 
           if (dest.key === 'Earth') {
+            currentLocation = 'EarthHub';
             populateDestinations(earthSubDestinations);
             appendLog("System: Accessing Earth sectors. Select your sub-destination.");
             return;
           }
 
+          // Check if traveling within Earth sub-destinations (train travel)
+          if (
+            currentLocation &&
+            earthSubDestinations.some(d => d.key === currentLocation) &&
+            earthSubDestinations.some(d => d.key === dest.key)
+          ) {
+            traveling = true;
+            const allButtons = destList.querySelectorAll('button');
+            allButtons.forEach(b => {
+              b.disabled = true;
+              b.classList.remove('selected');
+            });
+            btn.classList.add('selected');
+
+            appendLog(`System: Boarding the train to ${dest.name}...`);
+
+            setTimeout(() => {
+              appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
+              traveling = false;
+              currentLocation = dest.key;
+              allButtons.forEach(b => b.disabled = false);
+            }, 3000);
+
+            return;
+          }
+
+          // Normal travel for main planets or first Earth sub-selection
           traveling = true;
           const allButtons = destList.querySelectorAll('button');
           allButtons.forEach(b => {
@@ -93,6 +123,7 @@
           setTimeout(() => {
             appendLog(`System: Zero-point travel finished, welcome to ${dest.name}. Enjoy your expedition.`);
             traveling = false;
+            currentLocation = dest.key;
             allButtons.forEach(b => b.disabled = false);
           }, 3000);
         });
