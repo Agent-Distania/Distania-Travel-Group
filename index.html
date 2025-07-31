@@ -111,6 +111,7 @@
       <!-- Destination selection panel -->
       <div class="panel dest-list">
         <h2>Select Destination</h2>
+        <button data-dest="Earth">Earth Command Center</button>
         <button data-dest="Mars">Mars Colony Alpha</button>
         <button data-dest="Jupiter">Jupiter Orbital Station</button>
         <button data-dest="Europa">Europa Research Base</button>
@@ -162,7 +163,7 @@
         appendLog(`System: Initiating zero-point travel to ${dest}...`);
 
         setTimeout(() => {
-          appendLog(`System: Zero-point travel finished, welcome to ${dest}. Enjoy your travel.`);
+          appendLog(`System: Zero-point travel finished, welcome to ${dest}. Enjoy your expedition.`);
           // travel complete, re-enable buttons
           traveling = false;
           buttons.forEach(b => b.disabled = false);
