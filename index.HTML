@@ -1,147 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Fictional World Map Selector</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sci-Fi Terminal</title>
   <style>
+    /* Base styles */
     body {
-      font-family: sans-serif;
-      display: flex;
       margin: 0;
       height: 100vh;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Source Code Pro', monospace;
+      color: #fff;
     }
-    #map-container {
-      flex: 1;
-      background: #eef;
+
+    /* Terminal container with flicker effect */
+    .terminal {
+      position: relative;
+      width: 80vw;
+      max-width: 800px;
+      height: 70vh;
+      background: rgba(10, 10, 10, 0.9);
+      border: 2px solid #0f0;
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+      padding: 1rem;
+      overflow-y: auto;
+      backdrop-filter: blur(2px);
+      animation: flicker 0.15s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.8; }
+    }
+
+    /* Terminal header bar */
+    .terminal-header {
       display: flex;
       align-items: center;
-      justify-content: center;
+      margin-bottom: 0.5rem;
     }
-    svg {
-      width: 80vmin;
-      height: 80vmin;
-      border: 1px solid #999;
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
     }
-    .region {
-      fill: #cce;
-      stroke: #667;
-      stroke-width: 2;
-      cursor: pointer;
-      transition: fill 0.2s;
+    .dot.red { background: #f00; }
+    .dot.yellow { background: #ff0; }
+    .dot.green { background: #0f0; }
+
+    /* Lines of text */
+    .line {
+      line-height: 1.4;
+      white-space: pre-wrap;
     }
-    .region:hover {
-      fill: #aab;
+
+    /* Input area */
+    .input-line {
+      display: flex;
     }
-    .region.selected {
-      fill: #88a;
+    .prompt {
+      margin-right: 0.5rem;
     }
-    .area {
-      fill: #eec;
-      stroke: #766;
-      stroke-width: 1;
-      cursor: pointer;
-      display: none; /* hidden until region is selected */
-      transition: fill 0.2s;
+    .cmd-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #0f0;
+      caret-color: #0f0;
+      flex: 1;
+      font-family: inherit;
+      font-size: 1rem;
     }
-    .area:hover {
-      fill: #d99;
+    .cmd-input::placeholder {
+      color: rgba(0, 255, 0, 0.5);
     }
-    .area.selected {
-      fill: #c77;
+    /* Blinking cursor override */
+    @keyframes cursor-flicker {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
     }
-    #info {
-      width: 200px;
-      padding: 1rem;
-      border-left: 1px solid #ccc;
-      background: #fafafa;
-    }
-    #info h2 {
-      margin-top: 0;
+    .cmd-input {
+      animation: cursor-flicker 1s step-end infinite;
     }
   </style>
 </head>
 <body>
-
-  <div id="map-container">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <!-- Region A -->
-      <path id="regionA" class="region"
-            d="M10,10 L100,10 L90,90 L10,80 Z"
-            data-areas="A1,A2,A3"></path>
-      <!-- Sub-areas of A -->
-      <path id="A1" class="area"
-            d="M10,10 L55,10 L50,50 L10,40 Z"
-            data-name="Green Fields"></path>
-      <path id="A2" class="area"
-            d="M55,10 L100,10 L90,50 L50,50 Z"
-            data-name="Blue Hills"></path>
-      <path id="A3" class="area"
-            d="M10,40 L50,50 L45,80 L10,80 Z"
-            data-name="Red Marshes"></path>
-
-      <!-- Region B -->
-      <path id="regionB" class="region"
-            d="M110,20 L190,20 L180,100 L120,110 Z"
-            data-areas="B1,B2"></path>
-      <!-- Sub-areas of B -->
-      <path id="B1" class="area"
-            d="M110,20 L150,20 L145,60 L110,50 Z"
-            data-name="Silver Plains"></path>
-      <path id="B2" class="area"
-            d="M150,20 L190,20 L180,100 L145,60 Z"
-            data-name="Golden Desert"></path>
-    </svg>
-  </div>
-
-  <div id="info">
-    <h2>Selection</h2>
-    <p id="sel-region">—</p>
-    <p id="sel-area">—</p>
+  <div class="terminal" id="terminal">
+    <div class="terminal-header">
+      <div class="dot red"></div>
+      <div class="dot yellow"></div>
+      <div class="dot green"></div>
+    </div>
+    <div id="output"></div>
+    <div class="input-line">
+      <div class="prompt">user@ship:~$</div>
+      <input type="text" id="cmdInput" class="cmd-input" placeholder="enter command" autocomplete="off" />
+    </div>
   </div>
 
   <script>
-    const regions = document.querySelectorAll('.region');
-    const areas  = document.querySelectorAll('.area');
-    const infoRegion = document.getElementById('sel-region');
-    const infoArea   = document.getElementById('sel-area');
+    const output = document.getElementById('output');
+    const input = document.getElementById('cmdInput');
 
-    let currentRegion = null;
-    let currentArea   = null;
+    // Simple command handlers
+    const commands = {
+      help: 'Available commands: help, scan, status, clear',
+      scan: 'Scanning local systems...\n- Reactor: OK\n- Shields: 85%\n- Engines: 100%\nScan complete.',
+      status: 'Ship status:\nHull integrity: 94%\nCrew morale: Good\nOxygen levels: Normal',
+      clear: () => { output.innerHTML = ''; return ''; }
+    };
 
-    regions.forEach(reg => {
-      reg.addEventListener('click', () => {
-        // clear previous selections
-        if (currentRegion) currentRegion.classList.remove('selected');
-        areas.forEach(a => a.style.display = 'none');
-        if (currentArea) {
-          currentArea.classList.remove('selected');
-          currentArea = null;
-          infoArea.textContent = '—';
+    function printLine(text) {
+      const line = document.createElement('div');
+      line.className = 'line';
+      line.textContent = text;
+      output.appendChild(line);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const cmd = input.value.trim();
+        printLine('user@ship:~$ ' + cmd);
+        if (commands[cmd]) {
+          const res = typeof commands[cmd] === 'function'
+            ? commands[cmd]()
+            : commands[cmd];
+          if (res) printLine(res);
+        } else if (cmd) {
+          printLine('Command not found: ' + cmd);
         }
-
-        // mark new region
-        reg.classList.add('selected');
-        currentRegion = reg;
-        infoRegion.textContent = reg.id;
-
-        // show its sub-areas
-        const areaIDs = reg.dataset.areas.split(',');
-        areaIDs.forEach(id => {
-          document.getElementById(id).style.display = 'block';
-        });
-      });
+        input.value = '';
+      }
     });
 
-    areas.forEach(ar => {
-      ar.addEventListener('click', e => {
-        e.stopPropagation();  // don’t trigger region click
-        if (currentArea) currentArea.classList.remove('selected');
-        ar.classList.add('selected');
-        currentArea = ar;
-        infoArea.textContent = ar.dataset.name;
-      });
-    });
+    // Auto-focus input
+    window.addEventListener('click', () => input.focus());
+    input.focus();
   </script>
-
 </body>
 </html>
