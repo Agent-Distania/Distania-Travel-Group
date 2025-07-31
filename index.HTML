@@ -3,146 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sci-Fi Terminal</title>
+  <title>Spaceship Navigation Console</title>
   <style>
-    /* Base styles */
     body {
       margin: 0;
+      padding: 0;
       height: 100vh;
-      background: #000;
-      overflow: hidden;
+      background: #02030a;
+      font-family: 'Orbitron', sans-serif;
+      color: #8dfd8d;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Source Code Pro', monospace;
-      color: #fff;
     }
-
-    /* Terminal container with flicker effect */
-    .terminal {
-      position: relative;
-      width: 80vw;
-      max-width: 800px;
-      height: 70vh;
-      background: rgba(10, 10, 10, 0.9);
-      border: 2px solid #0f0;
-      box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+    .console {
+      width: 90vw;
+      max-width: 1000px;
+      height: 80vh;
+      background: rgba(5, 10, 30, 0.9);
+      border: 2px solid #0f4;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .panel {
+      border: 1px solid #0f4;
       padding: 1rem;
       overflow-y: auto;
-      backdrop-filter: blur(2px);
-      animation: flicker 0.15s infinite;
     }
-
-    @keyframes flicker {
-      0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
-      20%, 24%, 55% { opacity: 0.8; }
+    .panel h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      border-bottom: 1px solid #0f4;
+      padding-bottom: 0.5rem;
     }
-
-    /* Terminal header bar */
-    .terminal-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-right: 0.5rem;
-    }
-    .dot.red { background: #f00; }
-    .dot.yellow { background: #ff0; }
-    .dot.green { background: #0f0; }
-
-    /* Lines of text */
-    .line {
-      line-height: 1.4;
-      white-space: pre-wrap;
-    }
-
-    /* Input area */
-    .input-line {
-      display: flex;
-    }
-    .prompt {
-      margin-right: 0.5rem;
-    }
-    .cmd-input {
+    .dest-list button {
+      width: 100%;
       background: transparent;
-      border: none;
-      outline: none;
-      color: #0f0;
-      caret-color: #0f0;
-      flex: 1;
-      font-family: inherit;
+      border: 1px solid #0f4;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
       font-size: 1rem;
+      color: #8dfd8d;
+      cursor: pointer;
+      transition: background 0.2s;
     }
-    .cmd-input::placeholder {
-      color: rgba(0, 255, 0, 0.5);
+    .dest-list button:hover {
+      background: rgba(15, 255, 15, 0.1);
     }
-    /* Blinking cursor override */
-    @keyframes cursor-flicker {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0; }
+    .dest-list button.selected {
+      background: rgba(15, 255, 15, 0.2);
     }
-    .cmd-input {
-      animation: cursor-flicker 1s step-end infinite;
+    .log {
+      height: calc(100% - 2rem);
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <div class="terminal" id="terminal">
-    <div class="terminal-header">
-      <div class="dot red"></div>
-      <div class="dot yellow"></div>
-      <div class="dot green"></div>
+  <div class="console">
+    <!-- Destination selection panel -->
+    <div class="panel dest-list">
+      <h2>Select Destination</h2>
+      <button data-dest="Mars">Mars Colony Alpha</button>
+      <button data-dest="Jupiter">Jupiter Orbital Station</button>
+      <button data-dest="Europa">Europa Research Base</button>
+      <button data-dest="Andromeda">Andromeda Outpost</button>
+      <button data-dest="Vega">Vega Prime</button>
     </div>
-    <div id="output"></div>
-    <div class="input-line">
-      <div class="prompt">user@ship:~$</div>
-      <input type="text" id="cmdInput" class="cmd-input" placeholder="enter command" autocomplete="off" />
+    <!-- Navigation log panel -->
+    <div class="panel">
+      <h2>Navigation Log</h2>
+      <div id="log" class="log"></div>
     </div>
   </div>
 
   <script>
-    const output = document.getElementById('output');
-    const input = document.getElementById('cmdInput');
+    const buttons = document.querySelectorAll('.dest-list button');
+    const logEl = document.getElementById('log');
+    let current = null;
 
-    // Simple command handlers
-    const commands = {
-      help: 'Available commands: help, scan, status, clear',
-      scan: 'Scanning local systems...\n- Reactor: OK\n- Shields: 85%\n- Engines: 100%\nScan complete.',
-      status: 'Ship status:\nHull integrity: 94%\nCrew morale: Good\nOxygen levels: Normal',
-      clear: () => { output.innerHTML = ''; return ''; }
-    };
-
-    function printLine(text) {
+    function appendLog(text) {
       const line = document.createElement('div');
-      line.className = 'line';
       line.textContent = text;
-      output.appendChild(line);
-      terminal.scrollTop = terminal.scrollHeight;
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
     }
 
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        const cmd = input.value.trim();
-        printLine('user@ship:~$ ' + cmd);
-        if (commands[cmd]) {
-          const res = typeof commands[cmd] === 'function'
-            ? commands[cmd]()
-            : commands[cmd];
-          if (res) printLine(res);
-        } else if (cmd) {
-          printLine('Command not found: ' + cmd);
-        }
-        input.value = '';
-      }
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (current) current.classList.remove('selected');
+        btn.classList.add('selected');
+        current = btn;
+        const dest = btn.dataset.dest;
+        appendLog(`Captain: Plotting course to ${dest}...`);
+        setTimeout(() => {
+          appendLog(`Navigation: Course locked. Estimated arrival at ${dest} in T-minus 72 hours.`);
+        }, 1000);
+      });
     });
 
-    // Auto-focus input
-    window.addEventListener('click', () => input.focus());
-    input.focus();
+    // Initial message
+    appendLog('System: Welcome, Captain. Please select a destination.');
   </script>
 </body>
 </html>
