@@ -13,6 +13,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 /* Frame around screens with decorative corners */
 .panel-frame {
   position: relative;
@@ -38,6 +39,7 @@ body {
   border-left: none;
   border-top: none;
 }
+
 .screen {
   width: 90vw;
   max-width: 780px;
@@ -53,13 +55,18 @@ body {
   text-align: center;
   position: relative;
 }
-.hidden { display: none; }
+
+.hidden {
+  display: none;
+}
+
 h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
   letter-spacing: 1px;
   text-shadow: 0 0 8px rgba(15,255,15,0.5);
 }
+
 .btn, .dest-list button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -73,6 +80,7 @@ h1 {
   transform: scale(1.05);
   box-shadow: 0 0 10px rgba(15,255,15,0.5);
 }
+
 .dest-list button {
   width: 100%;
   margin: 0.5rem 0;
@@ -91,6 +99,7 @@ h1 {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
 .log {
   height: calc(100% - 2rem);
   overflow-y: auto;
@@ -101,6 +110,7 @@ h1 {
   padding-left: 0.5rem;
   text-shadow: 0 0 4px rgba(0,255,140,0.3);
 }
+
 .console {
   width: 100%;
   height: 100%;
@@ -108,6 +118,7 @@ h1 {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+
 .panel {
   border: 1px solid #0a3;
   padding: 1rem;
@@ -117,6 +128,7 @@ h1 {
   align-items: flex-start;
   background: rgba(0,10,20,0.5);
 }
+
 .panel h2 {
   margin-top: 0;
   font-size: 1.2rem;
