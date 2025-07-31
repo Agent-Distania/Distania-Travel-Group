@@ -74,7 +74,6 @@
       <button data-dest="Europa">Europa Research Base</button>
       <button data-dest="Andromeda">Andromeda Outpost</button>
       <button data-dest="Vega">Vega Prime</button>
-      <button data-dest="Earth">Earth</button>
     </div>
     <!-- Navigation log panel -->
     <div class="panel">
@@ -101,10 +100,12 @@
         btn.classList.add('selected');
         current = btn;
         const dest = btn.dataset.dest;
-        appendLog(`Captain: Plotting course to ${dest}...`);
+
+        // New travel messages
+        appendLog(`System: Initiating zero-point travel...`);
         setTimeout(() => {
-          appendLog(`Navigation: Course locked. Estimated arrival at ${dest} in T-minus 72 hours.`);
-        }, 1000);
+          appendLog(`System: Zero-point travel finished, welcome to ${dest} and enjoy your travel.`);
+        }, 3000);
       });
     });
 
