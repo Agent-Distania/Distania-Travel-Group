@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spaceship Navigation Console</title>
+  <title>Distania Travel Group</title>
   <style>
     body {
       margin: 0;
@@ -16,17 +16,44 @@
       justify-content: center;
       align-items: center;
     }
-    .console {
+    .screen {
       width: 90vw;
-      max-width: 1000px;
-      height: 80vh;
+      max-width: 800px;
+      height: 70vh;
       background: rgba(5, 10, 30, 0.9);
       border: 2px solid #0f4;
       box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .hidden { display: none; }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      color: #02030a;
+      background: #8dfd8d;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    /* Console styles */
+    .console {
+      width: 100%;
+      height: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
-      padding: 1rem;
     }
     .panel {
       border: 1px solid #0f4;
@@ -65,24 +92,37 @@
   </style>
 </head>
 <body>
-  <div class="console">
-    <!-- Destination selection panel -->
-    <div class="panel dest-list">
-      <h2>Select Destination</h2>
-      <button data-dest="Mars">Mars Colony Alpha</button>
-      <button data-dest="Jupiter">Jupiter Orbital Station</button>
-      <button data-dest="Europa">Europa Research Base</button>
-      <button data-dest="Andromeda">Andromeda Outpost</button>
-      <button data-dest="Vega">Vega Prime</button>
-    </div>
-    <!-- Navigation log panel -->
-    <div class="panel">
-      <h2>Navigation Log</h2>
-      <div id="log" class="log"></div>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="screen">
+    <h1>Distania Travel Group</h1>
+    <p>Your journey is our guarantee</p>
+    <button id="onBtn" class="btn">On</button>
+  </div>
+
+  <!-- Travel Console Screen -->
+  <div id="travelScreen" class="screen hidden">
+    <div class="console">
+      <!-- Destination selection panel -->
+      <div class="panel dest-list">
+        <h2>Select Destination</h2>
+        <button data-dest="Mars">Mars Colony Alpha</button>
+        <button data-dest="Jupiter">Jupiter Orbital Station</button>
+        <button data-dest="Europa">Europa Research Base</button>
+        <button data-dest="Andromeda">Andromeda Outpost</button>
+        <button data-dest="Vega">Vega Prime</button>
+      </div>
+      <!-- Navigation log panel -->
+      <div class="panel">
+        <h2>Navigation Log</h2>
+        <div id="log" class="log"></div>
+      </div>
     </div>
   </div>
 
   <script>
+    const loginScreen = document.getElementById('loginScreen');
+    const travelScreen = document.getElementById('travelScreen');
+    const onBtn = document.getElementById('onBtn');
     const buttons = document.querySelectorAll('.dest-list button');
     const logEl = document.getElementById('log');
     let current = null;
@@ -94,6 +134,13 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
+    // On button click: switch screens and init log
+    onBtn.addEventListener('click', () => {
+      loginScreen.classList.add('hidden');
+      travelScreen.classList.remove('hidden');
+      appendLog('System: Welcome, Captain. Please select a destination.');
+    });
+
     buttons.forEach(btn => {
       btn.addEventListener('click', () => {
         if (current) current.classList.remove('selected');
@@ -101,16 +148,12 @@
         current = btn;
         const dest = btn.dataset.dest;
 
-        // New travel messages
         appendLog(`System: Initiating zero-point travel...`);
         setTimeout(() => {
           appendLog(`System: Zero-point travel finished, welcome to ${dest} and enjoy your travel.`);
         }, 3000);
       });
     });
-
-    // Initial message
-    appendLog('System: Welcome, Captain. Please select a destination.');
   </script>
 </body>
 </html>
