@@ -4,20 +4,22 @@
   <meta charset="UTF-8" />
   <title>Distania Travel Group</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Login Screen -->
-  <div id="loginScreen">
-    <h1>Distania Travel Group</h1>
-    <p>Your journey is our guarantee</p>
-    <button id="onBtn">On</button>
-  </div>
+  <div class="panel-frame">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen">
+      <h1>Distania Travel Group</h1>
+      <p>Your journey is our guarantee</p>
+      <button id="onBtn" class="btn">On</button>
+    </div>
 
-  <!-- Travel Screen (hidden initially) -->
-  <div id="travelScreen" class="hidden" style="display:none;">
-    <div class="dest-list"></div>
-    <div id="log" style="white-space: pre-wrap; margin-top: 1em; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 0.5em;"></div>
+    <!-- Travel Screen (hidden initially) -->
+    <div id="travelScreen" class="screen hidden">
+      <div class="dest-list"></div>
+      <div id="log" class="log" aria-live="polite"></div>
+    </div>
   </div>
 
   <script>
@@ -53,6 +55,7 @@
         const btn = document.createElement('button');
         btn.textContent = dest.name;
         btn.dataset.dest = dest.key;
+        btn.classList.add('btn');
         destList.appendChild(btn);
 
         btn.addEventListener('click', () => {
@@ -127,7 +130,6 @@
 
     // Travel methods between Earth sub-destinations
     function travelBetweenEarthSubDests(fromKey, toKey, toName, doneCallback) {
-      // Define travel paths & methods (walking, train)
       const travelPaths = {
         NewYork: {
           Pacific: [
@@ -178,8 +180,8 @@
 
     // On button click: switch screens and init log, load main destinations
     onBtn.addEventListener('click', () => {
-      loginScreen.style.display = 'none';
-      travelScreen.style.display = 'block';
+      loginScreen.classList.add('hidden');
+      travelScreen.classList.remove('hidden');
       appendLog('System: Welcome, Captain. Please select a destination.');
       populateDestinations(mainDestinations);
     });
