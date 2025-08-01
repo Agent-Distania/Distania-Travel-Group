@@ -8,46 +8,14 @@
 </head>
 <body>
   <div class="panel-frame">
-    <!-- Startup Exposition Screen with email list -->
-    <div id="startupScreen" class="screen" style="position: relative; display: flex; flex-direction: column; gap: 0.75rem;">
-      <button id="closeStartup" aria-label="Close" style="position:absolute; top:8px; right:8px; background:transparent; border:none; color:#8dfd8d; font-size:1.2rem; cursor:pointer;">✕</button>
-      <h1 style="margin-top:0;">Exodus Civil Service</h1>
-      <div style="display:flex; gap:1rem; flex:1; min-height:0;">
-        <!-- Email list pane -->
-        <div id="emailList" style="flex:0 0 260px; background: rgba(0,10,20,0.6); border:1px solid #0a3; padding:0.75rem; overflow-y:auto; display:flex; flex-direction:column; gap:4px;">
-          <h2 style="margin:0 0 0.5rem; font-size:1rem;">Inbox</h2>
-          <div class="email-item" data-id="mission" style="padding:0.5rem; border-bottom:1px solid rgba(15,255,15,0.1); cursor:pointer; background: rgba(15,255,15,0.05);">
-            <strong>[ECS] Mission Briefing</strong>
-            <div style="font-size:0.65rem; margin-top:4px;">Primary assignment overview from Chief Clair.</div>
-          </div>
-          <div class="email-item" data-id="update" style="padding:0.5rem; border-bottom:1px solid rgba(15,255,15,0.1); cursor:pointer;">
-            <strong>Update from Chief Clair</strong>
-            <div style="font-size:0.65rem; margin-top:4px;">New anomalies detected near outer ring structures.</div>
-          </div>
-          <div class="email-item" data-id="logistics" style="padding:0.5rem; border-bottom:1px solid rgba(15,255,15,0.1); cursor:pointer;">
-            <strong>Logistics Notice</strong>
-            <div style="font-size:0.65rem; margin-top:4px;">Ship status and departure window.</div>
-          </div>
-          <div class="email-item" data-id="intel" style="padding:0.5rem; border-bottom:1px solid rgba(15,255,15,0.1); cursor:pointer;">
-            <strong>Field Intel Digest</strong>
-            <div style="font-size:0.65rem; margin-top:4px;">Preliminary readings from Europa and Vega.</div>
-          </div>
-        </div>
-        <!-- Email content pane -->
-        <div id="emailContent" style="flex:1; background: rgba(0,10,20,0.6); padding:1rem; border:1px solid #0a3; overflow-y:auto; display:flex; flex-direction:column;">
-          <h2 id="emailTitle" style="margin-top:0;">[ECS] Mission Briefing</h2>
-          <div id="emailBodyWrapper" style="flex:1; display:flex; flex-direction:column; gap:0.5rem;">
-            <p id="emailBody" style="margin:0; line-height:1.3;">
-              Welcome recruit to the Exodus Civil Service or ECS. We work for the unified governments to explore the mega structures that arrived during the Kilko disaster. We must discover who built them, their purpose, how old they are, and most importantly, why they are here, god luck explorer, your ship is waiting, when you get there press the on button to begin.
-            </p>
-            <p style="font-style: italic; margin:0;">– Chief Clair</p>
-          </div>
-        </div>
-      </div>
-      <div style="margin-top:0.5rem; display:flex; justify-content: space-between; align-items:center;">
-        <div style="font-size:0.85rem;">Select an email to read. Close (✕) when ready to proceed to the terminal.</div>
-        <button id="proceedBtn" class="btn" style="white-space: nowrap;">Acknowledge</button>
-      </div>
+    <!-- Startup Exposition Screen -->
+    <div id="startupScreen" class="screen">
+      <h1>Exodus Civil Service</h1>
+      <p style="max-width: 700px; line-height:1.3;">
+        Welcome recruit to the Exodus Civil Service or ECS. We work for the unified governments to explore the mega structures that arrived during the Kilko disaster. We must discover who built them, their purpose, how old they are, and most importantly, why they are here. Good luck explorer, your ship is waiting. When you get there press the On button to begin.
+      </p>
+      <p style="font-style: italic; margin-top:.5rem;">– Chief Clair</p>
+      <button id="proceedBtn" class="btn">Acknowledge</button>
     </div>
 
     <!-- Login Screen -->
@@ -79,36 +47,11 @@
     const loginScreen = document.getElementById('loginScreen');
     const travelScreen = document.getElementById('travelScreen');
     const proceedBtn = document.getElementById('proceedBtn');
-    const closeStartup = document.getElementById('closeStartup');
     const onBtn = document.getElementById('onBtn');
     const destList = document.querySelector('.dest-list');
     const logEl = document.getElementById('log');
-    const emailList = document.getElementById('emailList');
-    const emailTitle = document.getElementById('emailTitle');
-    const emailBody = document.getElementById('emailBody');
-
     let traveling = false;
     let currentLocation = null;
-
-    // Email dataset (preserves original briefing text exactly)
-    const emails = {
-      mission: {
-        title: "[ECS] Mission Briefing",
-        body: "Welcome recruit to the Exodus Civil Service or ECS, we work for the unified governments to explore the mega structures that arrived during the kilko disaster, we must discover who built them, their purpose, how old they are, and most importantly, why they are here, god luck explorer, your ship is waiting, when you get there press the on button to begin. – Chief Clair"
-      },
-      update: {
-        title: "Update from Chief Clair",
-        body: "New anomaly signatures have appeared near the outer halo of Vega Prime. Preliminary scans show temporal distortions and faint signal echoes. Your initial task: observe without interference and report any pattern deviations. Stay vigilant; previous probes experienced unexpected feedback loops."
-      },
-      logistics: {
-        title: "Logistics Notice",
-        body: "Ship is prepped, fuel reserves are optimal, and the zero-point array diagnostics report 98.7% efficiency. Estimated transit window to Earth Command Center opens in T-00:01:45. Standard exploration kit and emergency beacon are loaded. Confirm readiness before engaging primary systems."
-      },
-      intel: {
-        title: "Field Intel Digest",
-        body: "Recent field reports from Europa and Jupiter indicate shifts in structural resonance. Europa's ice-layered ruins emit weak energy pulses synchronized with Jupiter's storm fluctuations. Analysts suspect a hidden link; your commission is to chart these correlations during your next routing."
-      }
-    };
 
     // Main destinations
     const mainDestinations = [
@@ -474,47 +417,6 @@
       });
     }
 
-    // Email selection logic
-    function selectEmail(id) {
-      const email = emails[id];
-      if (!email) return;
-      // highlight selection
-      document.querySelectorAll('.email-item').forEach(el => {
-        el.style.background = el.dataset.id === id ? "rgba(15,255,15,0.05)" : "transparent";
-      });
-      emailTitle.textContent = email.title;
-      // split signature if present
-      const parts = email.body.split("–");
-      if (parts.length > 1) {
-        emailBody.textContent = parts[0].trim();
-        // append signature separately
-        const sigText = "–" + parts.slice(1).join("–").trim();
-        // Remove existing signature if any
-        const existingSig = document.querySelector("#emailBodyWrapper .signature");
-        if (existingSig) existingSig.remove();
-        const sig = document.createElement("p");
-        sig.textContent = sigText;
-        sig.style.fontStyle = "italic";
-        sig.style.margin = "0";
-        sig.classList.add("signature");
-        const wrapper = document.getElementById("emailBodyWrapper");
-        wrapper.appendChild(sig);
-      } else {
-        emailBody.textContent = email.body;
-        const existingSig = document.querySelector("#emailBodyWrapper .signature");
-        if (existingSig) existingSig.remove();
-      }
-    }
-
-    // initial email
-    selectEmail("mission");
-
-    emailList.addEventListener("click", e => {
-      const item = e.target.closest(".email-item");
-      if (!item) return;
-      selectEmail(item.dataset.id);
-    });
-
     function appendLog(text) {
       const line = document.createElement('div');
       line.textContent = text;
@@ -522,12 +424,8 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // Startup flow: go to login screen via buttons
+    // Startup flow: go to login screen
     proceedBtn.addEventListener('click', () => {
-      startupScreen.classList.add('hidden');
-      loginScreen.classList.remove('hidden');
-    });
-    closeStartup.addEventListener('click', () => {
       startupScreen.classList.add('hidden');
       loginScreen.classList.remove('hidden');
     });
