@@ -73,7 +73,7 @@
       { name: "Ancient Vault", key: "AncientVault" },
     ];
 
-    // Vega Prime sub-destinations (mix of orbit and surface)
+    // Vega Prime sub-destinations (orbit + surface)
     const vegaSubDestinations = [
       { name: "Return to Ship", key: "Return" },
       { name: "Orbital Trade Ring", key: "OrbitalTradeRing", type: "orbit" },
@@ -102,7 +102,7 @@
       AncientVault: "An ancient vault, sealed for millennia, rumored to hold relics and technologies from a civilization long gone. Access is heavily restricted and requires shuttle travel for safety."
     };
 
-    // Descriptions for Vega Prime sectors
+    // Descriptions for Vega sectors
     const vegaSectorDescriptions = {
       OrbitalTradeRing: "Orbiting Vega Prime is a magnificent array of orbital rings and trade stations. Light from the nearby star refracts off the metallic superstructures, illuminating the night side of the planet with a faint golden glow.",
       ObservationSpire: "The Stellar Observation Spire reaches high above the clouds, a pinnacle of scientific study and star-gazing technology in orbit.",
@@ -157,7 +157,7 @@
             return;
           }
 
-          // Vega submenu - on planet click show orbital description immediately before sub-destinations
+          // Vega submenu - show orbital description before sub-destinations
           if (dest.key === 'Vega') {
             currentLocation = 'VegaHub';
             appendLog(`System: Orbiting Vega Prime. ${vegaSectorDescriptions.OrbitalTradeRing}`);
@@ -165,7 +165,7 @@
             return;
           }
 
-          // Travel within Earth sub-destinations (train)
+          // Earth sub-destination travel (train)
           if (
             currentLocation === 'EarthHub' &&
             isSubDestination(dest.key, earthSubDestinations)
@@ -193,7 +193,7 @@
             return;
           }
 
-          // Travel within Europa sub-destinations (rover)
+          // Europa sub-destination travel (rover)
           if (
             currentLocation === 'EuropaHub' &&
             isSubDestination(dest.key, europaSubDestinations)
@@ -221,7 +221,7 @@
             return;
           }
 
-          // Travel within Mars sub-destinations (shuttle)
+          // Mars sub-destination travel (shuttle)
           if (
             currentLocation === 'MarsHub' &&
             isSubDestination(dest.key, marsSubDestinations)
@@ -249,7 +249,7 @@
             return;
           }
 
-          // Travel within Vega sub-destinations - check type to choose travel method or instant
+          // Vega sub-destination travel (orbit: instant, surface: shuttle/rover)
           if (
             currentLocation === 'VegaHub' &&
             isSubDestination(dest.key, vegaSubDestinations)
@@ -262,10 +262,10 @@
             });
             btn.classList.add('selected');
 
-            const travelType = btn.dataset.type || 'shuttle'; // default shuttle
+            const destinationObj = vegaSubDestinations.find(d => d.key === dest.key);
+            const travelType = destinationObj?.type || 'shuttle';
 
-            if(travelType === 'orbit'){
-              // Orbital destinations: instant arrival, no travel delay
+            if (travelType === 'orbit') {
               appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
               if (vegaSectorDescriptions[dest.key]) {
                 appendLog(vegaSectorDescriptions[dest.key]);
@@ -276,8 +276,7 @@
               return;
             }
 
-            // Surface travel by shuttle or rover
-            let travelVerb = travelType === 'rover' ? 'rover' : 'shuttle';
+            const travelVerb = travelType === 'rover' ? 'rover' : 'shuttle';
             appendLog(`System: Boarding the ${travelVerb} to ${dest.name}...`);
 
             setTimeout(() => {
@@ -293,7 +292,7 @@
             return;
           }
 
-          // Normal travel for main planets or first sub-selection
+          // Default: zero-point travel
           traveling = true;
           const allButtons = destList.querySelectorAll('button');
           allButtons.forEach(b => {
