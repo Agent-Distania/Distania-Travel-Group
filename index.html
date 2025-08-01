@@ -55,7 +55,7 @@
     const orbitalDescriptions = {
       Earth: "Orbiting Earth Command Center, a massive hub controlling interplanetary travel and defense.",
       Mars: "Orbiting Mars Colony Alpha, a sprawling network of habitats and terraforming stations.",
-      Jupiter: "Orbiting the Jupiter Orbital Station, the largest space station in the system, serving as a trade and military outpost.",
+      Jupiter: "Orbiting the Jupiter Orbital Station, home to enormous energy collectors and the nerve center for outer system logistics.",
       Europa: "Orbiting Europa Research Base, a scientific station monitoring the icy moon's hidden ocean.",
       Andromeda: "Orbiting the Andromeda Outpost, a forward base for deep space exploration beyond the solar system.",
       Vega: "Orbiting Vega Prime, a vibrant star system hub with bustling orbital trade rings."
@@ -84,8 +84,17 @@
       { name: "Ancient Vault", key: "AncientVault" },
     ];
 
+    // Jupiter sub-destinations
+    const jupiterSubDestinations = [
+      { name: "Return to Ship", key: "Return" },
+      { name: "Storm Observatory", key: "StormObservatory", type: "shuttle" },
+      { name: "Gas Harvesting Platform", key: "GasHarvester", type: "shuttle" },
+      { name: "Research Array", key: "ResearchArray", type: "drone" },
+      { name: "Deep Core Relay", key: "CoreRelay", type: "shuttle" },
+    ];
+
     // Vega sub-destinations with travel type for each
-    // travelType can be 'orbit', 'shuttle', or 'rover'
+    // travelType can be 'orbit', 'shuttle', or custom like 'drone'
     const vegaSubDestinations = [
       { name: "Return to Ship", key: "Return" },
       { name: "Capital City", key: "CapitalCity", type: "shuttle" },
@@ -112,6 +121,13 @@
       AncientVault: "An ancient vault carved deep into Martian rock, rumored to hold relics from a forgotten civilization or secrets to Mars' past."
     };
 
+    const jupiterSectorDescriptions = {
+      StormObservatory: "The Storm Observatory monitors Jupiter's raging atmospheric phenomena, using reinforced platforms to stay above the worst of the storms.",
+      GasHarvester: "Floating harvesting platforms extract and process volatile gases from the upper layers, feeding fuel depots across the system.",
+      ResearchArray: "A network of drone-deployed sensor nodes studying Jovian magnetospheres and particle flux in real time.",
+      CoreRelay: "Deep Core Relay acts as a communications and energy relay sunk into layers just below the visible cloud decks, stabilizing long-range links."
+    };
+
     const vegaSectorDescriptions = {
       CapitalCity: "The bustling capital city of Vega Prime, filled with towering skyscrapers and vibrant markets.",
       OrbitalTradeRing: "The Orbital Trade Ring is a sprawling complex of space docks and trade hubs circling Vega Prime, vital for commerce and defense.",
@@ -123,6 +139,7 @@
     const earthKeys = earthSubDestinations.map(d => d.key);
     const europaKeys = europaSubDestinations.map(d => d.key);
     const marsKeys = marsSubDestinations.map(d => d.key);
+    const jupiterKeys = jupiterSubDestinations.map(d => d.key);
     const vegaKeys = vegaSubDestinations.map(d => d.key);
 
     function isSubDestination(key, arr) {
@@ -150,7 +167,7 @@
           // Earth submenu
           if (dest.key === 'Earth') {
             currentLocation = 'EarthHub';
-            appendLog(`System: Orbiting Earth Command Center. ${orbitalDescriptions.Earth}`);
+            appendLog(`System: ${orbitalDescriptions.Earth}`);
             populateDestinations(earthSubDestinations);
             appendLog("System: Accessing Earth sectors. Select your sub-destination.");
             return;
@@ -159,7 +176,7 @@
           // Europa submenu
           if (dest.key === 'Europa') {
             currentLocation = 'EuropaHub';
-            appendLog(`System: Orbiting Europa Research Base. ${orbitalDescriptions.Europa}`);
+            appendLog(`System: ${orbitalDescriptions.Europa}`);
             populateDestinations(europaSubDestinations);
             appendLog("System: Accessing Europa sectors. Select your sub-destination.");
             return;
@@ -168,31 +185,26 @@
           // Mars submenu
           if (dest.key === 'Mars') {
             currentLocation = 'MarsHub';
-            appendLog(`System: Orbiting Mars Colony Alpha. ${orbitalDescriptions.Mars}`);
+            appendLog(`System: ${orbitalDescriptions.Mars}`);
             populateDestinations(marsSubDestinations);
             appendLog("System: Accessing Mars sectors. Select your sub-destination.");
             return;
           }
 
-          // Vega submenu - show orbital description first, then sub-destinations
+          // Jupiter submenu
+          if (dest.key === 'Jupiter') {
+            currentLocation = 'JupiterHub';
+            appendLog(`System: ${orbitalDescriptions.Jupiter}`);
+            populateDestinations(jupiterSubDestinations);
+            appendLog("System: Accessing Jupiter sectors. Select your sub-destination.");
+            return;
+          }
+
+          // Vega submenu
           if (dest.key === 'Vega') {
             currentLocation = 'VegaHub';
-            appendLog(`System: Orbiting Vega Prime. ${orbitalDescriptions.Vega}`);
+            appendLog(`System: ${orbitalDescriptions.Vega}`);
             populateDestinations(vegaSubDestinations);
-            return;
-          }
-
-          // Jupiter main destination - no sub destinations, just orbital log
-          if (dest.key === 'Jupiter') {
-            currentLocation = 'JupiterOrbital';
-            appendLog(`System: Orbiting Jupiter Orbital Station. ${orbitalDescriptions.Jupiter}`);
-            return;
-          }
-
-          // Andromeda main destination - no sub destinations, just orbital log
-          if (dest.key === 'Andromeda') {
-            currentLocation = 'AndromedaOutpost';
-            appendLog(`System: Orbiting Andromeda Outpost. ${orbitalDescriptions.Andromeda}`);
             return;
           }
 
@@ -220,7 +232,6 @@
               currentLocation = dest.key;
               allButtons.forEach(b => b.disabled = false);
             }, 3000);
-
             return;
           }
 
@@ -237,7 +248,6 @@
             });
             btn.classList.add('selected');
 
-            // Rover only to ResearchBase, else instant arrival (no travel)
             if (dest.key === 'ResearchBase') {
               appendLog(`System: Boarding the rover to ${dest.name}...`);
               setTimeout(() => {
@@ -250,7 +260,6 @@
                 allButtons.forEach(b => b.disabled = false);
               }, 3000);
             } else {
-              // For GroundCamp and Ruins: instant arrival
               appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
               if (europaSectorDescriptions[dest.key]) {
                 appendLog(europaSectorDescriptions[dest.key]);
@@ -259,7 +268,6 @@
               currentLocation = dest.key;
               allButtons.forEach(b => b.disabled = false);
             }
-
             return;
           }
 
@@ -287,7 +295,48 @@
               currentLocation = dest.key;
               allButtons.forEach(b => b.disabled = false);
             }, 3000);
+            return;
+          }
 
+          // Jupiter sub-destination travel
+          if (
+            (currentLocation === 'JupiterHub' || jupiterKeys.includes(currentLocation)) &&
+            jupiterKeys.includes(dest.key)
+          ) {
+            traveling = true;
+            const allButtons = destList.querySelectorAll('button');
+            allButtons.forEach(b => {
+              b.disabled = true;
+              b.classList.remove('selected');
+            });
+            btn.classList.add('selected');
+
+            const destinationObj = jupiterSubDestinations.find(d => d.key === dest.key);
+            const travelType = destinationObj?.type || 'shuttle';
+
+            if (travelType === 'drone') {
+              appendLog(`System: Deploying the drone to ${dest.name}...`);
+              setTimeout(() => {
+                appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
+                if (jupiterSectorDescriptions[dest.key]) {
+                  appendLog(jupiterSectorDescriptions[dest.key]);
+                }
+                traveling = false;
+                currentLocation = dest.key;
+                allButtons.forEach(b => b.disabled = false);
+              }, 2000);
+            } else {
+              appendLog(`System: Boarding the shuttle to ${dest.name}...`);
+              setTimeout(() => {
+                appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
+                if (jupiterSectorDescriptions[dest.key]) {
+                  appendLog(jupiterSectorDescriptions[dest.key]);
+                }
+                traveling = false;
+                currentLocation = dest.key;
+                allButtons.forEach(b => b.disabled = false);
+              }, 3000);
+            }
             return;
           }
 
@@ -308,7 +357,6 @@
             const travelType = destinationObj?.type || 'shuttle';
 
             if (travelType === 'orbit') {
-              // Instant arrival at orbit points
               appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
               if (vegaSectorDescriptions[dest.key]) {
                 appendLog(vegaSectorDescriptions[dest.key]);
@@ -331,7 +379,6 @@
               currentLocation = dest.key;
               allButtons.forEach(b => b.disabled = false);
             }, 3000);
-
             return;
           }
 
