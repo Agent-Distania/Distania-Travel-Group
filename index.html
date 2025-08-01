@@ -21,18 +21,17 @@
             <div style="font-size:0.65rem; margin-top:4px;">Primary assignment overview from Chief Clair.</div>
           </div>
           <div class="email-item" data-id="update" style="padding:0.5rem; border-bottom:1px solid rgba(15,255,15,0.1); cursor:pointer;">
-            <strong>Free trip to lilos raffle!</strong>
-            <div style="font-size:0.65rem; margin-top:4px;">Enter the raffle now! Don't wait!</div>
+            <strong>Update from Chief Clair</strong>
+            <div style="font-size:0.65rem; margin-top:4px;">New anomalies detected near outer ring structures.</div>
           </div>
           <div class="email-item" data-id="logistics" style="padding:0.5rem; border-bottom:1px solid rgba(15,255,15,0.1); cursor:pointer;">
-            <strong>[ECS] Logistics Notice</strong>
+            <strong>Logistics Notice</strong>
             <div style="font-size:0.65rem; margin-top:4px;">Ship status and departure window.</div>
           </div>
           <div class="email-item" data-id="intel" style="padding:0.5rem; border-bottom:1px solid rgba(15,255,15,0.1); cursor:pointer;">
-            <strong>[Field Intel Digest</strong>
+            <strong>Field Intel Digest</strong>
             <div style="font-size:0.65rem; margin-top:4px;">Preliminary readings from Europa and Vega.</div>
           </div>
-
         </div>
         <!-- Email content pane -->
         <div id="emailContent" style="flex:1; background: rgba(0,10,20,0.6); padding:1rem; border:1px solid #0a3; overflow-y:auto; display:flex; flex-direction:column;">
@@ -86,11 +85,6 @@
     const emailTitle = document.getElementById('emailTitle');
     const emailBody = document.getElementById('emailBody');
 
-  closeStartup.addEventListener('click', () => {
-  startupScreen.classList.add('hidden');
-  loginScreen.classList.remove('hidden');
-  });
-
     let traveling = false;
     let currentLocation = null;
 
@@ -98,14 +92,14 @@
     const emails = {
       mission: {
         title: "[ECS] Mission Briefing",
-        body: "Welcome recruit to the Exodus Civil Service or ECS, we work for the unified governments to explore the mega structures that arrived during the kilko disaster, we must discover who built them, their purpose, how old they are, and most importantly, why they are here, god luck explorer, your ship is waiting, when you get there press the on button to begin."
+        body: "Welcome recruit to the Exodus Civil Service or ECS, we work for the unified governments to explore the mega structures that arrived during the kilko disaster, we must discover who built them, their purpose, how old they are, and most importantly, why they are here, good luck explorer, your ship is waiting, when you get there press the on button to begin."
       },
       update: {
-        title: "Free trip to Lilos raffle!",
-        body: "Have you ever wanted a free al expenses paid trip to the paradise world of Lilos? Now you can! Sign the paper and submit your credit card info for the possibility of a free trip to Lilos! Don't wait sign now!"
+        title: "Update from Chief Clair",
+        body: "New anomaly signatures have appeared near the outer halo of Vega Prime. Preliminary scans show temporal distortions and faint signal echoes. Your initial task: observe without interference and report any pattern deviations. Stay vigilant; previous probes experienced unexpected feedback loops."
       },
       logistics: {
-        title: "[ECS] Logistics Notice",
+        title: "Logistics Notice",
         body: "Ship is prepped, fuel reserves are optimal, and the zero-point array diagnostics report 98.7% efficiency. Estimated transit window to Earth Command Center opens in T-00:01:45. Standard exploration kit and emergency beacon are loaded. Confirm readiness before engaging primary systems."
       },
       intel: {
