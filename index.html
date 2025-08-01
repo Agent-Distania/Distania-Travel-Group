@@ -9,13 +9,16 @@
 <body>
   <div class="panel-frame">
     <!-- Startup Exposition Screen -->
-    <div id="startupScreen" class="screen">
-      <h1>Exodus Civil Service</h1>
-      <p style="max-width: 700px; line-height:1.3;">
-        Welcome recruit to the Exodus Civil Service or ECS. We work for the unified governments to explore the mega structures that arrived during the Kilko disaster. We must discover who built them, their purpose, how old they are, and most importantly, why they are here. Good luck explorer, your ship is waiting. When you get there press the On button to begin.
-      </p>
-      <p style="font-style: italic; margin-top:.5rem;">– Chief Clair</p>
-      <button id="proceedBtn" class="btn">Acknowledge</button>
+    <div id="startupScreen" class="screen" style="position: relative;">
+      <button id="closeStartup" aria-label="Close" style="position:absolute; top:8px; right:8px; background:transparent; border:none; color:#8dfd8d; font-size:1.2rem; cursor:pointer;">✕</button>
+      <h1 style="margin-top:0;">Exodus Civil Service</h1>
+      <div class="email-like" style="background: rgba(0,10,20,0.6); padding:1rem; border:1px solid #0a3; border-radius:8px; max-width:760px;">
+        <p style="margin:0 0 1rem; line-height:1.3;">
+          Welcome recruit to the Exodus Civil Service or ECS. We work for the unified governments to explore the mega structures that arrived during the Kilko disaster. We must discover who built them, their purpose, how old they are, and most importantly, why they are here. God luck explorer, your ship is waiting. When you get there press the On button to begin.
+        </p>
+        <p style="font-style: italic; margin:0;">– Chief Clair</p>
+      </div>
+      <button id="proceedBtn" class="btn" style="margin-top:1rem;">Acknowledge</button>
     </div>
 
     <!-- Login Screen -->
@@ -47,6 +50,7 @@
     const loginScreen = document.getElementById('loginScreen');
     const travelScreen = document.getElementById('travelScreen');
     const proceedBtn = document.getElementById('proceedBtn');
+    const closeStartup = document.getElementById('closeStartup');
     const onBtn = document.getElementById('onBtn');
     const destList = document.querySelector('.dest-list');
     const logEl = document.getElementById('log');
@@ -424,8 +428,12 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // Startup flow: go to login screen
+    // Startup flow: go to login screen either via Acknowledge or X
     proceedBtn.addEventListener('click', () => {
+      startupScreen.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+    });
+    closeStartup.addEventListener('click', () => {
       startupScreen.classList.add('hidden');
       loginScreen.classList.remove('hidden');
     });
