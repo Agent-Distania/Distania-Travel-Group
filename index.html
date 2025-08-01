@@ -18,9 +18,11 @@
     <!-- Travel Console Screen -->
     <div id="travelScreen" class="screen hidden">
       <div class="console">
+        <!-- Destination selection panel -->
         <div class="panel dest-list">
           <h2>Select Destination</h2>
         </div>
+        <!-- Navigation log panel -->
         <div class="panel">
           <h2>Navigation Log</h2>
           <div id="log" class="log"></div>
@@ -73,8 +75,8 @@
       Ruins: "Ancient, mysterious ruins scattered beneath the ice hint at a long-lost civilization or alien presence. The Ruins are a focal point for exploration but also for potential danger."
     };
 
-    function isSubDestination(key, arr) {
-      return arr.some(d => d.key === key);
+    function isSubDestination(key, array) {
+      return array.some(d => d.key === key);
     }
 
     function createButtons(destinations) {
@@ -109,79 +111,57 @@
             return;
           }
 
-          // Train travel within Earth
+          // Earth train travel between subs
           if (
-            currentLocation === 'EarthHub' &&
+            isSubDestination(currentLocation, earthSubDestinations) &&
             isSubDestination(dest.key, earthSubDestinations)
           ) {
-            traveling = true;
-            const allButtons = destList.querySelectorAll('button');
-            allButtons.forEach(b => {
-              b.disabled = true;
-              b.classList.remove('selected');
-            });
-            btn.classList.add('selected');
-
-            appendLog(`System: Boarding the train to ${dest.name}...`);
-
-            setTimeout(() => {
-              appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
-              if (earthSectorDescriptions[dest.key]) {
-                appendLog(earthSectorDescriptions[dest.key]);
-              }
-              traveling = false;
-              currentLocation = dest.key;
-              allButtons.forEach(b => b.disabled = false);
-            }, 3000);
+            startTravel(dest, 'train', earthSectorDescriptions);
             return;
           }
 
-          // Rover travel within Europa
+          // Europa rover travel between subs
           if (
-            currentLocation === 'EuropaHub' &&
+            isSubDestination(currentLocation, europaSubDestinations) &&
             isSubDestination(dest.key, europaSubDestinations)
           ) {
-            traveling = true;
-            const allButtons = destList.querySelectorAll('button');
-            allButtons.forEach(b => {
-              b.disabled = true;
-              b.classList.remove('selected');
-            });
-            btn.classList.add('selected');
-
-            appendLog(`System: Boarding the rover to ${dest.name}...`);
-
-            setTimeout(() => {
-              appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
-              if (europaSectorDescriptions[dest.key]) {
-                appendLog(europaSectorDescriptions[dest.key]);
-              }
-              traveling = false;
-              currentLocation = dest.key;
-              allButtons.forEach(b => b.disabled = false);
-            }, 3000);
+            startTravel(dest, 'rover', europaSectorDescriptions);
             return;
           }
 
-          // Zero-point travel for main locations
-          traveling = true;
-          const allButtons = destList.querySelectorAll('button');
-          allButtons.forEach(b => {
-            b.disabled = true;
-            b.classList.remove('selected');
-          });
-          btn.classList.add('selected');
-
-          appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
-
-          setTimeout(() => {
-            appendLog(`System: Zero-point travel finished, welcome to ${dest.name}. Enjoy your expedition.`);
-            traveling = false;
-            currentLocation = dest.key;
-            allButtons.forEach(b => b.disabled = false);
-          }, 3000);
+          // Normal zero-point travel
+          startTravel(dest, 'zero');
         });
       });
+    }
+
+    function startTravel(dest, type, descriptions = {}) {
+      traveling = true;
+      const allButtons = destList.querySelectorAll('button');
+      allButtons.forEach(b => {
+        b.disabled = true;
+        b.classList.remove('selected');
+      });
+      const btn = [...allButtons].find(b => b.dataset.dest === dest.key);
+      if (btn) btn.classList.add('selected');
+
+      const vehicle = {
+        train: "Boarding the train",
+        rover: "Boarding the rover",
+        zero: "Initiating zero-point travel"
+      }[type];
+
+      appendLog(`System: ${vehicle} to ${dest.name}...`);
+
+      setTimeout(() => {
+        appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
+        if (descriptions[dest.key]) {
+          appendLog(descriptions[dest.key]);
+        }
+        traveling = false;
+        currentLocation = dest.key;
+        allButtons.forEach(b => b.disabled = false);
+      }, 3000);
     }
 
     function appendLog(text) {
@@ -191,16 +171,16 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    onBtn.addEventListener('click', () => {
-      loginScreen.classList.add('hidden');
-      travelScreen.classList.remove('hidden');
-      appendLog('System: Welcome, Captain. Please select a destination.');
-      populateDestinations(mainDestinations);
-    });
-
     function populateDestinations(destinations) {
       createButtons(destinations);
     }
+
+    onBtn.addEventListener('click', () => {
+      loginScreen.classList.add('hidden');
+      travelScreen.classList.remove('hidden');
+      appendLog("System: Welcome, Captain. Please select a destination.");
+      populateDestinations(mainDestinations);
+    });
   </script>
 </body>
 </html>
