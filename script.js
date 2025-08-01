@@ -14,6 +14,7 @@ const logEl = document.getElementById('log');
 // =======================
 let traveling = false;
 let currentLocation = null;
+let currentHub = null; // NEW
 
 // =======================
 // Configuration Data
@@ -48,12 +49,12 @@ const destinationConfigs = {
     travelType: "shuttle",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
-      { name: "Colony Core", key:"ColonyCore" },
+      { name: "Colony Core", key: "ColonyCore" },
       { name: "Terraforming Fields", key: "TerraformingFields" },
       { name: "Ancient Vault", key: "AncientVault" },
     ],
     sectorDescriptions: {
-      ColonuCore: "The beating heart of the terrafomring effort, its home to many many shops and homes its basically a giant underground city and one of the few that survived the kilko diaster and the mega structure that turned mars red again",
+      ColonyCore: "The beating heart of the terraforming effort, home to shops and homes. One of the few cities that survived the Kilko disaster.",
       TerraformingFields: "Engineers work here to make Mars habitable. Machinery hums endlessly, reshaping the planet.",
       AncientVault: "An ancient vault emerged during the Kilko disaster. It wiped out cities, turned back time, and turned Mars red again."
     }
@@ -68,9 +69,9 @@ const destinationConfigs = {
       { name: "Ruins", key: "Ruins" },
     ],
     sectorDescriptions: {
-      ResearchBase: "A hub of scientific activity focused on Europa’s ice crust and subsurface ocean, while it studies the local ecosystem of europa it mostly studies the mega strcture beneath the ice",
-      GroundCamp: "A rugged outpost supporting field teams on Europa's frozen surface. Weather makes it treacherous and dangerous at the best of times, it's built around an entrance to the mega strcture",
-      Ruins: "A hidden megastructure buried under Europa's ice. It may predate all known civilizations, it is in reality, the entire moon of europa, the mega structure is merely frozen over, humanity continues to try and gain entrance."
+      ResearchBase: "A hub of scientific activity focused on Europa’s ice crust and subsurface ocean.",
+      GroundCamp: "A rugged outpost supporting field teams. Built around an entrance to the megastructure.",
+      Ruins: "A hidden megastructure buried under Europa's ice. It may predate all known civilizations."
     }
   },
   Jupiter: {
@@ -84,11 +85,11 @@ const destinationConfigs = {
       { name: "Excavation Platforms", key: "ExcavationPlatforms", type: "shuttle" },
     ],
     sectorDescriptions: {
-      StormObservatory: "Observes Jupiter’s massive storms from a floating observatory high in the atmosphere, it adjusts the many inhabited stations to avoid the worst of the storms",
-      GasHarvester: "Harvests gases for energy across the solar system. Essential for fueling outer colonies.",
-      ResearchArray: "Deployed sensor nodes study Jupiter’s magnetic field and particle activity.",
-      CoreRelay: "A relay hub sunk into Jupiter’s atmosphere, stabilizing communications for deep space.",
-      ExcavationPlatforms: "Mining platforms explore the gas layers for signs of ancient megastructures."
+      StormObservatory: "Observes Jupiter’s massive storms and protects orbital stations.",
+      GasHarvester: "Harvests gases for fuel. Vital to outer colonies.",
+      ResearchArray: "Sensor nodes study Jupiter's magnetic field.",
+      CoreRelay: "Deep in the atmosphere, this hub maintains long-range communication.",
+      ExcavationPlatforms: "Digs into Jupiter’s gas layers for ancient megastructure remnants."
     }
   },
   Vega: {
@@ -101,14 +102,14 @@ const destinationConfigs = {
       { name: "Crystal Canyon Outpost", key: "CrystalCanyonOutpost", type: "shuttle" },
     ],
     sectorDescriptions: {
-      CapitalCity: "A neon-lit metropolis on Vega Prime. One of the few places untouched by the Kilko disaster.",
-      OrbitalTradeRing: "A massive commercial hub that facilitates interstellar trade and commerce.",
-      StellarObservationSpire: "An observation tower that first detected the megastructures in the Sol system.",
-      CrystalCanyonOutpost: "A mining colony in crystal canyons. Vital for extracting rare minerals for technology."
+      CapitalCity: "A neon metropolis untouched by the Kilko disaster.",
+      OrbitalTradeRing: "Commerce and supply hub for Vega Prime.",
+      StellarObservationSpire: "This is where the megastructures were first discovered.",
+      CrystalCanyonOutpost: "Gem mines that power everything from ships to phones."
     }
   },
   Andromeda: {
-    description: "Orbiting the Andromeda Outpost, a forward base for deep space exploration beyond the solar system, its the closetest the andromada intitive ever got to andromada",
+    description: "Orbiting the Andromeda Outpost, a forward base for deep space exploration.",
     travelType: "shuttle",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
@@ -117,9 +118,9 @@ const destinationConfigs = {
       { name: "Xeno Archives", key: "XenoArchives", type: "shuttle" },
     ],
     sectorDescriptions: {
-      ForwardRecon: "An automated station monitoring deep space anomalies and potential threats beyond known systems.",
-      BlackSpire: "A dark communications relay built into a jagged asteroid. It relays messages across galaxies.",
-      XenoArchives: "A secure vault of ancient alien texts, relics, and data acquired from across the void."
+      ForwardRecon: "An unmanned station monitoring deep space anomalies.",
+      BlackSpire: "A jagged relay station transmitting signals between galaxies.",
+      XenoArchives: "Vault of alien artifacts and encrypted data."
     }
   }
 };
@@ -156,18 +157,20 @@ function createButtons(destinations) {
 function handleDestinationClick(dest, btn) {
   if (traveling) return;
 
-  const config = destinationConfigs[currentLocation] || destinationConfigs[dest.key];
+  const config = destinationConfigs[currentHub] || destinationConfigs[dest.key];
   const isReturn = dest.key === 'Return';
   const isMainDest = mainDestinations.some(d => d.key === dest.key);
 
   if (isReturn) {
     currentLocation = null;
+    currentHub = null;
     createButtons(mainDestinations);
     appendLog("System: Returning to ship. Please select a destination.");
     return;
   }
 
-  if (config?.subDestinations && currentLocation === null) {
+  if (config?.subDestinations && currentHub === null) {
+    currentHub = dest.key;
     currentLocation = dest.key;
     appendLog(`System: ${config.description}`);
     createButtons(config.subDestinations);
@@ -175,7 +178,7 @@ function handleDestinationClick(dest, btn) {
     return;
   }
 
-  if (currentLocation && config?.subDestinations?.some(d => d.key === dest.key)) {
+  if (currentHub && config?.subDestinations?.some(d => d.key === dest.key)) {
     travelToSubDestination(dest, btn, config);
     return;
   }
@@ -191,7 +194,7 @@ function travelToMainDestination(dest, btn) {
   appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
   setTimeout(() => {
     appendLog(`System: Zero-point travel finished. Welcome to ${dest.name}.`);
-    endTravel(dest.key);
+    endTravel(dest.key, dest.key);
   }, 3000);
 }
 
@@ -214,7 +217,7 @@ function travelToSubDestination(dest, btn, config) {
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     if (description) appendLog(description);
-    endTravel(dest.key);
+    endTravel(dest.key, currentHub); // keep hub context
   }, delay);
 }
 
@@ -227,8 +230,9 @@ function beginTravel(btn) {
   btn.classList.add('selected');
 }
 
-function endTravel(newLocation) {
+function endTravel(newLocation, hubKey) {
   currentLocation = newLocation;
+  currentHub = hubKey;
   traveling = false;
   enableButtons();
 }
