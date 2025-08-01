@@ -29,39 +29,100 @@ const mainDestinations = [
 
 const destinationConfigs = {
   Earth: {
-    description: "Orbiting Earth, the fractured home of humanity...",
+    description: "Orbiting Earth, the fractured home of humanity. The once-beautiful world lies in ruins due to the Kilko disaster...",
+    travelType: "train",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
       { name: "New York Sector", key: "NewYork" },
       { name: "Earth Space Port", key: "EarthSpacePort" },
       { name: "Pacific Research Facility", key: "Pacific" },
     ],
-    travelType: "train",
     sectorDescriptions: {
-      NewYork: "A massive sprawling city...",
-      EarthSpacePort: "A medium sized structure space port...",
-      Pacific: "This massive floating research base..."
+      NewYork: "A massive sprawling city, a far cry from the concrete jungle of old. Its proximity to the Torta structures fuels its economy.",
+      EarthSpacePort: "A large cargo and civilian port that once fueled the Red War. Now a gateway for imports to Earth's mega cities.",
+      Pacific: "A massive floating research base that studies artifacts from the Kilko disaster and other megastructures across the system."
     }
   },
   Mars: {
-    description: "Orbiting Mars Colony Alpha...",
+    description: "Orbiting Mars Colony Alpha, a sprawling network of habitats and terraforming stations.",
+    travelType: "shuttle",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
+      { name: "Colony Core", key:"ColonyCore" },
       { name: "Terraforming Fields", key: "TerraformingFields" },
       { name: "Ancient Vault", key: "AncientVault" },
     ],
-    travelType: "shuttle",
     sectorDescriptions: {
-      TerraformingFields: "The Terraforming Fields are vast areas...",
-      AncientVault: "An ancient vault carved deep into Martian rock..."
+      ColonuCore: "The beating heart of the terrafomring effort, its home to many many shops and homes its basically a giant underground city and one of the few that survived the kilko diaster and the mega structure that turned mars red again",
+      TerraformingFields: "Engineers work here to make Mars habitable. Machinery hums endlessly, reshaping the planet.",
+      AncientVault: "An ancient vault emerged during the Kilko disaster. It wiped out cities, turned back time, and turned Mars red again."
     }
   },
-  // Add Europa, Jupiter, Vega, Andromeda following the same pattern...
+  Europa: {
+    description: "Orbiting Europa Research Base, a scientific station monitoring the icy moon’s hidden ocean.",
+    travelType: "rover",
+    subDestinations: [
+      { name: "Return to Ship", key: "Return" },
+      { name: "Research Base", key: "ResearchBase", type: "rover" },
+      { name: "Ground Camp", key: "GroundCamp" },
+      { name: "Ruins", key: "Ruins" },
+    ],
+    sectorDescriptions: {
+      ResearchBase: "A hub of scientific activity focused on Europa’s ice crust and subsurface ocean, while it studies the local ecosystem of europa it mostly studies the mega strcture beneath the ice",
+      GroundCamp: "A rugged outpost supporting field teams on Europa's frozen surface. Weather makes it treacherous and dangerous at the best of times, it's built around an entrance to the mega strcture",
+      Ruins: "A hidden megastructure buried under Europa's ice. It may predate all known civilizations, it is in reality, the entire moon of europa, the mega structure is merely frozen over, humanity continues to try and gain entrance."
+    }
+  },
+  Jupiter: {
+    description: "Orbiting the Jupiter Orbital Station, home to massive energy collectors and system logistics control.",
+    subDestinations: [
+      { name: "Return to Ship", key: "Return" },
+      { name: "Storm Observatory", key: "StormObservatory", type: "shuttle" },
+      { name: "Gas Harvesting Platform", key: "GasHarvester", type: "shuttle" },
+      { name: "Research Array", key: "ResearchArray", type: "drone" },
+      { name: "Deep Core Relay", key: "CoreRelay", type: "shuttle" },
+      { name: "Excavation Platforms", key: "ExcavationPlatforms", type: "shuttle" },
+    ],
+    sectorDescriptions: {
+      StormObservatory: "Observes Jupiter’s massive storms from a floating observatory high in the atmosphere, it adjusts the many inhabited stations to avoid the worst of the storms",
+      GasHarvester: "Harvests gases for energy across the solar system. Essential for fueling outer colonies.",
+      ResearchArray: "Deployed sensor nodes study Jupiter’s magnetic field and particle activity.",
+      CoreRelay: "A relay hub sunk into Jupiter’s atmosphere, stabilizing communications for deep space.",
+      ExcavationPlatforms: "Mining platforms explore the gas layers for signs of ancient megastructures."
+    }
+  },
+  Vega: {
+    description: "Orbiting Vega Prime, a vibrant star system hub with bustling orbital trade rings.",
+    subDestinations: [
+      { name: "Return to Ship", key: "Return" },
+      { name: "Capital City", key: "CapitalCity", type: "shuttle" },
+      { name: "Orbital Trade Ring", key: "OrbitalTradeRing", type: "orbit" },
+      { name: "Stellar Observation Spire", key: "StellarObservationSpire", type: "orbit" },
+      { name: "Crystal Canyon Outpost", key: "CrystalCanyonOutpost", type: "shuttle" },
+    ],
+    sectorDescriptions: {
+      CapitalCity: "A neon-lit metropolis on Vega Prime. One of the few places untouched by the Kilko disaster.",
+      OrbitalTradeRing: "A massive commercial hub that facilitates interstellar trade and commerce.",
+      StellarObservationSpire: "An observation tower that first detected the megastructures in the Sol system.",
+      CrystalCanyonOutpost: "A mining colony in crystal canyons. Vital for extracting rare minerals for technology."
+    }
+  },
+  Andromeda: {
+    description: "Orbiting the Andromeda Outpost, a forward base for deep space exploration beyond the solar system, its the closetest the andromada intitive ever got to andromada",
+    travelType: "shuttle",
+    subDestinations: [
+      { name: "Return to Ship", key: "Return" },
+      { name: "Forward Recon Station", key: "ForwardRecon", type: "drone" },
+      { name: "Black Spire Relay", key: "BlackSpire" },
+      { name: "Xeno Archives", key: "XenoArchives", type: "shuttle" },
+    ],
+    sectorDescriptions: {
+      ForwardRecon: "An automated station monitoring deep space anomalies and potential threats beyond known systems.",
+      BlackSpire: "A dark communications relay built into a jagged asteroid. It relays messages across galaxies.",
+      XenoArchives: "A secure vault of ancient alien texts, relics, and data acquired from across the void."
+    }
+  }
 };
-
-// Flatten all subdestination keys for quick validation
-const getAllSubKeys = () =>
-  Object.values(destinationConfigs).flatMap(cfg => cfg.subDestinations?.map(d => d.key) || []);
 
 // =======================
 // Core Functions
@@ -88,7 +149,6 @@ function createButtons(destinations) {
     btn.textContent = dest.name;
     btn.dataset.dest = dest.key;
     destList.appendChild(btn);
-
     btn.addEventListener('click', () => handleDestinationClick(dest, btn));
   });
 }
@@ -100,7 +160,6 @@ function handleDestinationClick(dest, btn) {
   const isReturn = dest.key === 'Return';
   const isMainDest = mainDestinations.some(d => d.key === dest.key);
 
-  // Return to main
   if (isReturn) {
     currentLocation = null;
     createButtons(mainDestinations);
@@ -108,7 +167,6 @@ function handleDestinationClick(dest, btn) {
     return;
   }
 
-  // Entering a main hub
   if (config?.subDestinations && currentLocation === null) {
     currentLocation = dest.key;
     appendLog(`System: ${config.description}`);
@@ -117,13 +175,11 @@ function handleDestinationClick(dest, btn) {
     return;
   }
 
-  // Sub-destination travel
   if (currentLocation && config?.subDestinations?.some(d => d.key === dest.key)) {
     travelToSubDestination(dest, btn, config);
     return;
   }
 
-  // Zero-point travel to main destination (no sub-menu)
   if (isMainDest) {
     travelToMainDestination(dest, btn);
     return;
@@ -141,17 +197,20 @@ function travelToMainDestination(dest, btn) {
 
 function travelToSubDestination(dest, btn, config) {
   beginTravel(btn);
-
   const description = config.sectorDescriptions?.[dest.key];
   const travelType = dest.type || config.travelType || 'shuttle';
-  const travelLabel = travelType === 'drone' ? 'Deploying drone' :
-                      travelType === 'orbit' ? 'Initiating orbital alignment' :
-                      `Boarding the ${travelType}`;
+
+  const travelLabel = {
+    drone: "Deploying drone",
+    orbit: "Initiating orbital alignment",
+    rover: "Boarding the rover",
+    shuttle: "Boarding the shuttle",
+    train: "Boarding the train"
+  }[travelType] || "Traveling";
 
   appendLog(`System: ${travelLabel} to ${dest.name}...`);
 
   const delay = travelType === 'drone' ? 2000 : 3000;
-
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     if (description) appendLog(description);
@@ -188,4 +247,3 @@ onBtn.addEventListener('click', () => {
   appendLog("System: Welcome, Captain. Please select a destination.");
   createButtons(mainDestinations);
 });
-
