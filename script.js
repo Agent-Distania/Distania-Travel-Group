@@ -30,7 +30,7 @@ const mainDestinations = [
 
 const destinationConfigs = {
   Earth: {
-    description: "Orbiting Earth, the fractured home of humanity. The once-beautiful world lies in ruins due to the Kilko disaster...",
+    description: "Orbiting Earth, the fractured home of humanity. The once-beautiful world lies fractured, but humanity persists in the ruins of the kilko disaster",
     travelType: "train",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
@@ -39,9 +39,9 @@ const destinationConfigs = {
       { name: "Pacific Research Facility", key: "Pacific" },
     ],
     sectorDescriptions: {
-      NewYork: "A massive sprawling city, a far cry from the concrete jungle of old. Its proximity to the Torta structures fuels its economy.",
-      EarthSpacePort: "A large cargo and civilian port that once fueled the Red War. Now a gateway for imports to Earth's mega cities.",
-      Pacific: "A massive floating research base that studies artifacts from the Kilko disaster and other megastructures across the system."
+      NewYork: "A massive sprawling city, a far cry from the concrete jungle of old, its more spread out layout in the modern day after its rebuilding has brought new york into the modern day. Its proximity to the Torta structures fuels its economy.",
+      EarthSpacePort: "A large cargo and civilian port that once fueled the Red War, its defenses await an enemy long since defeated. Now a gateway for imports to Earth's mega cities.",
+      Pacific: "A massive floating research base that studies artifacts from the Kilko disaster and other megastructures across the system, its the main research hub for humanity but its reputation has been tarnished by the kilko disaster"
     }
   },
   Mars: {
@@ -69,7 +69,7 @@ const destinationConfigs = {
       { name: "Ruins", key: "Ruins" },
     ],
     sectorDescriptions: {
-      ResearchBase: "A hub of scientific activity focused on Europa’s ice crust and subsurface ocean.",
+      ResearchBase: "A hub of scientific activity focused on Europa’s ice crust and subsurface ocean, it has massive subsurface tunnels that lead to the mega structure below ending in a mini city sized air pocket where they work.",
       GroundCamp: "A rugged outpost supporting field teams. Built around an entrance to the megastructure.",
       Ruins: "A hidden megastructure buried under Europa's ice. It may predate all known civilizations."
     }
