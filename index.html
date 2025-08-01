@@ -65,25 +65,25 @@
       { name: "Return to Ship", key: "Return" },
       { name: "Colony Core", key: "ColonyCore" },
       { name: "Terraforming Fields", key: "Terraforming" },
-      { name: "Ancient Vault", key: "Vault" },
+      { name: "Ancient Vault", key: "AncientVault" },
     ];
 
     const earthSectorDescriptions = {
-      NewYork: "A massive sprawling city... fueled by exploration of the Torta structures.",
-      EarthSpacePort: "A medium-sized port... modern day handles cargo for post-Kilko megacities.",
-      Pacific: "A floating research base... studying structures from across the solar system.",
+      NewYork: "A massive sprawling city...",
+      EarthSpacePort: "A medium sized structure space port...",
+      Pacific: "This massive floating research base..."
     };
 
     const europaSectorDescriptions = {
-      ResearchBase: "The Europa Research Base... studying the crust and hidden ocean.",
-      GroundCamp: "A rugged surface outpost... supporting field teams on the ice.",
-      Ruins: "Mysterious ancient ruins... hinting at a long-lost presence beneath the ice.",
+      ResearchBase: "The Europa Research Base is a hub of scientific activity...",
+      GroundCamp: "A rugged outpost established on Europa's frozen surface...",
+      Ruins: "Ancient, mysterious ruins scattered beneath the ice..."
     };
 
     const marsSectorDescriptions = {
-      ColonyCore: "The heart of Mars' urban colony life, the Colony Core is bustling with commerce, administration, and residential domes under a protective shield from the harsh Martian elements.",
-      Terraforming: "Stretching for kilometers, the Terraforming Fields hum with the machinery slowly transforming the planet into a habitable environment. Drones buzz constantly, and the air smells faintly of ozone.",
-      Vault: "The Ancient Vault lies beneath a Martian ridge, sealed for millennia. Now cracked open by archeologists, it offers more questions than answers — and possibly danger."
+      ColonyCore: "The heart of Mars' urban colony life, Colony Core is a pressurized metropolis...",
+      Terraforming: "Stretching for kilometers, the Terraforming Fields hum with atmospheric generators and soil converters...",
+      AncientVault: "The Ancient Vault lies beneath a Martian ridge, sealed behind cryptic mechanisms..."
     };
 
     function isSubDestination(key, arr) {
@@ -130,14 +130,13 @@
           }
 
           const allButtons = destList.querySelectorAll('button');
-          traveling = true;
           allButtons.forEach(b => {
             b.disabled = true;
             b.classList.remove('selected');
           });
           btn.classList.add('selected');
+          traveling = true;
 
-          // Earth train travel
           if (currentLocation === 'EarthHub' && isSubDestination(dest.key, earthSubDestinations)) {
             appendLog(`System: Boarding the train to ${dest.name}...`);
             setTimeout(() => {
@@ -150,7 +149,6 @@
             return;
           }
 
-          // Europa rover travel
           if (currentLocation === 'EuropaHub' && isSubDestination(dest.key, europaSubDestinations)) {
             appendLog(`System: Boarding the rover to ${dest.name}...`);
             setTimeout(() => {
@@ -163,9 +161,8 @@
             return;
           }
 
-          // Mars shuttle travel — apply to all Mars sub-destinations except Return
-          if (currentLocation === 'MarsHub' && dest.key !== 'Return' && isSubDestination(dest.key, marsSubDestinations)) {
-            appendLog(`System: Launching the shuttle to ${dest.name}...`);
+          if (currentLocation === 'MarsHub' && isSubDestination(dest.key, marsSubDestinations)) {
+            appendLog(`System: Boarding the shuttle to ${dest.name}...`);
             setTimeout(() => {
               appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
               if (marsSectorDescriptions[dest.key]) appendLog(marsSectorDescriptions[dest.key]);
@@ -176,7 +173,6 @@
             return;
           }
 
-          // Default: zero-point travel for main destinations
           appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
           setTimeout(() => {
             appendLog(`System: Zero-point travel finished, welcome to ${dest.name}. Enjoy your expedition.`);
@@ -195,16 +191,16 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    onBtn.addEventListener('click', () => {
-      loginScreen.classList.add('hidden');
-      travelScreen.classList.remove('hidden');
-      appendLog('System: Welcome, Captain. Please select a destination.');
-      populateDestinations(mainDestinations);
-    });
-
     function populateDestinations(destinations) {
       createButtons(destinations);
     }
+
+    onBtn.addEventListener('click', () => {
+      loginScreen.classList.add('hidden');
+      travelScreen.classList.remove('hidden');
+      appendLog("System: Welcome, Captain. Please select a destination.");
+      populateDestinations(mainDestinations);
+    });
   </script>
 </body>
 </html>
