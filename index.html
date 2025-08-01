@@ -137,7 +137,7 @@
           });
           btn.classList.add('selected');
 
-          // Earth train
+          // Earth train travel
           if (currentLocation === 'EarthHub' && isSubDestination(dest.key, earthSubDestinations)) {
             appendLog(`System: Boarding the train to ${dest.name}...`);
             setTimeout(() => {
@@ -150,7 +150,7 @@
             return;
           }
 
-          // Europa rover
+          // Europa rover travel
           if (currentLocation === 'EuropaHub' && isSubDestination(dest.key, europaSubDestinations)) {
             appendLog(`System: Boarding the rover to ${dest.name}...`);
             setTimeout(() => {
@@ -163,8 +163,8 @@
             return;
           }
 
-          // Mars shuttle
-          if (currentLocation === 'MarsHub' && isSubDestination(dest.key, marsSubDestinations)) {
+          // Mars shuttle travel — apply to all Mars sub-destinations except Return
+          if (currentLocation === 'MarsHub' && dest.key !== 'Return' && isSubDestination(dest.key, marsSubDestinations)) {
             appendLog(`System: Launching the shuttle to ${dest.name}...`);
             setTimeout(() => {
               appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
@@ -176,7 +176,7 @@
             return;
           }
 
-          // Default: Zero-point jump
+          // Default: zero-point travel for main destinations
           appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
           setTimeout(() => {
             appendLog(`System: Zero-point travel finished, welcome to ${dest.name}. Enjoy your expedition.`);
