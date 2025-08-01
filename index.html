@@ -109,6 +109,12 @@
       CrystalCanyonOutpost: "A remote outpost nestled in the beautiful but treacherous Crystal Canyon, home to scientists and miners."
     };
 
+    // Cache sub-destination keys for group checks
+    const earthKeys = earthSubDestinations.map(d => d.key);
+    const europaKeys = europaSubDestinations.map(d => d.key);
+    const marsKeys = marsSubDestinations.map(d => d.key);
+    const vegaKeys = vegaSubDestinations.map(d => d.key);
+
     function isSubDestination(key, arr) {
       return arr.some(d => d.key === key);
     }
@@ -165,8 +171,8 @@
 
           // Earth sub-destination travel (train)
           if (
-            currentLocation === 'EarthHub' &&
-            isSubDestination(dest.key, earthSubDestinations)
+            (currentLocation === 'EarthHub' || earthKeys.includes(currentLocation)) &&
+            earthKeys.includes(dest.key)
           ) {
             traveling = true;
             const allButtons = destList.querySelectorAll('button');
@@ -193,8 +199,8 @@
 
           // Europa sub-destination travel (rover only for Research Base)
           if (
-            currentLocation === 'EuropaHub' &&
-            isSubDestination(dest.key, europaSubDestinations)
+            (currentLocation === 'EuropaHub' || europaKeys.includes(currentLocation)) &&
+            europaKeys.includes(dest.key)
           ) {
             traveling = true;
             const allButtons = destList.querySelectorAll('button');
@@ -232,8 +238,8 @@
 
           // Mars sub-destination travel (shuttle)
           if (
-            currentLocation === 'MarsHub' &&
-            isSubDestination(dest.key, marsSubDestinations)
+            (currentLocation === 'MarsHub' || marsKeys.includes(currentLocation)) &&
+            marsKeys.includes(dest.key)
           ) {
             traveling = true;
             const allButtons = destList.querySelectorAll('button');
@@ -260,8 +266,8 @@
 
           // Vega sub-destination travel
           if (
-            currentLocation === 'VegaHub' &&
-            isSubDestination(dest.key, vegaSubDestinations)
+            (currentLocation === 'VegaHub' || vegaKeys.includes(currentLocation)) &&
+            vegaKeys.includes(dest.key)
           ) {
             traveling = true;
             const allButtons = destList.querySelectorAll('button');
