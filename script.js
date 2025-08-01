@@ -39,9 +39,9 @@ const destinationConfigs = {
       { name: "Pacific Research Facility", key: "Pacific" },
     ],
     sectorDescriptions: {
-      NewYork: "A massive sprawling city...",
-      EarthSpacePort: "A large cargo and civilian port...",
-      Pacific: "A massive floating research base..."
+      NewYork: "A massive sprawling city, a far cry from the concrete jungle of old. Its proximity to the Torta structures fuels its economy.",
+      EarthSpacePort: "A large cargo and civilian port that once fueled the Red War. Now a gateway for imports to Earth's mega cities.",
+      Pacific: "A massive floating research base that studies artifacts from the Kilko disaster and other megastructures across the system."
     }
   },
   Mars: {
@@ -54,13 +54,13 @@ const destinationConfigs = {
       { name: "Ancient Vault", key: "AncientVault" },
     ],
     sectorDescriptions: {
-      ColonyCore: "The beating heart of the terraforming effort.",
-      TerraformingFields: "Engineers work here to make Mars habitable.",
-      AncientVault: "An ancient vault emerged during the Kilko disaster."
+      ColonyCore: "The beating heart of the terraforming effort, home to shops and homes. One of the few cities that survived the Kilko disaster.",
+      TerraformingFields: "Engineers work here to make Mars habitable. Machinery hums endlessly, reshaping the planet into its once green self as they avoid the mars mega structure",
+      AncientVault: "An ancient vault emerged during the Kilko disaster. It wiped out cities, turned back time, and turned Mars red again."
     }
   },
   Europa: {
-    description: "Orbiting Europa Research Base...",
+    description: "Orbiting Europa Research Base, a scientific station monitoring the icy moon’s hidden ocean.",
     travelType: "rover",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
@@ -69,13 +69,13 @@ const destinationConfigs = {
       { name: "Ruins", key: "Ruins" },
     ],
     sectorDescriptions: {
-      ResearchBase: "A hub of scientific activity on Europa.",
-      GroundCamp: "A rugged outpost supporting field teams.",
-      Ruins: "A hidden megastructure beneath Europa's ice."
+      ResearchBase: "A hub of scientific activity focused on Europa’s ice crust and subsurface ocean.",
+      GroundCamp: "A rugged outpost supporting field teams. Built around an entrance to the megastructure.",
+      Ruins: "A hidden megastructure buried under Europa's ice. It may predate all known civilizations."
     }
   },
   Jupiter: {
-    description: "Orbiting Jupiter Orbital Station...",
+    description: "Orbiting the Jupiter Orbital Station, home to massive energy collectors and system logistics control.",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
       { name: "Storm Observatory", key: "StormObservatory", type: "shuttle" },
@@ -85,15 +85,15 @@ const destinationConfigs = {
       { name: "Excavation Platforms", key: "ExcavationPlatforms", type: "shuttle" },
     ],
     sectorDescriptions: {
-      StormObservatory: "Observes Jupiter’s storms.",
-      GasHarvester: "Harvests fuel from Jupiter's gases.",
-      ResearchArray: "Sensor nodes study magnetic fields.",
-      CoreRelay: "Long-range communications relay.",
-      ExcavationPlatforms: "Mining platforms below the gas layers."
+      StormObservatory: "Observes Jupiter’s massive storms and protects orbital stations from said stroms by adjusting how close they are to the surface",
+      GasHarvester: "Harvests gases for fuel. Vital to all logistics and ships.",
+      ResearchArray: "Sensor nodes study Jupiter's magnetic field, the array is entirely automated and drones can be seen darting between the various sensors",
+      CoreRelay: "Deep in the atmosphere, this hub maintains long-range communication with mega strcuture exploration teams and the stations",
+      ExcavationPlatforms: "Digs into Jupiter’s gas layers for its ancient megastructure, a decaying massive ring deep in the gas, its purpose unknown and one of the few humanity is capable of exploring"
     }
   },
   Vega: {
-    description: "Orbiting Vega Prime...",
+    description: "Orbiting Vega Prime, a vibrant star system hub with bustling orbital trade rings.",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
       { name: "Capital City", key: "CapitalCity", type: "shuttle" },
@@ -102,14 +102,14 @@ const destinationConfigs = {
       { name: "Crystal Canyon Outpost", key: "CrystalCanyonOutpost", type: "shuttle" },
     ],
     sectorDescriptions: {
-      CapitalCity: "Neon metropolis of Vega Prime.",
-      OrbitalTradeRing: "Sprawling orbital commerce hub.",
-      StellarObservationSpire: "Where the megastructures were discovered.",
-      CrystalCanyonOutpost: "Mineral extraction base in crystal canyons."
+      CapitalCity: "A neon metropolis untouched by the Kilko disaster.",
+      OrbitalTradeRing: "Commerce and supply hub for Vega Prime.",
+      StellarObservationSpire: "This is where the megastructures were first discovered.",
+      CrystalCanyonOutpost: "Gem mines that power everything from ships to phones."
     }
   },
   Andromeda: {
-    description: "Forward base near Andromeda.",
+    description: "Orbiting the Andromeda Outpost, a forward base for deep space exploration, the closet the andromeda intitive ever got to andromeda",
     travelType: "shuttle",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
@@ -118,9 +118,9 @@ const destinationConfigs = {
       { name: "Xeno Archives", key: "XenoArchives", type: "shuttle" },
     ],
     sectorDescriptions: {
-      ForwardRecon: "Autonomous monitoring station.",
-      BlackSpire: "Massive dark relay array.",
-      XenoArchives: "Vault of ancient alien records."
+      ForwardRecon: "An unmanned station monitoring deep space anomalies.",
+      BlackSpire: "A jagged relay station transmitting signals between galaxies.",
+      XenoArchives: "Vault of alien artifacts and encrypted data."
     }
   }
 };
