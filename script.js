@@ -14,7 +14,7 @@ const logEl = document.getElementById('log');
 // =======================
 let traveling = false;
 let currentLocation = null;
-let currentHub = null; // NEW
+let currentHub = null;
 
 // =======================
 // Configuration Data
@@ -157,7 +157,6 @@ function createButtons(destinations) {
 function handleDestinationClick(dest, btn) {
   if (traveling) return;
 
-  const config = destinationConfigs[currentHub] || destinationConfigs[dest.key];
   const isReturn = dest.key === 'Return';
   const isMainDest = mainDestinations.some(d => d.key === dest.key);
 
@@ -169,7 +168,9 @@ function handleDestinationClick(dest, btn) {
     return;
   }
 
-  if (config?.subDestinations && currentHub === null) {
+  // Entering a hub
+  if (isMainDest && !currentHub) {
+    const config = destinationConfigs[dest.key];
     currentHub = dest.key;
     currentLocation = dest.key;
     appendLog(`System: ${config.description}`);
@@ -178,11 +179,15 @@ function handleDestinationClick(dest, btn) {
     return;
   }
 
-  if (currentHub && config?.subDestinations?.some(d => d.key === dest.key)) {
+  // Inside a hub, selecting sub-destination
+  const config = destinationConfigs[currentHub];
+  const isSub = config?.subDestinations?.some(d => d.key === dest.key);
+  if (currentHub && isSub) {
     travelToSubDestination(dest, btn, config);
     return;
   }
 
+  // Default: travel to main destination (without sub menu)
   if (isMainDest) {
     travelToMainDestination(dest, btn);
     return;
@@ -217,7 +222,7 @@ function travelToSubDestination(dest, btn, config) {
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     if (description) appendLog(description);
-    endTravel(dest.key, currentHub); // keep hub context
+    endTravel(dest.key, currentHub); // keep hub
   }, delay);
 }
 
