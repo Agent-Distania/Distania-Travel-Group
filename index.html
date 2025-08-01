@@ -51,6 +51,16 @@
       { name: "Vega Prime", key: "Vega" },
     ];
 
+    // Orbital descriptions for main destinations
+    const orbitalDescriptions = {
+      Earth: "Orbiting Earth Command Center, a massive hub controlling interplanetary travel and defense.",
+      Mars: "Orbiting Mars Colony Alpha, a sprawling network of habitats and terraforming stations.",
+      Jupiter: "Orbiting the Jupiter Orbital Station, the largest space station in the system, serving as a trade and military outpost.",
+      Europa: "Orbiting Europa Research Base, a scientific station monitoring the icy moon's hidden ocean.",
+      Andromeda: "Orbiting the Andromeda Outpost, a forward base for deep space exploration beyond the solar system.",
+      Vega: "Orbiting Vega Prime, a vibrant star system hub with bustling orbital trade rings."
+    };
+
     // Earth sub-destinations
     const earthSubDestinations = [
       { name: "Return to Ship", key: "Return" },
@@ -140,6 +150,7 @@
           // Earth submenu
           if (dest.key === 'Earth') {
             currentLocation = 'EarthHub';
+            appendLog(`System: Orbiting Earth Command Center. ${orbitalDescriptions.Earth}`);
             populateDestinations(earthSubDestinations);
             appendLog("System: Accessing Earth sectors. Select your sub-destination.");
             return;
@@ -148,6 +159,7 @@
           // Europa submenu
           if (dest.key === 'Europa') {
             currentLocation = 'EuropaHub';
+            appendLog(`System: Orbiting Europa Research Base. ${orbitalDescriptions.Europa}`);
             populateDestinations(europaSubDestinations);
             appendLog("System: Accessing Europa sectors. Select your sub-destination.");
             return;
@@ -156,6 +168,7 @@
           // Mars submenu
           if (dest.key === 'Mars') {
             currentLocation = 'MarsHub';
+            appendLog(`System: Orbiting Mars Colony Alpha. ${orbitalDescriptions.Mars}`);
             populateDestinations(marsSubDestinations);
             appendLog("System: Accessing Mars sectors. Select your sub-destination.");
             return;
@@ -164,8 +177,22 @@
           // Vega submenu - show orbital description first, then sub-destinations
           if (dest.key === 'Vega') {
             currentLocation = 'VegaHub';
-            appendLog(`System: Orbiting Vega Prime. ${vegaSectorDescriptions.OrbitalTradeRing}`);
+            appendLog(`System: Orbiting Vega Prime. ${orbitalDescriptions.Vega}`);
             populateDestinations(vegaSubDestinations);
+            return;
+          }
+
+          // Jupiter main destination - no sub destinations, just orbital log
+          if (dest.key === 'Jupiter') {
+            currentLocation = 'JupiterOrbital';
+            appendLog(`System: Orbiting Jupiter Orbital Station. ${orbitalDescriptions.Jupiter}`);
+            return;
+          }
+
+          // Andromeda main destination - no sub destinations, just orbital log
+          if (dest.key === 'Andromeda') {
+            currentLocation = 'AndromedaOutpost';
+            appendLog(`System: Orbiting Andromeda Outpost. ${orbitalDescriptions.Andromeda}`);
             return;
           }
 
