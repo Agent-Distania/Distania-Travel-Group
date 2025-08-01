@@ -38,7 +38,7 @@
           <h2 id="emailTitle" style="margin-top:0;">[ECS] Mission Briefing</h2>
           <div id="emailBodyWrapper" style="flex:1; display:flex; flex-direction:column; gap:0.5rem;">
             <p id="emailBody" style="margin:0; line-height:1.3;">
-              Welcome recruit to the Exodus Civil Service or ECS. We work for the unified governments to explore the mega structures that arrived during the Kilko disaster. We must discover who built them, their purpose, how old they are, and most importantly, why they are here, god luck explorer, your ship is waiting, when you get there press the On button to begin.
+              Welcome recruit to the Exodus Civil Service or ECS. We work for the unified governments to explore the mega structures that arrived during the Kilko disaster. We must discover who built them, their purpose, how old they are, and most importantly, why they are here, god luck explorer, your ship is waiting, when you get there press the on button to begin.
             </p>
             <p style="font-style: italic; margin:0;">– Chief Clair</p>
           </div>
@@ -46,6 +46,7 @@
       </div>
       <div style="margin-top:0.5rem; display:flex; justify-content: space-between; align-items:center;">
         <div style="font-size:0.85rem;">Select an email to read. Close (✕) when ready to proceed to the terminal.</div>
+        <button id="proceedBtn" class="btn" style="white-space: nowrap;">Acknowledge</button>
       </div>
     </div>
 
@@ -77,6 +78,7 @@
     const startupScreen = document.getElementById('startupScreen');
     const loginScreen = document.getElementById('loginScreen');
     const travelScreen = document.getElementById('travelScreen');
+    const proceedBtn = document.getElementById('proceedBtn');
     const closeStartup = document.getElementById('closeStartup');
     const onBtn = document.getElementById('onBtn');
     const destList = document.querySelector('.dest-list');
@@ -92,7 +94,7 @@
     const emails = {
       mission: {
         title: "[ECS] Mission Briefing",
-        body: "Welcome recruit to the Exodus Civil Service or ECS, we work for the unified governments to explore the mega structures that arrived during the kilko disaster, we must discover who built them, their purpose, how old they are, and most importantly, why they are here, good luck explorer, your ship is waiting, when you get there press the on button to begin."
+        body: "Welcome recruit to the Exodus Civil Service or ECS, we work for the unified governments to explore the mega structures that arrived during the kilko disaster, we must discover who built them, their purpose, how old they are, and most importantly, why they are here, god luck explorer, your ship is waiting, when you get there press the on button to begin. – Chief Clair"
       },
       update: {
         title: "Update from Chief Clair",
@@ -476,14 +478,18 @@
     function selectEmail(id) {
       const email = emails[id];
       if (!email) return;
+      // highlight selection
       document.querySelectorAll('.email-item').forEach(el => {
         el.style.background = el.dataset.id === id ? "rgba(15,255,15,0.05)" : "transparent";
       });
       emailTitle.textContent = email.title;
+      // split signature if present
       const parts = email.body.split("–");
       if (parts.length > 1) {
         emailBody.textContent = parts[0].trim();
+        // append signature separately
         const sigText = "–" + parts.slice(1).join("–").trim();
+        // Remove existing signature if any
         const existingSig = document.querySelector("#emailBodyWrapper .signature");
         if (existingSig) existingSig.remove();
         const sig = document.createElement("p");
@@ -491,7 +497,8 @@
         sig.style.fontStyle = "italic";
         sig.style.margin = "0";
         sig.classList.add("signature");
-        document.getElementById("emailBodyWrapper").appendChild(sig);
+        const wrapper = document.getElementById("emailBodyWrapper");
+        wrapper.appendChild(sig);
       } else {
         emailBody.textContent = email.body;
         const existingSig = document.querySelector("#emailBodyWrapper .signature");
@@ -508,7 +515,18 @@
       selectEmail(item.dataset.id);
     });
 
-    // Startup flow: close startup shows login
+    function appendLog(text) {
+      const line = document.createElement('div');
+      line.textContent = text;
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // Startup flow: go to login screen via buttons
+    proceedBtn.addEventListener('click', () => {
+      startupScreen.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+    });
     closeStartup.addEventListener('click', () => {
       startupScreen.classList.add('hidden');
       loginScreen.classList.remove('hidden');
@@ -524,13 +542,6 @@
 
     function populateDestinations(destinations) {
       createButtons(destinations);
-    }
-
-    function appendLog(text) {
-      const line = document.createElement('div');
-      line.textContent = text;
-      logEl.appendChild(line);
-      logEl.scrollTop = logEl.scrollHeight;
     }
   </script>
 </body>
