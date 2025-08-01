@@ -58,6 +58,13 @@
       { name: "Pacific Research Facility", key: "Pacific" },
     ];
 
+    // Descriptions for each Earth sub-sector
+    const earthSectorDescriptions = {
+      NewYork: "A massive sprawling city, it's a far cry from the concrete jungle of old and has been significantly expanded to let the city breathe fresh air. It remains a popular tourist destination even in the age of space, and the exploration of the nearby Torta structures fuels the city with money.",
+      EarthSpacePort: "A medium sized structure space port wise, it still is massive and almost a mini city. Once upon a time it fueled the red war and the capture of the Minerva Object from hostile local wildlife on Europa. Its ancient defensive battlements gather dust as they lay in wait for a chance to finally prove themselves in a war long over. The space port in modern day is a large cargo and civilian port mostly taking on imports for the various mega cities that remain on Earth after the Kilko disaster.",
+      Pacific: "This massive floating research base takes in artifacts from the many structures that now call Earth home. This research base also studies the objects from the now hundreds of structures across the solar system and beyond. The clean white halls and blue halls hide the many experiments and studies going on deep within the facility."
+    };
+
     function createButtons(destinations) {
       destList.innerHTML = '<h2>Select Destination</h2>';
       destinations.forEach(dest => {
@@ -101,6 +108,10 @@
 
             setTimeout(() => {
               appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
+              // Show description after arrival if available
+              if (earthSectorDescriptions[dest.key]) {
+                appendLog(earthSectorDescriptions[dest.key]);
+              }
               traveling = false;
               currentLocation = dest.key;
               allButtons.forEach(b => b.disabled = false);
