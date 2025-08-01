@@ -18,11 +18,9 @@
     <!-- Travel Console Screen -->
     <div id="travelScreen" class="screen hidden">
       <div class="console">
-        <!-- Destination selection panel -->
         <div class="panel dest-list">
           <h2>Select Destination</h2>
         </div>
-        <!-- Navigation log panel -->
         <div class="panel">
           <h2>Navigation Log</h2>
           <div id="log" class="log"></div>
@@ -63,20 +61,33 @@
       { name: "Ruins", key: "Ruins" },
     ];
 
+    const marsSubDestinations = [
+      { name: "Return to Ship", key: "Return" },
+      { name: "Colony Core", key: "ColonyCore" },
+      { name: "Terraforming Fields", key: "Terraforming" },
+      { name: "Ancient Vault", key: "Vault" },
+    ];
+
     const earthSectorDescriptions = {
-      NewYork: "A massive sprawling city, it's a far cry from the concrete jungle of old and has been significantly expanded to let the city breathe fresh air. It remains a popular tourist destination even in the age of space, and the exploration of the nearby Torta structures fuels the city with money.",
-      EarthSpacePort: "A medium sized structure space port wise, it still is massive and almost a mini city. Once upon a time it fueled the red war and the capture of the Minerva Object from hostile local wildlife on Europa. Its ancient defensive battlements gather dust as they lay in wait for a chance to finally prove themselves in a war long over. The space port in modern day is a large cargo and civilian port mostly taking on imports for the various mega cities that remain on Earth after the Kilko disaster.",
-      Pacific: "This massive floating research base takes in artifacts from the many structures that now call Earth home. This research base also studies the objects from the now hundreds of structures across the solar system and beyond. The clean white halls and blue halls hide the many experiments and studies going on deep within the facility."
+      NewYork: "A massive sprawling city... fueled by exploration of the Torta structures.",
+      EarthSpacePort: "A medium-sized port... modern day handles cargo for post-Kilko megacities.",
+      Pacific: "A floating research base... studying structures from across the solar system.",
     };
 
     const europaSectorDescriptions = {
-      ResearchBase: "The europan research base is the main focal point of research on the mega structure, tens of thousands of people call this mini city home and work day in and day out to advance our understanding of the europan mega structure",
-      GroundCamp: "Surviving on the surface of europa has never been easy, this camp is built around a entrance to the europan mega structure as they actively try to bypass the asncient security systems",
-      Ruins: "The ruins beneath europa suggest the moon itself is a frozen over mega structure, ancient entrances have been found but have yet to be opened, the darkness beneath the ice is the mega structure, ongoing attempts at getting inside continue to this day."
+      ResearchBase: "The Europa Research Base... studying the crust and hidden ocean.",
+      GroundCamp: "A rugged surface outpost... supporting field teams on the ice.",
+      Ruins: "Mysterious ancient ruins... hinting at a long-lost presence beneath the ice.",
     };
 
-    function isSubDestination(key, array) {
-      return array.some(d => d.key === key);
+    const marsSectorDescriptions = {
+      ColonyCore: "The heart of Mars' urban colony life, the Colony Core is bustling with commerce, administration, and residential domes under a protective shield from the harsh Martian elements.",
+      Terraforming: "Stretching for kilometers, the Terraforming Fields hum with the machinery slowly transforming the planet into a habitable environment. Drones buzz constantly, and the air smells faintly of ozone.",
+      Vault: "The Ancient Vault lies beneath a Martian ridge, sealed for millennia. Now cracked open by archeologists, it offers more questions than answers — and possibly danger."
+    };
+
+    function isSubDestination(key, arr) {
+      return arr.some(d => d.key === key);
     }
 
     function createButtons(destinations) {
@@ -111,57 +122,70 @@
             return;
           }
 
-          // Earth train travel between subs
-          if (
-            isSubDestination(currentLocation, earthSubDestinations) &&
-            isSubDestination(dest.key, earthSubDestinations)
-          ) {
-            startTravel(dest, 'train', earthSectorDescriptions);
+          if (dest.key === 'Mars') {
+            currentLocation = 'MarsHub';
+            populateDestinations(marsSubDestinations);
+            appendLog("System: Accessing Mars sectors. Select your sub-destination.");
             return;
           }
 
-          // Europa rover travel between subs
-          if (
-            isSubDestination(currentLocation, europaSubDestinations) &&
-            isSubDestination(dest.key, europaSubDestinations)
-          ) {
-            startTravel(dest, 'rover', europaSectorDescriptions);
+          const allButtons = destList.querySelectorAll('button');
+          traveling = true;
+          allButtons.forEach(b => {
+            b.disabled = true;
+            b.classList.remove('selected');
+          });
+          btn.classList.add('selected');
+
+          // Earth train
+          if (currentLocation === 'EarthHub' && isSubDestination(dest.key, earthSubDestinations)) {
+            appendLog(`System: Boarding the train to ${dest.name}...`);
+            setTimeout(() => {
+              appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
+              if (earthSectorDescriptions[dest.key]) appendLog(earthSectorDescriptions[dest.key]);
+              traveling = false;
+              currentLocation = dest.key;
+              allButtons.forEach(b => b.disabled = false);
+            }, 3000);
             return;
           }
 
-          // Normal zero-point travel
-          startTravel(dest, 'zero');
+          // Europa rover
+          if (currentLocation === 'EuropaHub' && isSubDestination(dest.key, europaSubDestinations)) {
+            appendLog(`System: Boarding the rover to ${dest.name}...`);
+            setTimeout(() => {
+              appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
+              if (europaSectorDescriptions[dest.key]) appendLog(europaSectorDescriptions[dest.key]);
+              traveling = false;
+              currentLocation = dest.key;
+              allButtons.forEach(b => b.disabled = false);
+            }, 3000);
+            return;
+          }
+
+          // Mars shuttle
+          if (currentLocation === 'MarsHub' && isSubDestination(dest.key, marsSubDestinations)) {
+            appendLog(`System: Launching the shuttle to ${dest.name}...`);
+            setTimeout(() => {
+              appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
+              if (marsSectorDescriptions[dest.key]) appendLog(marsSectorDescriptions[dest.key]);
+              traveling = false;
+              currentLocation = dest.key;
+              allButtons.forEach(b => b.disabled = false);
+            }, 3000);
+            return;
+          }
+
+          // Default: Zero-point jump
+          appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
+          setTimeout(() => {
+            appendLog(`System: Zero-point travel finished, welcome to ${dest.name}. Enjoy your expedition.`);
+            traveling = false;
+            currentLocation = dest.key;
+            allButtons.forEach(b => b.disabled = false);
+          }, 3000);
         });
       });
-    }
-
-    function startTravel(dest, type, descriptions = {}) {
-      traveling = true;
-      const allButtons = destList.querySelectorAll('button');
-      allButtons.forEach(b => {
-        b.disabled = true;
-        b.classList.remove('selected');
-      });
-      const btn = [...allButtons].find(b => b.dataset.dest === dest.key);
-      if (btn) btn.classList.add('selected');
-
-      const vehicle = {
-        train: "Boarding the train",
-        rover: "Boarding the rover",
-        zero: "Initiating zero-point travel"
-      }[type];
-
-      appendLog(`System: ${vehicle} to ${dest.name}...`);
-
-      setTimeout(() => {
-        appendLog(`System: Arrived at ${dest.name}. Enjoy your expedition.`);
-        if (descriptions[dest.key]) {
-          appendLog(descriptions[dest.key]);
-        }
-        traveling = false;
-        currentLocation = dest.key;
-        allButtons.forEach(b => b.disabled = false);
-      }, 3000);
     }
 
     function appendLog(text) {
@@ -171,16 +195,16 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    function populateDestinations(destinations) {
-      createButtons(destinations);
-    }
-
     onBtn.addEventListener('click', () => {
       loginScreen.classList.add('hidden');
       travelScreen.classList.remove('hidden');
-      appendLog("System: Welcome, Captain. Please select a destination.");
+      appendLog('System: Welcome, Captain. Please select a destination.');
       populateDestinations(mainDestinations);
     });
+
+    function populateDestinations(destinations) {
+      createButtons(destinations);
+    }
   </script>
 </body>
 </html>
