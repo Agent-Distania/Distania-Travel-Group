@@ -86,6 +86,11 @@
     const emailTitle = document.getElementById('emailTitle');
     const emailBody = document.getElementById('emailBody');
 
+  closeStartup.addEventListener('click', () => {
+  startupScreen.classList.add('hidden');
+  loginScreen.classList.remove('hidden');
+  });
+
     let traveling = false;
     let currentLocation = null;
 
