@@ -111,10 +111,6 @@ h1 {
   text-shadow: 0 0 4px rgba(0,255,140,0.3);
 }
 
-#log > div {
-  margin-bottom: 0.75rem; /* Adjust this value for more or less spacing */
-}
-
 .console {
   width: 100%;
   height: 100%;
@@ -140,4 +136,9 @@ h1 {
   padding-bottom: 0.5rem;
   width: 100%;
   text-shadow: 0 0 6px rgba(15,255,15,0.4);
+}
+
+/* Add spacing between individual log messages */
+#log > div {
+  margin-bottom: 0.5rem;
 }
