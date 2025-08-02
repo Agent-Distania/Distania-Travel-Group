@@ -137,6 +137,8 @@ h1 {
   width: 100%;
   text-shadow: 0 0 6px rgba(15,255,15,0.4);
 }
+
+
 #loreModal {
   position: fixed;
   top: 0;
