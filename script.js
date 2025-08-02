@@ -137,11 +137,11 @@ const ambientDialogue = {
     { speaker: "Trader", line: "Shipping lanes are still backed up. Blame the Torta storm." },
     { speaker: "Civilian", line: "You ever wonder what’s *under* the megastructure?" },
     { speaker: "Courier", line: "My route got rerouted again... Torta tunnel issues." },
-    { speaker: "Patrol", line: "Keep moving. Streets are restricted beyond block 5." }
+    { speaker: "Patrolman", line: "Keep moving. Streets are restricted beyond block 5." }
   ],
   EarthSpacePort: [
     { speaker: "EarthSpacePort - Dockmaster", line: "Cargo bay 3 is sealed. Ready for next drop." },
-    { speaker: "EarthSpacePort - Security", line: "Keep an eye on bay 7. Something's off." },
+    { speaker: "EarthSpacePort - Security Guard", line: "Keep an eye on bay 7. Something's off." },
     { speaker: "EarthSpacePort - Engineer", line: "Old warships still give me the chills." },
     { speaker: "EarthSpacePort - Pilot", line: "A Venus run beats this chaos any day." },
     { speaker: "EarthSpacePort - Load Chief", line: "No one's touched bay 12 in hours. Go check." }
