@@ -39,11 +39,20 @@
       </div>
     </div>
   </div>
-<section id="loreLibrary" style="margin-top:20px;">
-  <h3>Lore Library</h3>
-  <ul id="loreList" style="list-style: none; padding-left: 0;"></ul>
-</section>
+<!-- 📘 Lore Button -->
+<button id="openLoreBtn" style="position: absolute; top: 10px; right: 10px;">Lore Library</button>
 
+<!-- 📖 Lore Library Modal -->
+<div id="loreModal" class="hidden">
+  <div class="lore-header">
+    <h2>Lore Library</h2>
+    <button id="closeLoreBtn">✕</button>
+  </div>
+  <div class="lore-body">
+    <div class="lore-list" id="loreList"></div>
+    <div class="lore-content" id="loreContent">Select a lore entry to view its contents.</div>
+  </div>
+</div>
 
 
   <script src="script.js"></script>
