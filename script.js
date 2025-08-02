@@ -41,9 +41,9 @@ const destinationConfigs = {
       { name: "Pacific Research Facility", key: "Pacific" },
     ],
     sectorDescriptions: {
-      NewYork: "A massive sprawling city, a far cry from the concrete jungle of old...",
-      EarthSpacePort: "A large cargo and civilian port that once fueled the Red War...",
-      Pacific: "A massive floating research base that studies artifacts from the Kilko disaster..."
+      NewYork: "A massive sprawling city, a far cry from the concrete jungle of old, its more spread out layout in the modern day after its rebuilding has brought new york into the modern day. Its proximity to the Torta structures fuels its economy.",
+      EarthSpacePort: "A large cargo and civilian port that once fueled the Red War, its defenses await an enemy long since defeated. Now a gateway for imports to Earth's mega cities.",
+      Pacific: "A massive floating research base that studies artifacts from the Kilko disaster and other megastructures across the system, its the main research hub for humanity but its reputation has been tarnished by the kilko disaster"
     }
   },
   Mars: {
@@ -56,9 +56,9 @@ const destinationConfigs = {
       { name: "Ancient Vault", key: "AncientVault" },
     ],
     sectorDescriptions: {
-      ColonyCore: "The beating heart of the terraforming effort...",
-      TerraformingFields: "Engineers work here to make Mars habitable...",
-      AncientVault: "An ancient vault emerged during the Kilko disaster..."
+      ColonyCore: "The beating heart of the terraforming effort, home to shops and homes. One of the few cities that survived the Kilko disaster.",
+      TerraformingFields: "Engineers work here to make Mars habitable. Machinery hums endlessly, reshaping the planet into its once green self as they avoid the mars mega structure",
+      AncientVault: "An ancient vault emerged during the Kilko disaster. It wiped out cities, turned back time, and turned Mars red again."
     }
   },
   Europa: {
@@ -71,9 +71,9 @@ const destinationConfigs = {
       { name: "Ruins", key: "Ruins" },
     ],
     sectorDescriptions: {
-      ResearchBase: "A hub of scientific activity focused on Europa’s ice crust...",
-      GroundCamp: "A rugged outpost supporting field teams...",
-      Ruins: "A hidden megastructure buried under Europa's ice..."
+      ResearchBase: "A hub of scientific activity focused on Europa’s ice crust and subsurface ocean, it has massive subsurface tunnels that lead to the mega structure below ending in a mini city sized air pocket where they work.",
+      GroundCamp: "A rugged outpost supporting field teams. Built around an entrance to the megastructure.",
+      Ruins: "A hidden megastructure buried under Europa's ice. It may predate all known civilizations."
     }
   },
   Jupiter: {
@@ -87,11 +87,11 @@ const destinationConfigs = {
       { name: "Excavation Platforms", key: "ExcavationPlatforms", type: "shuttle" },
     ],
     sectorDescriptions: {
-      StormObservatory: "Observes Jupiter’s massive storms...",
-      GasHarvester: "Harvests gases for fuel...",
-      ResearchArray: "Sensor nodes study Jupiter's magnetic field...",
-      CoreRelay: "Deep in the atmosphere, this hub maintains long-range communication...",
-      ExcavationPlatforms: "Digs into Jupiter’s gas layers..."
+      StormObservatory: "Observes Jupiter’s massive storms and protects orbital stations from said stroms by adjusting how close they are to the surface",
+      GasHarvester: "Harvests gases for fuel. Vital to all logistics and ships.",
+      ResearchArray: "Sensor nodes study Jupiter's magnetic field, the array is entirely automated and drones can be seen darting between the various sensors",
+      CoreRelay: "Deep in the atmosphere, this hub maintains long-range communication with mega strcuture exploration teams and the stations",
+      ExcavationPlatforms: "Digs into Jupiter’s gas layers for its ancient megastructure, a decaying massive ring deep in the gas, its purpose unknown and one of the few humanity is capable of exploring"
     }
   },
   Vega: {
@@ -106,7 +106,7 @@ const destinationConfigs = {
     sectorDescriptions: {
       CapitalCity: "A neon metropolis untouched by the Kilko disaster.",
       OrbitalTradeRing: "Commerce and supply hub for Vega Prime.",
-      StellarObservationSpire: "Where the megastructures were first discovered.",
+      StellarObservationSpire: "This is where the megastructures were first discovered.",
       CrystalCanyonOutpost: "Gem mines that power everything from ships to phones."
     }
   },
