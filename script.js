@@ -311,7 +311,8 @@ const NovaAI = {
       "Nova: Course plotted. We should arrive unscathed.",
       "Nova: Activating field dampeners. I trust your stomach's stable.",
       "Nova: Don't worry, I’ve run simulations. Only one exploded.",
-      "Nova: Next stop, the void between places."
+      "Nova: Next stop, the void between places.",
+      "Nova: Ignore any impacts you hear, its probably just an asteroid."
     ],
     arrival: [
       "Nova: Arrival confirmed. No hull breaches detected.",
@@ -325,7 +326,9 @@ const NovaAI = {
       "Nova: Monitoring sensors. Silence is... eerie.",
       "Nova: No threats detected. For now.",
       "Nova: If you're contemplating, I recommend the Vega view.",
-      "Nova: I’ve re-calibrated your neural quiet mode. You're welcome."
+      "Nova: I’ve re-calibrated your neural quiet mode. You're welcome.",
+      "Nova: I don't like it when you get quiet, do I need to phone a friend?",
+      "Nova: Please tell me your not experincing PTSD captain, the last time was unideal"
     ]
   },
 
