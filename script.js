@@ -635,15 +635,33 @@ function updateLoreLibrary() {
   });
 }
 
-onBtn.addEventListener('click', () => {
-  loginScreen.classList.add('hidden');
-  travelScreen.classList.remove('hidden');
-  document.getElementById('openLoreBtn').classList.remove('hidden'); // 👈 Add this line
-  appendLog("System: Welcome, Captain. Please select a destination.");
-  createButtons(mainDestinations);
+document.addEventListener("DOMContentLoaded", () => {
+  // Now all DOM elements are guaranteed to exist
+  proceedBtn.addEventListener('click', () => {
+    startupScreen.classList.add('hidden');
+    loginScreen.classList.remove('hidden');
+  });
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && !loreModal.classList.contains('hidden')) {
+  onBtn.addEventListener('click', () => {
+    loginScreen.classList.add('hidden');
+    travelScreen.classList.remove('hidden');
+    document.getElementById('openLoreBtn').classList.remove('hidden');
+    appendLog("System: Welcome, Captain. Please select a destination.");
+    createButtons(mainDestinations);
+  });
+
+  openLoreBtn.addEventListener('click', () => {
+    loreModal.classList.remove('hidden');
+    updateLoreLibrary();
+  });
+
+  closeLoreBtn.addEventListener('click', () => {
     loreModal.classList.add('hidden');
-  }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !loreModal.classList.contains('hidden')) {
+      loreModal.classList.add('hidden');
+    }
+  });
 });
