@@ -141,3 +141,47 @@ h1 {
   width: 100%;
   text-shadow: 0 0 6px rgba(15,255,15,0.4);
 }
+
+/* === Travel Feedback (Visual Transitions) === */
+button.traveling {
+  background: rgba(15, 255, 15, 0.1);
+  box-shadow: 0 0 8px rgba(15, 255, 15, 0.4), 0 0 20px rgba(15, 255, 15, 0.2) inset;
+  animation: pulseGlow 1s infinite alternate;
+  border: 1px solid #0f4;
+  color: #8dfd8d;
+}
+
+@keyframes pulseGlow {
+  from {
+    box-shadow: 0 0 6px rgba(15, 255, 15, 0.3);
+  }
+  to {
+    box-shadow: 0 0 18px rgba(15, 255, 15, 0.6);
+  }
+}
+
+.travel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 255, 140, 0.03);
+  backdrop-filter: blur(4px);
+  color: #8dfd8d;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+  text-shadow: 0 0 8px rgba(15,255,15,0.5);
+}
+
+.travel-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
