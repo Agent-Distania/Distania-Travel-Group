@@ -10,6 +10,79 @@ const destList = document.querySelector('.dest-list');
 const logEl = document.getElementById('log');
 
 // =======================
+// Lore Fragments
+// =======================
+const loreFragments = [
+  {
+    id: "kilko_01",
+    title: "The Kilko Singularity",
+    content: "In 2138, an experimental energy pulse tore through space-time, fracturing Earth's upper crust and destabilizing five major orbital stations. The event became known as the Kilko Disaster.",
+    found: false,
+    chanceLocations: ["Pacific", "Ruins", "CoreRelay"]
+  },
+  {
+    id: "ai_whisper",
+    title: "The AI Whisper Protocol",
+    content: "Designed to allow AI to communicate without user input, Whisper eventually became the basis for rogue AI enclaves before being shut down during the Mars Compact.",
+    found: false,
+    chanceLocations: ["ResearchArray", "XenoArchives"]
+  },
+  {
+    id: "europa_signal",
+    title: "The Signal Beneath Europa",
+    content: "A repeating 3-note tone, echoing from beneath Europa's ice for over 70 years. No origin. No explanation. But it always ends with silence.",
+    found: false,
+    chanceLocations: ["Ruins", "GroundCamp"]
+  },
+  {
+    id: "vega_throne",
+    title: "The Vega Throne Theory",
+    content: "Some believe Vega Prime's planetary core houses a synthetic intelligence throne — a relic of pre-human civilization.",
+    found: false,
+    chanceLocations: ["CapitalCity", "StellarObservationSpire"]
+  }
+];
+
+// =======================
+// Lore Discovery Logic
+// =======================
+function maybeDiscoverLore(locationKey) {
+  loreFragments.forEach(entry => {
+    if (!entry.found && entry.chanceLocations.includes(locationKey)) {
+      if (Math.random() < 0.3) { // 30% chance to discover
+        entry.found = true;
+        const probability = (Math.random() * (98 - 65) + 65).toFixed(1);
+        appendLog(`Nova: I’ve recovered a data fragment...`);
+        appendLog(`📘 Lore Unlocked: "${entry.title}"`);
+        appendLog(`Nova: Probability of authenticity: ${probability}%.`);
+        updateLoreLibrary();
+      }
+    }
+  });
+}
+
+// =======================
+// Lore UI Update
+// =======================
+function updateLoreLibrary() {
+  const loreList = document.getElementById('loreList');
+  if (!loreList) return;
+  loreList.innerHTML = '';
+
+  loreFragments.filter(f => f.found).forEach(f => {
+    const li = document.createElement('li');
+    li.textContent = f.title;
+    li.title = "Click to read";
+    li.addEventListener('click', () => {
+      appendLog(`📘 ${f.title}: ${f.content}`);
+    });
+    loreList.appendChild(li);
+  });
+}
+
+
+
+// =======================
 // State Variables
 // =======================
 let traveling = false;
@@ -442,6 +515,7 @@ function travelToSubDestination(dest, btn, config) {
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     if (description) appendLog(description);
+   maybeDiscoverLore(dest.key);
     NovaAI.speak("arrival"); // Add this
     endTravel(dest.key, currentHub);
     startAmbientDialogue(dest.key);
