@@ -577,9 +577,49 @@ proceedBtn.addEventListener('click', () => {
   loginScreen.classList.remove('hidden');
 });
 
+// =======================
+// Lore Modal UI
+// =======================
+const openLoreBtn = document.getElementById('openLoreBtn');
+const closeLoreBtn = document.getElementById('closeLoreBtn');
+const loreModal = document.getElementById('loreModal');
+const loreContent = document.getElementById('loreContent');
+
+openLoreBtn.addEventListener('click', () => {
+  loreModal.classList.remove('hidden');
+  updateLoreLibrary(); // Populate list every time it's opened
+});
+
+closeLoreBtn.addEventListener('click', () => {
+  loreModal.classList.add('hidden');
+});
+
+function updateLoreLibrary() {
+  const loreList = document.getElementById('loreList');
+  if (!loreList) return;
+  loreList.innerHTML = '';
+
+  const found = loreFragments.filter(f => f.found);
+  if (found.length === 0) {
+    loreList.innerHTML = "<p>No lore entries discovered yet.</p>";
+    loreContent.textContent = "Explore more locations to unlock data fragments.";
+    return;
+  }
+
+  found.forEach(f => {
+    const btn = document.createElement('button');
+    btn.textContent = f.title;
+    btn.addEventListener('click', () => {
+      loreContent.innerHTML = `<h3>${f.title}</h3><p>${f.content}</p>`;
+    });
+    loreList.appendChild(btn);
+  });
+}
+
 onBtn.addEventListener('click', () => {
   loginScreen.classList.add('hidden');
   travelScreen.classList.remove('hidden');
+  document.getElementById('openLoreBtn').classList.remove('hidden'); // 👈 Add this line
   appendLog("System: Welcome, Captain. Please select a destination.");
   createButtons(mainDestinations);
 });
