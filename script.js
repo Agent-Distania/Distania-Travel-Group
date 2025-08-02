@@ -1,134 +1,13 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Existing DOM element references
-  const startupScreen = document.getElementById('startupScreen');
-  const loginScreen = document.getElementById('loginScreen');
-  const travelScreen = document.getElementById('travelScreen');
-  const proceedBtn = document.getElementById('proceedBtn');
-  const onBtn = document.getElementById('onBtn');
-  const destList = document.querySelector('.dest-list');
-  const logEl = document.getElementById('log');
-  const openLoreBtn = document.getElementById('openLoreBtn');
-  const loreModal = document.getElementById('loreModal');
-  const closeLoreBtn = document.getElementById('closeLoreBtn');
-
-  // NEW: Add this line to get your acknowledge button
-  const acknowledgeBtn = document.getElementById('acknowledgeBtn');
-
-  // Existing event listeners ...
-  proceedBtn.addEventListener('click', () => {
-    startupScreen.classList.add('hidden');
-    loginScreen.classList.remove('hidden');
-  });
-
-  onBtn.addEventListener('click', () => {
-    loginScreen.classList.add('hidden');
-    travelScreen.classList.remove('hidden');
-    openLoreBtn.classList.remove('hidden');
-    appendLog("System: Welcome, Captain. Please select a destination.");
-    createButtons(mainDestinations);
-  });
-
-  openLoreBtn.addEventListener('click', () => {
-    loreModal.classList.remove('hidden');
-    updateLoreLibrary();
-  });
-
-  closeLoreBtn.addEventListener('click', () => {
-    loreModal.classList.add('hidden');
-  });
-
-  // NEW: Attach click event listener for acknowledge button here
-  if (acknowledgeBtn) {
-    acknowledgeBtn.addEventListener('click', () => {
-      // Your acknowledge logic here
-      appendLog("System: Acknowledged.");
-      // Any other action you want to perform on click
-    });
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !loreModal.classList.contains('hidden')) {
-      loreModal.classList.add('hidden');
-    }
-  });
-});
-
-
-
-
 // =======================
-// Lore Fragments
+// DOM Elements
 // =======================
-const loreFragments = [
-  {
-    id: "kilko_01",
-    title: "The Kilko Singularity",
-    content: "In 2138, an experimental energy pulse tore through space-time, fracturing Earth's upper crust and destabilizing five major orbital stations. The event became known as the Kilko Disaster.",
-    found: false,
-    chanceLocations: ["Pacific", "Ruins", "CoreRelay"]
-  },
-  {
-    id: "ai_whisper",
-    title: "The AI Whisper Protocol",
-    content: "Designed to allow AI to communicate without user input, Whisper eventually became the basis for rogue AI enclaves before being shut down during the Mars Compact.",
-    found: false,
-    chanceLocations: ["ResearchArray", "XenoArchives"]
-  },
-  {
-    id: "europa_signal",
-    title: "The Signal Beneath Europa",
-    content: "A repeating 3-note tone, echoing from beneath Europa's ice for over 70 years. No origin. No explanation. But it always ends with silence.",
-    found: false,
-    chanceLocations: ["Ruins", "GroundCamp"]
-  },
-  {
-    id: "vega_throne",
-    title: "The Vega Throne Theory",
-    content: "Some believe Vega Prime's planetary core houses a synthetic intelligence throne — a relic of pre-human civilization.",
-    found: false,
-    chanceLocations: ["CapitalCity", "StellarObservationSpire"]
-  }
-];
-
-// =======================
-// Lore Discovery Logic
-// =======================
-function maybeDiscoverLore(locationKey) {
-  loreFragments.forEach(entry => {
-    if (!entry.found && entry.chanceLocations.includes(locationKey)) {
-      if (Math.random() < 0.3) { // 30% chance to discover
-        entry.found = true;
-const probability = (Math.random() * (98 - 65) + 65).toFixed(1);
-appendLog(`Nova: I’ve recovered a data fragment...`);
-appendLog(`📘 Lore Unlocked: "${entry.title}"`);
-appendLog(`Nova: Probability of authenticity: ${probability}%. Uploading to terminal.`);
-updateLoreLibrary();
-
-      }
-    }
-  });
-}
-
-// =======================
-// Lore UI Update
-// =======================
-function updateLoreLibrary() {
-  const loreList = document.getElementById('loreList');
-  if (!loreList) return;
-  loreList.innerHTML = '';
-
-  loreFragments.filter(f => f.found).forEach(f => {
-    const li = document.createElement('li');
-    li.textContent = f.title;
-    li.title = "Click to read";
-    li.addEventListener('click', () => {
-      appendLog(`📘 ${f.title}: ${f.content}`);
-    });
-    loreList.appendChild(li);
-  });
-}
-
-
+const startupScreen = document.getElementById('startupScreen');
+const loginScreen = document.getElementById('loginScreen');
+const travelScreen = document.getElementById('travelScreen');
+const proceedBtn = document.getElementById('proceedBtn');
+const onBtn = document.getElementById('onBtn');
+const destList = document.querySelector('.dest-list');
+const logEl = document.getElementById('log');
 
 // =======================
 // State Variables
@@ -450,20 +329,12 @@ const NovaAI = {
     ]
   },
 
-  lastLine: null,
-
-speak(category) {
-  const lines = this.dialogue[category];
-  if (!lines || lines.length === 0) return;
-
-  let line;
-  do {
-    line = lines[Math.floor(Math.random() * lines.length)];
-  } while (line === this.lastLine && lines.length > 1);
-
-  this.lastLine = line;
-  appendLog(line);
-},
+  speak(category) {
+    const lines = this.dialogue[category];
+    if (!lines || lines.length === 0) return;
+    const line = lines[Math.floor(Math.random() * lines.length)];
+    appendLog(line);
+  },
 
   idleTimer: null,
 
@@ -567,21 +438,10 @@ function travelToSubDestination(dest, btn, config) {
 
   appendLog(`System: ${travelLabel} to ${dest.name}...`);
 
-  const travelDelays = {
-  drone: 2000,
-  orbit: 2500,
-  rover: 3000,
-  shuttle: 3000,
-  train: 3500,
-  default: 3000
-};
-
-const delay = travelDelays[travelType] || travelDelays.default;
-
+  const delay = travelType === 'drone' ? 2000 : 3000;
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     if (description) appendLog(description);
-   maybeDiscoverLore(dest.key);
     NovaAI.speak("arrival"); // Add this
     endTravel(dest.key, currentHub);
     startAmbientDialogue(dest.key);
@@ -643,40 +503,9 @@ proceedBtn.addEventListener('click', () => {
   loginScreen.classList.remove('hidden');
 });
 
-// =======================
-// Lore Modal UI
-// =======================
-const openLoreBtn = document.getElementById('openLoreBtn');
-const closeLoreBtn = document.getElementById('closeLoreBtn');
-const loreModal = document.getElementById('loreModal');
-const loreContent = document.getElementById('loreContent');
-
-openLoreBtn.addEventListener('click', () => {
-  loreModal.classList.remove('hidden');
-  updateLoreLibrary(); // Populate list every time it's opened
+onBtn.addEventListener('click', () => {
+  loginScreen.classList.add('hidden');
+  travelScreen.classList.remove('hidden');
+  appendLog("System: Welcome, Captain. Please select a destination.");
+  createButtons(mainDestinations);
 });
-
-closeLoreBtn.addEventListener('click', () => {
-  loreModal.classList.add('hidden');
-});
-
-function updateLoreLibrary() {
-  const loreList = document.getElementById('loreList');
-  if (!loreList) return;
-  loreList.innerHTML = '';
-
-  const found = loreFragments.filter(f => f.found);
-  if (found.length === 0) {
-    loreList.innerHTML = "<p>No lore entries discovered yet.</p>";
-    loreContent.textContent = "Explore more locations to unlock data fragments.";
-    return;
-  }
-
-  found.forEach(f => {
-    const btn = document.createElement('button');
-    btn.textContent = f.title;
-    btn.addEventListener('click', () => {
-      loreContent.innerHTML = `<h3>${f.title}</h3><p>${f.content}</p>`;
-    });
-    loreList.appendChild(btn);
-  });
