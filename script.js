@@ -1,7 +1,5 @@
-// =======================
-// DOM Elements
-// =======================
 document.addEventListener("DOMContentLoaded", () => {
+  // Existing DOM element references
   const startupScreen = document.getElementById('startupScreen');
   const loginScreen = document.getElementById('loginScreen');
   const travelScreen = document.getElementById('travelScreen');
@@ -13,6 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const loreModal = document.getElementById('loreModal');
   const closeLoreBtn = document.getElementById('closeLoreBtn');
 
+  // NEW: Add this line to get your acknowledge button
+  const acknowledgeBtn = document.getElementById('acknowledgeBtn');
+
+  // Existing event listeners ...
   proceedBtn.addEventListener('click', () => {
     startupScreen.classList.add('hidden');
     loginScreen.classList.remove('hidden');
@@ -35,12 +37,22 @@ document.addEventListener("DOMContentLoaded", () => {
     loreModal.classList.add('hidden');
   });
 
+  // NEW: Attach click event listener for acknowledge button here
+  if (acknowledgeBtn) {
+    acknowledgeBtn.addEventListener('click', () => {
+      // Your acknowledge logic here
+      appendLog("System: Acknowledged.");
+      // Any other action you want to perform on click
+    });
+  }
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !loreModal.classList.contains('hidden')) {
       loreModal.classList.add('hidden');
     }
   });
 });
+
 
 
 
