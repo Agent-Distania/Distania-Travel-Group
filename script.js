@@ -301,6 +301,57 @@ function appendLog(text) {
   logEl.scrollTop = logEl.scrollHeight;
 }
 
+// =======================
+// Nova AI System
+// =======================
+const NovaAI = {
+  dialogue: {
+    travel: [
+      "Nova: Initializing travel systems. Brace for inertial shift.",
+      "Nova: Course plotted. We should arrive unscathed.",
+      "Nova: Activating field dampeners. I trust your stomach's stable.",
+      "Nova: Don't worry, I’ve run simulations. Only one exploded.",
+      "Nova: Next stop, the void between places."
+    ],
+    arrival: [
+      "Nova: Arrival confirmed. No hull breaches detected.",
+      "Nova: Welcome. Conditions seem... breathable.",
+      "Nova: Surface scans are returning anomalies. Intriguing.",
+      "Nova: I suggest keeping your helmet on.",
+      "Nova: We've arrived. Try not to break anything, Captain."
+    ],
+    idle: [
+      "Nova: Systems green. Do you require anything, Captain?",
+      "Nova: Monitoring sensors. Silence is... eerie.",
+      "Nova: No threats detected. For now.",
+      "Nova: If you're contemplating, I recommend the Vega view.",
+      "Nova: I’ve re-calibrated your neural quiet mode. You're welcome."
+    ]
+  },
+
+  speak(category) {
+    const lines = this.dialogue[category];
+    if (!lines || lines.length === 0) return;
+    const line = lines[Math.floor(Math.random() * lines.length)];
+    appendLog(line);
+  },
+
+  idleTimer: null,
+
+  startIdle() {
+    clearInterval(this.idleTimer);
+    this.idleTimer = setInterval(() => {
+      if (!traveling && Math.random() < 0.6) {
+        this.speak("idle");
+      }
+    }, 45000);
+  },
+
+  stopIdle() {
+    clearInterval(this.idleTimer);
+  }
+};
+
 function clearDestinations() {
   destList.innerHTML = '<h2>Select Destination</h2>';
 }
@@ -361,15 +412,19 @@ function handleDestinationClick(dest, btn) {
 
 function travelToMainDestination(dest, btn) {
   beginTravel(btn);
+  NovaAI.speak("travel"); // Add this
   appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
   setTimeout(() => {
     appendLog(`System: Zero-point travel finished. Welcome to ${dest.name}.`);
+    NovaAI.speak("arrival"); // Add this
     endTravel(dest.key, dest.key);
+    NovaAI.startIdle(); // Add this
   }, 3000);
 }
 
 function travelToSubDestination(dest, btn, config) {
   beginTravel(btn);
+  NovaAI.speak("travel"); // Add this
   const description = config.sectorDescriptions?.[dest.key];
   const travelType = dest.type || config.travelType || 'shuttle';
 
@@ -387,14 +442,17 @@ function travelToSubDestination(dest, btn, config) {
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     if (description) appendLog(description);
+    NovaAI.speak("arrival"); // Add this
     endTravel(dest.key, currentHub);
     startAmbientDialogue(dest.key);
+    NovaAI.startIdle(); // Add this
   }, delay);
 }
 
 function beginTravel(btn) {
   traveling = true;
   clearInterval(ambientTimer);
+  NovaAI.stopIdle(); // Add this
   destList.querySelectorAll('button').forEach(b => {
     b.disabled = true;
     b.classList.remove('selected');
