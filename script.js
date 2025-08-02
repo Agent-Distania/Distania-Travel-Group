@@ -292,6 +292,44 @@ const ambientDialogue = {
 };
 
 // =======================
+// MAP LOGIC
+// =======================
+const mapBtn = document.getElementById('mapBtn');
+const mapModal = document.getElementById('mapModal');
+const mapTitle = document.getElementById('mapTitle');
+const mapContent = document.getElementById('mapContent');
+
+mapBtn.addEventListener('click', () => {
+  if (!currentHub) {
+    mapTitle.textContent = "Map";
+    mapContent.textContent = "No current destination selected.\nPlease travel to a main destination.";
+    mapModal.classList.remove('hidden');
+    return;
+  }
+
+  const config = destinationConfigs[currentHub];
+  if (!config || !config.subDestinations) {
+    mapTitle.textContent = "Map";
+    mapContent.textContent = "No map available for this location.";
+    mapModal.classList.remove('hidden');
+    return;
+  }
+
+  mapTitle.textContent = `${currentHub} Sector Map`;
+  const lines = config.subDestinations
+    .filter(d => d.key !== 'Return')
+    .map(d => `• ${d.name}`);
+  mapContent.textContent = lines.join("\n");
+  mapModal.classList.remove('hidden');
+});
+
+function closeMap() {
+  mapModal.classList.add('hidden');
+}
+
+
+
+// =======================
 // Core Functions
 // =======================
 function appendLog(text) {
