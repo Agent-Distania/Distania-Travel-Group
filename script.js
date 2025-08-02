@@ -133,11 +133,11 @@ const destinationConfigs = {
 const ambientDialogue = {
   // === Earth ===
   NewYork: [
-    { speaker: "NewYork - Technician", line: "Just patched another conduit. Third one this week." },
-    { speaker: "NewYork - Trader", line: "Shipping lanes are still backed up. Blame the Torta storm." },
-    { speaker: "NewYork - Civilian", line: "You ever wonder what’s *under* the megastructure?" },
-    { speaker: "NewYork - Courier", line: "My route got rerouted again... Torta tunnel issues." },
-    { speaker: "NewYork - Patrol", line: "Keep moving. Streets are restricted beyond block 5." }
+    { speaker: "Technician", line: "Just patched another conduit. Third one this week." },
+    { speaker: "Trader", line: "Shipping lanes are still backed up. Blame the Torta storm." },
+    { speaker: "Civilian", line: "You ever wonder what’s *under* the megastructure?" },
+    { speaker: "Courier", line: "My route got rerouted again... Torta tunnel issues." },
+    { speaker: "Patrol", line: "Keep moving. Streets are restricted beyond block 5." }
   ],
   EarthSpacePort: [
     { speaker: "EarthSpacePort - Dockmaster", line: "Cargo bay 3 is sealed. Ready for next drop." },
