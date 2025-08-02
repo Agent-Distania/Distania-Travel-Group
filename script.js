@@ -9,6 +9,39 @@ const onBtn = document.getElementById('onBtn');
 const destList = document.querySelector('.dest-list');
 const logEl = document.getElementById('log');
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Now all DOM elements are guaranteed to exist
+  proceedBtn.addEventListener('click', () => {
+    startupScreen.classList.add('hidden');
+    loginScreen.classList.remove('hidden');
+  });
+
+  onBtn.addEventListener('click', () => {
+    loginScreen.classList.add('hidden');
+    travelScreen.classList.remove('hidden');
+    document.getElementById('openLoreBtn').classList.remove('hidden');
+    appendLog("System: Welcome, Captain. Please select a destination.");
+    createButtons(mainDestinations);
+  });
+
+  openLoreBtn.addEventListener('click', () => {
+    loreModal.classList.remove('hidden');
+    updateLoreLibrary();
+  });
+
+  closeLoreBtn.addEventListener('click', () => {
+    loreModal.classList.add('hidden');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !loreModal.classList.contains('hidden')) {
+      loreModal.classList.add('hidden');
+    }
+  });
+});
+
+
+
 // =======================
 // Lore Fragments
 // =======================
@@ -633,35 +666,3 @@ function updateLoreLibrary() {
     });
     loreList.appendChild(btn);
   });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Now all DOM elements are guaranteed to exist
-  proceedBtn.addEventListener('click', () => {
-    startupScreen.classList.add('hidden');
-    loginScreen.classList.remove('hidden');
-  });
-
-  onBtn.addEventListener('click', () => {
-    loginScreen.classList.add('hidden');
-    travelScreen.classList.remove('hidden');
-    document.getElementById('openLoreBtn').classList.remove('hidden');
-    appendLog("System: Welcome, Captain. Please select a destination.");
-    createButtons(mainDestinations);
-  });
-
-  openLoreBtn.addEventListener('click', () => {
-    loreModal.classList.remove('hidden');
-    updateLoreLibrary();
-  });
-
-  closeLoreBtn.addEventListener('click', () => {
-    loreModal.classList.add('hidden');
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !loreModal.classList.contains('hidden')) {
-      loreModal.classList.add('hidden');
-    }
-  });
-});
