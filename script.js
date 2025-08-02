@@ -131,27 +131,164 @@ const destinationConfigs = {
 // Ambient Dialogue Data
 // =======================
 const ambientDialogue = {
+  // === Earth ===
   NewYork: [
     { speaker: "NewYork - Technician", line: "Just patched another conduit. Third one this week." },
     { speaker: "NewYork - Trader", line: "Shipping lanes are still backed up. Blame the Torta storm." },
-    { speaker: "NewYork - Civilian", line: "You ever wonder what’s *under* the megastructure?" }
+    { speaker: "NewYork - Civilian", line: "You ever wonder what’s *under* the megastructure?" },
+    { speaker: "NewYork - Courier", line: "My route got rerouted again... Torta tunnel issues." },
+    { speaker: "NewYork - Patrol", line: "Keep moving. Streets are restricted beyond block 5." }
   ],
   EarthSpacePort: [
     { speaker: "EarthSpacePort - Dockmaster", line: "Cargo bay 3 is sealed. Ready for next drop." },
     { speaker: "EarthSpacePort - Security", line: "Keep an eye on bay 7. Something's off." },
-    { speaker: "EarthSpacePort - Engineer", line: "Old warships still give me the chills." }
+    { speaker: "EarthSpacePort - Engineer", line: "Old warships still give me the chills." },
+    { speaker: "EarthSpacePort - Pilot", line: "A Venus run beats this chaos any day." },
+    { speaker: "EarthSpacePort - Load Chief", line: "No one's touched bay 12 in hours. Go check." }
   ],
   Pacific: [
     { speaker: "Pacific - Researcher", line: "Another reading spike. That can't be good..." },
     { speaker: "Pacific - AI Assistant", line: "Reminder: hydration is optimal for humans." },
-    { speaker: "Pacific - Archivist", line: "I swear one of the artifacts moved." }
+    { speaker: "Pacific - Archivist", line: "I swear one of the artifacts moved." },
+    { speaker: "Pacific - Diver", line: "I saw light beneath grid 3. Unnatural light." },
+    { speaker: "Pacific - Communications", line: "Relay's been glitching all morning. Again." }
   ],
+
+  // === Mars ===
   ColonyCore: [
     { speaker: "ColonyCore - Botanist", line: "The trees are taking root. Finally." },
     { speaker: "ColonyCore - Historian", line: "We almost lost this city. Almost." },
-    { speaker: "ColonyCore - Vendor", line: "Fresh synthfruit! Get it while it glows!" }
+    { speaker: "ColonyCore - Vendor", line: "Fresh synthfruit! Get it while it glows!" },
+    { speaker: "ColonyCore - Child", line: "Are the stars different from Mars?" },
+    { speaker: "ColonyCore - Guard", line: "Routine scans. Don’t make this weird." }
+  ],
+  TerraformingFields: [
+    { speaker: "Fields - DroneOperator", line: "Unit 42 stopped responding near the ridge." },
+    { speaker: "Fields - Terraformer", line: "Wind’s picking up. Sandstorm incoming, maybe." },
+    { speaker: "Fields - Mechanic", line: "Pump systems are jammed. Again." },
+    { speaker: "Fields - Supervisor", line: "Check the eastern dome’s pressure seal." },
+    { speaker: "Fields - Biologist", line: "Soil sample B-17 is reacting... strangely." }
+  ],
+  AncientVault: [
+    { speaker: "Vault - Archeologist", line: "These symbols repeat every 88 meters." },
+    { speaker: "Vault - Linguist", line: "No match in any known dialect. Not even close." },
+    { speaker: "Vault - Archivist", line: "Kilko resonance patterns are increasing." },
+    { speaker: "Vault - Guard", line: "You hear that hum? It’s louder near the wall." },
+    { speaker: "Vault - Explorer", line: "Whatever this place is, it's *not* dead." }
+  ],
+
+  // === Europa ===
+  ResearchBase: [
+    { speaker: "ResearchBase - Scientist", line: "Cracks in the ice are forming faster now." },
+    { speaker: "ResearchBase - Analyst", line: "Another drone went silent beneath layer 4." },
+    { speaker: "ResearchBase - Engineer", line: "Pressure's spiking in the lower tunnels." },
+    { speaker: "ResearchBase - Medic", line: "Radiation exposure checks are due. Again." },
+    { speaker: "ResearchBase - Geologist", line: "There’s movement under the crust. Again." }
+  ],
+  GroundCamp: [
+    { speaker: "GroundCamp - Lead", line: "Keep your boots sealed — it’s colder than usual." },
+    { speaker: "GroundCamp - Guard", line: "Ice wolves spotted on the south ridge." },
+    { speaker: "GroundCamp - Surveyor", line: "We've got a partial reading from Node Delta." },
+    { speaker: "GroundCamp - Cook", line: "Who left the heat dome open last night?" },
+    { speaker: "GroundCamp - Rookie", line: "I swear the ice just... breathed." }
+  ],
+  Ruins: [
+    { speaker: "Ruins - DroneOp", line: "Two more scouts lost signal in the main shaft." },
+    { speaker: "Ruins - Archeologist", line: "There’s geometry here that shouldn’t exist." },
+    { speaker: "Ruins - Signal Tech", line: "Frequency drift again. That’s the third time." },
+    { speaker: "Ruins - Commander", line: "No one goes deeper than sector 6. Orders." },
+    { speaker: "Ruins - Echo Analyst", line: "The walls are *responding* to us..." }
+  ],
+
+  // === Jupiter ===
+  StormObservatory: [
+    { speaker: "Observatory - Scientist", line: "The red storm’s pulse is intensifying again." },
+    { speaker: "Observatory - Sensor Tech", line: "Telescopes realigned to track the outer vortex." },
+    { speaker: "Observatory - Engineer", line: "We lost another stabilizer. Swell." },
+    { speaker: "Observatory - Navigator", line: "Station drift is within margin. Barely." },
+    { speaker: "Observatory - Commander", line: "Prepare fallback orbit in case of breach." }
+  ],
+  GasHarvester: [
+    { speaker: "Harvester - Operator", line: "Hydrogen levels are peaking. Cut intake 12%" },
+    { speaker: "Harvester - Technician", line: "Someone needs to grease the extractor arms." },
+    { speaker: "Harvester - Pilot", line: "Watch for turbulence. Jupiter’s cranky today." },
+    { speaker: "Harvester - Chemist", line: "We may have found trace organics..." },
+    { speaker: "Harvester - Commander", line: "Prep for emergency cutoff. Always prep." }
+  ],
+  ResearchArray: [
+    { speaker: "Array - Drone AI", line: "Node connection stable. No anomalies." },
+    { speaker: "Array - Data Analyst", line: "The magnetic shift pattern is repeating." },
+    { speaker: "Array - Admin", line: "Command uplink active. Relay is clear." },
+    { speaker: "Array - Operator", line: "Sensor 19 is acting up again. Replace it." },
+    { speaker: "Array - Monitor", line: "Telemetry from Saturn just went dark." }
+  ],
+  CoreRelay: [
+    { speaker: "CoreRelay - Relay Tech", line: "Signal lag is under 12ms. Not bad." },
+    { speaker: "CoreRelay - Comms Officer", line: "Keep relay frequency clear. Priority only." },
+    { speaker: "CoreRelay - Engineer", line: "That relay beam just blinked. It’s not supposed to." },
+    { speaker: "CoreRelay - Watch", line: "Atmospheric pressure’s climbing fast. Again." },
+    { speaker: "CoreRelay - Officer", line: "We’re close to the breach zone. Stay sharp." }
+  ],
+  ExcavationPlatforms: [
+    { speaker: "Excavator - Lead", line: "Platform 3 is vibrating again." },
+    { speaker: "Excavator - Tech", line: "That artifact is glowing. Again." },
+    { speaker: "Excavator - Diver", line: "I saw something move in the gas." },
+    { speaker: "Excavator - Commander", line: "Keep scans tight. No slip-ups." },
+    { speaker: "Excavator - Crew", line: "Who left the gravity dampeners off?" }
+  ],
+
+  // === Vega ===
+  CapitalCity: [
+    { speaker: "CapitalCity - Resident", line: "The neon's brighter than usual." },
+    { speaker: "CapitalCity - Vendor", line: "Get your bio-glass earrings! Freshly etched!" },
+    { speaker: "CapitalCity - Runner", line: "Delivery bots are delayed. Manual runs it is." },
+    { speaker: "CapitalCity - Security", line: "No entry without Vega ID clearance." },
+    { speaker: "CapitalCity - Tourist", line: "Is that a real star fragment?" }
+  ],
+  OrbitalTradeRing: [
+    { speaker: "TradeRing - Trader", line: "Cargo’s cleared customs. Finally." },
+    { speaker: "TradeRing - Officer", line: "We intercepted a smuggler with Kilko tech." },
+    { speaker: "TradeRing - Drone Pilot", line: "Trade pod 7 just spun out. Recovering." },
+    { speaker: "TradeRing - Customs", line: "You need three forms for that? Ridiculous." },
+    { speaker: "TradeRing - Announcer", line: "Attention: minor delay in sector 4 shipping lanes." }
+  ],
+  StellarObservationSpire: [
+    { speaker: "Spire - Astronomer", line: "Another anomaly blinked at 5 AU." },
+    { speaker: "Spire - Analyst", line: "We caught a flare echo. From *outside*." },
+    { speaker: "Spire - Systems", line: "Array aligned. Holding stable." },
+    { speaker: "Spire - Observer", line: "The Kilko field’s visible again. Barely." },
+    { speaker: "Spire - Technician", line: "Sensor 3B needs realignment." }
+  ],
+  CrystalCanyonOutpost: [
+    { speaker: "Canyon - Miner", line: "Drill's stuck. Again." },
+    { speaker: "Canyon - Geologist", line: "These crystals resonate when we speak." },
+    { speaker: "Canyon - Surveyor", line: "We mapped another chamber today." },
+    { speaker: "Canyon - Medic", line: "Hydration levels low in Zone Delta." },
+    { speaker: "Canyon - AI", line: "Caution: seismic tremors detected nearby." }
+  ],
+
+  // === Andromeda ===
+  ForwardRecon: [
+    { speaker: "Recon - Operator", line: "Signal spike. Something’s out there." },
+    { speaker: "Recon - Drone AI", line: "Scans incomplete. Retry in 3 minutes." },
+    { speaker: "Recon - Watcher", line: "The void feels... different today." },
+    { speaker: "Recon - Lead", line: "Automated beacon failure on channel 8." },
+    { speaker: "Recon - Guard", line: "Secure the station perimeter. Again." }
+  ],
+  BlackSpire: [
+    { speaker: "BlackSpire - Technician", line: "Echo packets doubled in the last hour." },
+    { speaker: "BlackSpire - Watcher", line: "We’re still relaying signals from Sol." },
+    { speaker: "BlackSpire - Guard", line: "I swear the asteroid moved. Just a little." },
+    { speaker: "BlackSpire - Engineer", line: "Relay 9 is glowing. That’s not normal." },
+    { speaker: "BlackSpire - Archivist", line: "We logged a pulse from Andromeda’s edge." }
+  ],
+  XenoArchives: [
+    { speaker: "XenoArchives - Linguist", line: "Translation halted. Symbols just... shifted." },
+    { speaker: "XenoArchives - Curator", line: "No touching the containment field. Again." },
+    { speaker: "XenoArchives - Researcher", line: "This relic’s emitting a new frequency." },
+    { speaker: "XenoArchives - AI", line: "Unknown language pattern forming. Tracking..." },
+    { speaker: "XenoArchives - Historian", line: "That statue wasn't facing that way yesterday." }
   ]
-  // Add more locations as needed
 };
 
 // =======================
