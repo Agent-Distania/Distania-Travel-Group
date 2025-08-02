@@ -1,16 +1,18 @@
 // =======================
 // DOM Elements
 // =======================
-const startupScreen = document.getElementById('startupScreen');
-const loginScreen = document.getElementById('loginScreen');
-const travelScreen = document.getElementById('travelScreen');
-const proceedBtn = document.getElementById('proceedBtn');
-const onBtn = document.getElementById('onBtn');
-const destList = document.querySelector('.dest-list');
-const logEl = document.getElementById('log');
-
 document.addEventListener("DOMContentLoaded", () => {
-  // Now all DOM elements are guaranteed to exist
+  const startupScreen = document.getElementById('startupScreen');
+  const loginScreen = document.getElementById('loginScreen');
+  const travelScreen = document.getElementById('travelScreen');
+  const proceedBtn = document.getElementById('proceedBtn');
+  const onBtn = document.getElementById('onBtn');
+  const destList = document.querySelector('.dest-list');
+  const logEl = document.getElementById('log');
+  const openLoreBtn = document.getElementById('openLoreBtn');
+  const loreModal = document.getElementById('loreModal');
+  const closeLoreBtn = document.getElementById('closeLoreBtn');
+
   proceedBtn.addEventListener('click', () => {
     startupScreen.classList.add('hidden');
     loginScreen.classList.remove('hidden');
@@ -19,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   onBtn.addEventListener('click', () => {
     loginScreen.classList.add('hidden');
     travelScreen.classList.remove('hidden');
-    document.getElementById('openLoreBtn').classList.remove('hidden');
+    openLoreBtn.classList.remove('hidden');
     appendLog("System: Welcome, Captain. Please select a destination.");
     createButtons(mainDestinations);
   });
