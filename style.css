@@ -137,8 +137,3 @@ h1 {
   width: 100%;
   text-shadow: 0 0 6px rgba(15,255,15,0.4);
 }
-
-/* Add spacing between individual log messages */
-#log > div {
-  margin-bottom: 0.5rem;
-}
