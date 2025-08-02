@@ -1,4 +1,4 @@
-// =======================
+  // =======================
 // DOM Elements
 // =======================
 const startupScreen = document.getElementById('startupScreen');
@@ -300,7 +300,7 @@ const ambientDialogue = {
     { speaker: "Researcher", line: "This relic’s emitting a new frequency, maybe its some form od radio?" },
     { speaker: "Language AI", line: "Unknown language pattern forming. Tracking..." },
     { speaker: "Historian", line: "That statue wasn't facing that way yesterday." },
-    { speaker: "ARI Marine", line: "Those statues give me nightmares, I swear they move when you don't look"
+    { speaker: "ARI Marine", line: "Those statues give me nightmares, I swear they move when you don't look" }
   ]
 };
 
