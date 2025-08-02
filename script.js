@@ -90,7 +90,7 @@ const destinationConfigs = {
       StormObservatory: "Observes Jupiter’s massive storms and protects orbital stations from said stroms by adjusting how close they are to the surface",
       GasHarvester: "Harvests gases for fuel. Vital to all logistics and ships.",
       ResearchArray: "Sensor nodes study Jupiter's magnetic field, the array is entirely automated and drones can be seen darting between the various sensors",
-      CoreRelay: "Deep in the atmosphere, this hub maintains long-range communication with mega strcuture exploration teams and the stations",
+      CoreRelay: "Deep in the atmosphere, this hub maintains long-range communication with mega stucture exploration teams and the stations",
       ExcavationPlatforms: "Digs into Jupiter’s gas layers for its ancient megastructure, a decaying massive ring deep in the gas, its purpose unknown and one of the few humanity is capable of exploring"
     }
   },
@@ -328,7 +328,7 @@ const NovaAI = {
       "Nova: If you're contemplating, I recommend the Vega view.",
       "Nova: I’ve re-calibrated your neural quiet mode. You're welcome.",
       "Nova: I don't like it when you get quiet, do I need to phone a friend?",
-      "Nova: Please tell me your not experincing PTSD captain, the last time was unideal"
+      "Nova: Nova: Please tell me you're not experiencing PTSD, Captain. The last time was... unideal."
     ]
   },
 
@@ -415,19 +415,21 @@ function handleDestinationClick(dest, btn) {
 
 function travelToMainDestination(dest, btn) {
   beginTravel(btn);
-  NovaAI.speak("travel"); // Add this
+  NovaAI.speak("travel");
   appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
+  showTravelOverlay(`Engaging transit to ${dest.name}...`);
   setTimeout(() => {
     appendLog(`System: Zero-point travel finished. Welcome to ${dest.name}.`);
-    NovaAI.speak("arrival"); // Add this
+    NovaAI.speak("arrival");
     endTravel(dest.key, dest.key);
-    NovaAI.startIdle(); // Add this
+    hideTravelOverlay();
+    NovaAI.startIdle();
   }, 3000);
 }
 
 function travelToSubDestination(dest, btn, config) {
   beginTravel(btn);
-  NovaAI.speak("travel"); // Add this
+  NovaAI.speak("travel");
   const description = config.sectorDescriptions?.[dest.key];
   const travelType = dest.type || config.travelType || 'shuttle';
 
@@ -439,18 +441,21 @@ function travelToSubDestination(dest, btn, config) {
     train: "Boarding the train"
   }[travelType] || "Traveling";
 
+  showTravelOverlay(`${travelLabel} to ${dest.name}...`);
   appendLog(`System: ${travelLabel} to ${dest.name}...`);
 
   const delay = travelType === 'drone' ? 2000 : 3000;
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     if (description) appendLog(description);
-    NovaAI.speak("arrival"); // Add this
+    NovaAI.speak("arrival");
     endTravel(dest.key, currentHub);
+    hideTravelOverlay(); // 👈 make sure this is here
     startAmbientDialogue(dest.key);
-    NovaAI.startIdle(); // Add this
+    NovaAI.startIdle();
   }, delay);
 }
+
 
 function beginTravel(btn) {
   traveling = true;
@@ -471,6 +476,28 @@ function endTravel(newLocation, hubKey) {
 }
 
 // =======================
+// Travel Overlay Logic
+// =======================
+function showTravelOverlay(message = "Engaging transit...") {
+  const overlay = document.getElementById('travelOverlay');
+  if (!overlay) return;
+  overlay.textContent = message;
+  overlay.classList.remove('hidden');
+  overlay.classList.add('active');
+}
+
+function hideTravelOverlay() {
+  const overlay = document.getElementById('travelOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('active');
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+  }, 800); // match the CSS transition duration
+}
+
+
+
+// =======================
 // Ambient Dialogue Logic
 // =======================
 function startAmbientDialogue(destKey) {
@@ -482,7 +509,7 @@ function startAmbientDialogue(destKey) {
     if (currentLocation !== destKey) return;
     const { speaker, line } = getRandomMessage(messages);
     appendLog(`${speaker}: "${line}"`);
-  }, 5000);
+  }, 8000);
 
   ambientTimer = setInterval(() => {
     if (currentLocation !== destKey) {
