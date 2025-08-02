@@ -142,7 +142,7 @@ const ambientDialogue = {
   EarthSpacePort: [
     { speaker: "EarthSpacePort - Dockmaster", line: "Cargo bay 3 is sealed. Ready for next drop." },
     { speaker: "EarthSpacePort - Security", line: "Keep an eye on bay 7. Something's off." },
-    { speaker: "EarthSpacePort - Engineer", line: "Old warships still give me the chills." },
+    { speaker: "EarthSpacePort - Engineer", line: "Old warships still give me the chills, ghosts haunt those museum ships." },
     { speaker: "EarthSpacePort - Pilot", line: "A Venus run beats this chaos any day." },
     { speaker: "EarthSpacePort - Load Chief", line: "No one's touched bay 12 in hours. Go check." }
   ],
@@ -183,7 +183,7 @@ const ambientDialogue = {
     { speaker: "ResearchBase - Analyst", line: "Another drone went silent beneath layer 4." },
     { speaker: "ResearchBase - Engineer", line: "Pressure's spiking in the lower tunnels." },
     { speaker: "ResearchBase - Medic", line: "Radiation exposure checks are due. Again." },
-    { speaker: "ResearchBase - Geologist", line: "There’s movement under the crust. Again." }
+    { speaker: "ResearchBase - Geologist", line: "There’s movement under the ice, big one this time." }
   ],
   GroundCamp: [
     { speaker: "GroundCamp - Lead", line: "Keep your boots sealed — it’s colder than usual." },
@@ -196,8 +196,8 @@ const ambientDialogue = {
     { speaker: "Ruins - DroneOp", line: "Two more scouts lost signal in the main shaft." },
     { speaker: "Ruins - Archeologist", line: "There’s geometry here that shouldn’t exist." },
     { speaker: "Ruins - Signal Tech", line: "Frequency drift again. That’s the third time." },
-    { speaker: "Ruins - Commander", line: "No one goes deeper than sector 6. Orders." },
-    { speaker: "Ruins - Echo Analyst", line: "The walls are *responding* to us..." }
+    { speaker: "Ruins - Commander", line: "No one goes deeper than sector 6. Orders. It didn't go well last time." },
+    { speaker: "Ruins - Echo Analyst", line: "The walls are *responding* to us, listen." }
   ],
 
   // === Jupiter ===
@@ -226,12 +226,12 @@ const ambientDialogue = {
     { speaker: "CoreRelay - Relay Tech", line: "Signal lag is under 12ms. Not bad." },
     { speaker: "CoreRelay - Comms Officer", line: "Keep relay frequency clear. Priority only." },
     { speaker: "CoreRelay - Engineer", line: "That relay beam just blinked. It’s not supposed to." },
-    { speaker: "CoreRelay - Watch", line: "Atmospheric pressure’s climbing fast. Again." },
+    { speaker: "CoreRelay - Watch", line: "Atmospheric pressure’s climbing fast again." },
     { speaker: "CoreRelay - Officer", line: "We’re close to the breach zone. Stay sharp." }
   ],
   ExcavationPlatforms: [
     { speaker: "Excavator - Lead", line: "Platform 3 is vibrating again." },
-    { speaker: "Excavator - Tech", line: "That artifact is glowing. Again." },
+    { speaker: "Excavator - Tech", line: "The shuttle that brings artifacts gets banged up every so often by something." },
     { speaker: "Excavator - Diver", line: "I saw something move in the gas." },
     { speaker: "Excavator - Commander", line: "Keep scans tight. No slip-ups." },
     { speaker: "Excavator - Crew", line: "Who left the gravity dampeners off?" }
@@ -239,7 +239,7 @@ const ambientDialogue = {
 
   // === Vega ===
   CapitalCity: [
-    { speaker: "CapitalCity - Resident", line: "The neon's brighter than usual." },
+    { speaker: "CapitalCity - Resident", line: "The neon lights are so bright during a hang-over." },
     { speaker: "CapitalCity - Vendor", line: "Get your bio-glass earrings! Freshly etched!" },
     { speaker: "CapitalCity - Runner", line: "Delivery bots are delayed. Manual runs it is." },
     { speaker: "CapitalCity - Security", line: "No entry without Vega ID clearance." },
@@ -247,7 +247,7 @@ const ambientDialogue = {
   ],
   OrbitalTradeRing: [
     { speaker: "TradeRing - Trader", line: "Cargo’s cleared customs. Finally." },
-    { speaker: "TradeRing - Officer", line: "We intercepted a smuggler with Kilko tech." },
+    { speaker: "TradeRing - Officer", line: "We intercepted a smuggler with mega structure artifacts." },
     { speaker: "TradeRing - Drone Pilot", line: "Trade pod 7 just spun out. Recovering." },
     { speaker: "TradeRing - Customs", line: "You need three forms for that? Ridiculous." },
     { speaker: "TradeRing - Announcer", line: "Attention: minor delay in sector 4 shipping lanes." }
@@ -256,12 +256,12 @@ const ambientDialogue = {
     { speaker: "Spire - Astronomer", line: "Another anomaly blinked at 5 AU." },
     { speaker: "Spire - Analyst", line: "We caught a flare echo. From *outside*." },
     { speaker: "Spire - Systems", line: "Array aligned. Holding stable." },
-    { speaker: "Spire - Observer", line: "The Kilko field’s visible again. Barely." },
+    { speaker: "Spire - Observer", line: "The berreta anomaly is visible again. Barely." },
     { speaker: "Spire - Technician", line: "Sensor 3B needs realignment." }
   ],
   CrystalCanyonOutpost: [
-    { speaker: "Canyon - Miner", line: "Drill's stuck. Again." },
-    { speaker: "Canyon - Geologist", line: "These crystals resonate when we speak." },
+    { speaker: "Canyon - Miner", line: "Drill's stuck, get the tech over here." },
+    { speaker: "Canyon - Geologist", line: "These crystals resonate when we speak, hold it and see." },
     { speaker: "Canyon - Surveyor", line: "We mapped another chamber today." },
     { speaker: "Canyon - Medic", line: "Hydration levels low in Zone Delta." },
     { speaker: "Canyon - AI", line: "Caution: seismic tremors detected nearby." }
@@ -273,18 +273,18 @@ const ambientDialogue = {
     { speaker: "Recon - Drone AI", line: "Scans incomplete. Retry in 3 minutes." },
     { speaker: "Recon - Watcher", line: "The void feels... different today." },
     { speaker: "Recon - Lead", line: "Automated beacon failure on channel 8." },
-    { speaker: "Recon - Guard", line: "Secure the station perimeter. Again." }
+    { speaker: "Recon - Guard", line: "Secure the station perimeter. Again, can never be to safe in the void sea." }
   ],
   BlackSpire: [
     { speaker: "BlackSpire - Technician", line: "Echo packets doubled in the last hour." },
-    { speaker: "BlackSpire - Watcher", line: "We’re still relaying signals from Sol." },
+    { speaker: "BlackSpire - Watcher", line: "We’re still relaying signals from Sol, dunno to where tho, nothing further than us." },
     { speaker: "BlackSpire - Guard", line: "I swear the asteroid moved. Just a little." },
     { speaker: "BlackSpire - Engineer", line: "Relay 9 is glowing. That’s not normal." },
     { speaker: "BlackSpire - Archivist", line: "We logged a pulse from Andromeda’s edge." }
   ],
   XenoArchives: [
     { speaker: "XenoArchives - Linguist", line: "Translation halted. Symbols just... shifted." },
-    { speaker: "XenoArchives - Curator", line: "No touching the containment field. Again." },
+    { speaker: "XenoArchives - Curator", line: "No touching the containment field, the medbay is already busy." },
     { speaker: "XenoArchives - Researcher", line: "This relic’s emitting a new frequency." },
     { speaker: "XenoArchives - AI", line: "Unknown language pattern forming. Tracking..." },
     { speaker: "XenoArchives - Historian", line: "That statue wasn't facing that way yesterday." }
@@ -313,6 +313,7 @@ const NovaAI = {
       "Nova: Don't worry, I’ve run simulations. Only one exploded.",
       "Nova: Next stop, the void between places.",
       "Nova: Ignore any impacts you hear, its probably just an asteroid."
+      "Nova: Amplifier always told me that zero point travel was relaxing, it is in a way."
     ],
     arrival: [
       "Nova: Arrival confirmed. No hull breaches detected.",
@@ -320,6 +321,8 @@ const NovaAI = {
       "Nova: Surface scans are returning anomalies. Intriguing.",
       "Nova: I suggest keeping your helmet on.",
       "Nova: We've arrived. Try not to break anything, Captain."
+      "Nova: Remember to recover any relics captain! Make amplifier proud!"
+
     ],
     idle: [
       "Nova: Systems green. Do you require anything, Captain?",
