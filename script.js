@@ -51,11 +51,12 @@ function maybeDiscoverLore(locationKey) {
     if (!entry.found && entry.chanceLocations.includes(locationKey)) {
       if (Math.random() < 0.3) { // 30% chance to discover
         entry.found = true;
-        const probability = (Math.random() * (98 - 65) + 65).toFixed(1);
-        appendLog(`Nova: I’ve recovered a data fragment...`);
-        appendLog(`📘 Lore Unlocked: "${entry.title}"`);
-        appendLog(`Nova: Probability of authenticity: ${probability}%.`);
-        updateLoreLibrary();
+const probability = (Math.random() * (98 - 65) + 65).toFixed(1);
+appendLog(`Nova: I’ve recovered a data fragment...`);
+appendLog(`📘 Lore Unlocked: "${entry.title}"`);
+appendLog(`Nova: Probability of authenticity: ${probability}%. Uploading to terminal.`);
+updateLoreLibrary();
+
       }
     }
   });
@@ -402,12 +403,20 @@ const NovaAI = {
     ]
   },
 
-  speak(category) {
-    const lines = this.dialogue[category];
-    if (!lines || lines.length === 0) return;
-    const line = lines[Math.floor(Math.random() * lines.length)];
-    appendLog(line);
-  },
+  lastLine: null,
+
+speak(category) {
+  const lines = this.dialogue[category];
+  if (!lines || lines.length === 0) return;
+
+  let line;
+  do {
+    line = lines[Math.floor(Math.random() * lines.length)];
+  } while (line === this.lastLine && lines.length > 1);
+
+  this.lastLine = line;
+  appendLog(line);
+},
 
   idleTimer: null,
 
@@ -511,7 +520,17 @@ function travelToSubDestination(dest, btn, config) {
 
   appendLog(`System: ${travelLabel} to ${dest.name}...`);
 
-  const delay = travelType === 'drone' ? 2000 : 3000;
+  const travelDelays = {
+  drone: 2000,
+  orbit: 2500,
+  rover: 3000,
+  shuttle: 3000,
+  train: 3500,
+  default: 3000
+};
+
+const delay = travelDelays[travelType] || travelDelays.default;
+
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     if (description) appendLog(description);
@@ -622,4 +641,9 @@ onBtn.addEventListener('click', () => {
   document.getElementById('openLoreBtn').classList.remove('hidden'); // 👈 Add this line
   appendLog("System: Welcome, Captain. Please select a destination.");
   createButtons(mainDestinations);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !loreModal.classList.contains('hidden')) {
+    loreModal.classList.add('hidden');
+  }
 });
