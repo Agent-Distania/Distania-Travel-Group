@@ -450,11 +450,16 @@ function handleDestinationClick(dest, btn) {
     }
 
     const parentSub = config.subDestinations.find(d => d.key === currentLocation);
-    if (parentSub?.subDestinations?.some(d => d.key === dest.key)) {
-      travelToSubSubDestination(dest, btn, parentSub);
-      return;
-    }
-  }
+
+const isSubSub = parentSub && (
+  parentSub.subDestinations?.some(d => d.key === dest.key) ||
+  dest.key.startsWith(parentSub.key + "_") // fallback for auto-named sub-sub keys
+);
+
+if (isSubSub) {
+  travelToSubSubDestination(dest, btn, parentSub);
+  return;
+}
 
   if (isMainDest) {
     travelToMainDestination(dest, btn);
