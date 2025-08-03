@@ -320,14 +320,18 @@ function appendLog(text) {
 const NovaAI = {
   dialogue: {
     travel: [
-      "Nova: Initializing travel systems. Brace for inertial shift.",
+       "Nova: Initializing travel systems. Brace for inertial shift.",
       "Nova: Course plotted. We should arrive unscathed.",
       "Nova: Activating field dampeners. I trust your stomach's stable.",
       "Nova: Don't worry, I’ve run simulations. Only one exploded.",
       "Nova: Next stop, the void between places.",
       "Nova: Ignore any impacts you hear, it's probably just an asteroid.",
       "Nova: Hull integrity holding at 100%, brace for arrival",
-      "Nova: Did you know you could survive for up to 2 minutes in the vaccum of space? You'd lose consciousness after 15 seconds tho"
+      "Nova: Did you know you could survive for up to 2 minutes in the vaccum of space? You'd lose consciousness after 15 seconds tho",
+      "Nova: Zero-point travel is not entirely understood, we got it from the mega structures! Some had massive ship bays that had city sized ships inside!",
+      "Nova: The torta structures are connected to the mega structures, its believed they visited earth when it was just rock, billions of years ago!",
+      "Nova: Zero point travel is the only way to leave the sol system quickly, generation ships are simply unviable until we invent cryo stasis",
+      "Nova: Fuel levels holding, this new zero point core is very efficent!"
     ],
       arrival: [
       "Nova: Arrival confirmed. No hull breaches detected.",
