@@ -487,27 +487,28 @@ function travelToSubDestination(dest, btn, config) {
 
     // If the destination is New York, define real nested sub-destinations
     if (dest.key === "NewYork") {
-      dest.subDestinations = [
-        { name: "Return to Previous", key: "Return" },
-        { name: "Downtown Core", key: "NewYork_Downtown" },
-        { name: "Torta Excavation Site", key: "NewYork_Torta" },
-        { name: "Skyline Transit Nexus", key: "NewYork_Transit" }
-    if (dest.key === "EarthSpacePort") {
-         dest.subDestinations = [
-        { name: "Return to Previous", key: "Return" },
-        { name: "Processing", key: "EarthSpacePort_FrontDesk" },
-        { name: "Cargo Intake", key: "EarthSpacePort_Cargo" },
-        { name: "Docking Bay", key: "EarthSpacePort_Docking"
-      ];
-    } else {
-      // Otherwise use generic nested sectors
-      dest.subDestinations = [
-        { name: "Return to Previous", key: "Return" },
-        { name: `${dest.name} Subsector A`, key: `${dest.key}_A` },
-        { name: `${dest.name} Subsector B`, key: `${dest.key}_B` },
-        { name: `${dest.name} Subsector C`, key: `${dest.key}_C` }
-      ];
-    }
+  dest.subDestinations = [
+    { name: "Return to Previous", key: "Return" },
+    { name: "Downtown Core", key: "NewYork_Downtown" },
+    { name: "Torta Excavation Site", key: "NewYork_Torta" },
+    { name: "Skyline Transit Nexus", key: "NewYork_Transit" }
+  ];
+} else if (dest.key === "EarthSpacePort") {
+  dest.subDestinations = [
+    { name: "Return to Previous", key: "Return" },
+    { name: "Processing", key: "EarthSpacePort_FrontDesk" },
+    { name: "Cargo Intake", key: "EarthSpacePort_Cargo" },
+    { name: "Docking Bay", key: "EarthSpacePort_Docking" }
+  ];
+} else {
+  // Otherwise use generic nested sectors
+  dest.subDestinations = [
+    { name: "Return to Previous", key: "Return" },
+    { name: `${dest.name} Subsector A`, key: `${dest.key}_A` },
+    { name: `${dest.name} Subsector B`, key: `${dest.key}_B` },
+    { name: `${dest.name} Subsector C`, key: `${dest.key}_C` }
+  ];
+}
 
     createButtons(dest.subDestinations);
     hideTravelOverlay();
