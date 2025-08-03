@@ -537,17 +537,23 @@ function travelToSubSubDestination(dest, btn, parentSub) {
   NovaAI.speak("travel");
   showTravelOverlay(`Traveling deeper to ${dest.name}...`);
   appendLog(`System: Traveling deeper to ${dest.name}...`);
+
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     NovaAI.speak("arrival");
     currentLocation = dest.key;
 
-    createButtons(dest.subDestinations);
+    // ✅ Only show return button if it's the end of the line
+    createButtons([
+      { name: "Return to Previous", key: "Return" }
+    ]);
+
     hideTravelOverlay();
     NovaAI.startIdle();
     traveling = false;
   }, 2000);
 }
+
 
 function beginTravel(btn) {
   traveling = true;
