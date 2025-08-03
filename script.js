@@ -515,26 +515,41 @@ function endTravel(newLocation, hubKey) {
 // =======================
 // Travel Overlay Logic
 // =======================
-function showTravelOverlay(message = "Engaging transit...") {
-  const overlay = document.getElementById('travelOverlay');
-  if (!overlay) return;
-  overlay.textContent = message;
-  overlay.classList.remove('hidden');
-  overlay.classList.add('active');
-}
+function travelToSubDestination(dest, btn, config) {
+  beginTravel(btn);
+  NovaAI.speak("travel");
+  const description = config.sectorDescriptions?.[dest.key];
+  const travelType = dest.type || config.travelType || 'shuttle';
 
-function hideTravelOverlay() {
-  const overlay = document.getElementById('travelOverlay');
-  if (!overlay) return;
-  overlay.classList.remove('active');
+  const travelLabel = {
+    drone: "Deploying drone",
+    orbit: "Initiating orbital alignment",
+    rover: "Boarding the rover",
+    shuttle: "Boarding the shuttle",
+    train: "Boarding the train"
+  }[travelType] || "Traveling";
+
+  showTravelOverlay(`${travelLabel} to ${dest.name}...`);
+  appendLog(`System: ${travelLabel} to ${dest.name}...`);
+
+  const delay = travelType === 'drone' ? 2000 : 3000;
   setTimeout(() => {
-    overlay.classList.add('hidden');
-  }, 800); // match the CSS transition duration
-}
+    appendLog(`System: Arrived at ${dest.name}.`);
+    if (description) appendLog(description);
+    NovaAI.speak("arrival");
+    endTravel(dest.key, currentHub);
+    hideTravelOverlay();
 
-if (dest.key === "Library") {
-  displayLibraryBooks();
-  return;
+    // ✅ Special case: handle Library destination
+    if (dest.key === "Library") {
+      displayLibraryBooks();
+      return;
+    }
+
+    // Start ambient dialogue for normal destinations
+    startAmbientDialogue(dest.key);
+    NovaAI.startIdle();
+  }, delay);
 }
 
 // =======================
