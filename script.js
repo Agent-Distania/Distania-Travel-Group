@@ -36,23 +36,12 @@ const destinationConfigs = {
     travelType: "train",
     subDestinations: [
       { name: "Return to Ship", key: "Return" },
-     {
-  name: "New York Sector",
-  key: "NewYork",
-  subDestinations: [
-    { name: "Return to Earth", key: "Return" },
-    { name: "NY Garrison", key: "NYGarrison" },
-    { name: "Shops", key: "Shops" }
-  ]
-},
-
+      { name: "New York Sector", key: "NewYork" },
       { name: "Earth Space Port", key: "EarthSpacePort" },
       { name: "Pacific Research Facility", key: "Pacific" },
     ],
     sectorDescriptions: {
       NewYork: "A massive sprawling city, a far cry from the concrete jungle of old, its more spread out layout in the modern day after its rebuilding has brought new york into the modern day. Its proximity to the Torta structures fuels its economy.",
-      NYGarrison: "The local military base to keep the peace",
-      Shops: "The various shops of new york",
       EarthSpacePort: "A large cargo and civilian port that once fueled the Red War, its defenses await an enemy long since defeated. Now a gateway for imports to Earth's mega cities.",
       Pacific: "A massive floating research base that studies artifacts from the Kilko disaster and other megastructures across the system, its the main research hub for humanity but its reputation has been tarnished by the kilko disaster"
     }
@@ -170,15 +159,6 @@ const ambientDialogue = {
     { speaker: "Researcher", line: "I was there during the kilko disaster, I was lukily in oregon, it was untouched by the disaster and is now home to a thriving mega city and ECS." },
     { speaker: "Secuirty Guard", line: "Your only authorized for floors 1-3 do not try and access 4-10 or I'll have to remove you from site" }
   ],
-  NYGarrison: [
-  { speaker: "Marine", line: "Keep your ID badge visible at all times." },
-  { speaker: "Commander", line: "Double shifts again. Thanks, Kilko disaster." }
-],
-Shops: [
-  { speaker: "Vendor", line: "Fresh black-market chips! Don’t ask where they’re from." },
-  { speaker: "Courier", line: "Watch your pockets. This place has hands." }
-],
-
 
   // === Mars ===
   ColonyCore: [
@@ -416,52 +396,40 @@ function handleDestinationClick(dest, btn) {
   if (traveling) return;
 
   const isReturn = dest.key === 'Return';
-  const config = destinationConfigs[currentHub];
+  const isMainDest = mainDestinations.some(d => d.key === dest.key);
 
   if (isReturn) {
-    if (currentLocation !== currentHub) {
-      // Go back up one level
-      createButtons(config.subDestinations);
-      currentLocation = currentHub;
-      appendLog("System: Returning to main sector.");
-    } else {
-      // Return to main destination screen
-      currentLocation = null;
-      currentHub = null;
-      clearInterval(ambientTimer);
-      createButtons(mainDestinations);
-      appendLog("System: Returning to ship. Please select a destination.");
-    }
+    currentLocation = null;
+    currentHub = null;
+    clearInterval(ambientTimer);
+    createButtons(mainDestinations);
+    appendLog("System: Returning to ship. Please select a destination.");
     return;
   }
 
-  // Handle nested subDestinations
-  if (dest.subDestinations) {
-    // Recursive layer
-    currentLocation = dest.key;
-    createButtons(dest.subDestinations);
-    appendLog(`System: Accessing sub-sector of ${dest.name}...`);
-    return;
-  }
-
-  // Check if it's a direct sub-destination of current hub
-  const isValidSub = config.subDestinations?.some(d => d.key === dest.key);
-  if (isValidSub) {
-    travelToSubDestination(dest, btn, config);
-    return;
-  }
-
-  // Fallback: if it's a main destination
-  const isMainDest = mainDestinations.some(d => d.key === dest.key);
- if (isMainDest) {
+  if (isMainDest && !currentHub) {
+    const config = destinationConfigs[dest.key];
     currentHub = dest.key;
     currentLocation = dest.key;
-    const config = destinationConfigs[dest.key];
     appendLog(`System: ${config.description}`);
     createButtons(config.subDestinations);
     appendLog(`System: Accessing ${dest.name} sectors.`);
     return;
   }
+
+  if (currentHub) {
+    const config = destinationConfigs[currentHub];
+    const isValidSub = config.subDestinations?.some(d => d.key === dest.key);
+    if (isValidSub) {
+      travelToSubDestination(dest, btn, config);
+      return;
+    }
+  }
+
+  if (isMainDest) {
+    travelToMainDestination(dest, btn);
+  }
+}
 
 function travelToMainDestination(dest, btn) {
   beginTravel(btn);
