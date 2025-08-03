@@ -1,4 +1,5 @@
 {
+  ==earth==
   "NewYork": [
     { "speaker": "Technician", "line": "Just patched another conduit. Third one this week." },
     { "speaker": "Trader", "line": "Shipping lanes are still backed up. Blame the kolki disaster and the amount of space debris it caused thats not cleaned up" },
@@ -69,5 +70,4 @@
     { "speaker": "Commander", "line": "No one goes deeper than sector 6. Orders, didn't go well last time due to the pressure." },
     { "speaker": "Echo Analyst", "line": "The walls are *responding* to us..." }
   ]
-  // Add more entries (Jupiter, Vega, Andromeda, etc.) here
 }
