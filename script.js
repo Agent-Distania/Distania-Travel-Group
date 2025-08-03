@@ -42,7 +42,7 @@ const destinationConfigs = {
   subDestinations: [
     { name: "Return to Earth", key: "Return" },
     { name: "NY Garrison", key: "NYGarrison" },
-    { name: "Shp[s", key: "Shops" }
+    { name: "Shops", key: "Shops" }
   ]
 },
 
@@ -174,7 +174,7 @@ const ambientDialogue = {
   { speaker: "Marine", line: "Keep your ID badge visible at all times." },
   { speaker: "Commander", line: "Double shifts again. Thanks, Kilko disaster." }
 ],
-NYBazaar: [
+Shops: [
   { speaker: "Vendor", line: "Fresh black-market chips! Don’t ask where they’re from." },
   { speaker: "Courier", line: "Watch your pockets. This place has hands." }
 ],
@@ -453,7 +453,7 @@ function handleDestinationClick(dest, btn) {
 
   // Fallback: if it's a main destination
   const isMainDest = mainDestinations.some(d => d.key === dest.key);
-  if (isMainDest && !currentHub) {
+ if (isMainDest) {
     currentHub = dest.key;
     currentLocation = dest.key;
     const config = destinationConfigs[dest.key];
@@ -461,34 +461,6 @@ function handleDestinationClick(dest, btn) {
     createButtons(config.subDestinations);
     appendLog(`System: Accessing ${dest.name} sectors.`);
     return;
-  }
-
-  if (isReturn) {
-    currentLocation = null;
-    currentHub = null;
-    clearInterval(ambientTimer);
-    createButtons(mainDestinations);
-    appendLog("System: Returning to ship. Please select a destination.");
-    return;
-  }
-
-  if (isMainDest && !currentHub) {
-    const config = destinationConfigs[dest.key];
-    currentHub = dest.key;
-    currentLocation = dest.key;
-    appendLog(`System: ${config.description}`);
-    createButtons(config.subDestinations);
-    appendLog(`System: Accessing ${dest.name} sectors.`);
-    return;
-  }
-
-  if (currentHub) {
-    const config = destinationConfigs[currentHub];
-    const isValidSub = config.subDestinations?.some(d => d.key === dest.key);
-    if (isValidSub) {
-      travelToSubDestination(dest, btn, config);
-      return;
-    }
   }
 
   if (isMainDest) {
