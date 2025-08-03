@@ -28,7 +28,6 @@
     { "speaker": "Researcher", "line" "I was there during the kilko disaster, I was lukily in oregon, it was untouched by the disaster and is now home to a thriving mega city and ECS." },
     { "speaker":"Secuirty Guard", "line" "Your only authorized for floors 1-3 do not try and access 4-10 or I'll have to remove you from site" }
   ],
-  ],
   "ColonyCore": [
     { "speaker": "Botanist", "line": "The trees are taking root. Finally." },
     { "speaker": "Historian", "line": "We almost lost this city. Almost." },
