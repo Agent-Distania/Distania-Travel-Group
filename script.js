@@ -449,22 +449,20 @@ function handleDestinationClick(dest, btn) {
       return;
     }
 
-    const parentSub = config.subDestinations.find(d => d.key === currentLocation);
+    // ✅ Fallback: Guess parent if user clicked directly into sub-sub-sector
+    const potentialParent = config.subDestinations.find(d => dest.key.startsWith(d.key + "_"));
 
-const isSubSub = parentSub && (
-  parentSub.subDestinations?.some(d => d.key === dest.key) ||
-  dest.key.startsWith(parentSub.key + "_") // fallback for auto-named sub-sub keys
-);
-
-if (isSubSub) {
-  travelToSubSubDestination(dest, btn, parentSub);
-  return;
-}
+    if (potentialParent) {
+      travelToSubSubDestination(dest, btn, potentialParent);
+      return;
+    }
+  }
 
   if (isMainDest) {
     travelToMainDestination(dest, btn);
   }
 }
+
 
 function travelToMainDestination(dest, btn) {
   beginTravel(btn);
