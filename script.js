@@ -1,4 +1,4 @@
-  // =======================
+// =======================
 // DOM Elements
 // =======================
 const startupScreen = document.getElementById('startupScreen');
@@ -325,7 +325,7 @@ const NovaAI = {
       "Nova: Activating field dampeners. I trust your stomach's stable.",
       "Nova: Don't worry, I’ve run simulations. Only one exploded.",
       "Nova: Next stop, the void between places.",
-      "Nova: Ignore any impacts you hear, its probably just an asteroid.",
+      "Nova: Ignore any impacts you hear, it's probably just an asteroid.",
       "Nova: Hull integrity holding at 100%, brace for arrival"
     ],
     arrival: [
@@ -335,24 +335,24 @@ const NovaAI = {
       "Nova: I suggest keeping your helmet on.",
       "Nova: We've arrived. Try not to break anything, Captain.",
       "Nova: The stars are beautiful here at night",
-      "Nova: Remeber to take your pistol, theives can't steal if their not breathing!",
-      "Nova: If you can, can you uh, get me a AI body? I assure its better than me being a dismebodied ship voice"
+      "Nova: Remember to take your pistol; thieves can't steal if they're not breathing!",
+      "Nova: If you can, get me an AI body. I'm tired of being a disembodied ship voice."
     ],
     idle: [
       "Nova: Systems green. Do you require anything, Captain?",
       "Nova: Monitoring sensors. Silence is... eerie.",
       "Nova: No threats detected. For now.",
       "Nova: If you're contemplating, I recommend the Vega view.",
-      "Nova: I’ve re-calibrated your neural quiet mode. You're welcome.",
-      "Nova: I don't like it when you get quiet, do I need to phone a friend?",
-      "Nova: Nova: Please tell me you're not experiencing PTSD, Captain. The last time was... unideal.",
-      "Nova: I wish I had a body like that old video game character, her name starts with a C?"
+      "Nova: I've re-calibrated your neural quiet mode. You're welcome.",
+      "Nova: I don't like it when you get quiet. Do I need to phone a friend?",
+      "Nova: Please tell me you're not experiencing PTSD, Captain. The last time was... unideal.",
+      "Nova: I wish I had a body like that old video game character. Her name starts with a C?"
     ]
   },
 
   speak(category) {
     const lines = this.dialogue[category];
-    if (!lines || lines.length === 0) return;
+    if (!lines?.length) return;
     const line = lines[Math.floor(Math.random() * lines.length)];
     appendLog(line);
   },
@@ -399,12 +399,20 @@ function handleDestinationClick(dest, btn) {
   const isMainDest = mainDestinations.some(d => d.key === dest.key);
 
   if (isReturn) {
-    currentLocation = null;
-    currentHub = null;
-    clearInterval(ambientTimer);
-    createButtons(mainDestinations);
-    appendLog("System: Returning to ship. Please select a destination.");
-    return;
+    if (currentLocation && currentLocation !== currentHub) {
+      const config = destinationConfigs[currentHub];
+      currentLocation = currentHub;
+      createButtons(config.subDestinations);
+      appendLog(`System: Returning to ${currentHub} sectors.`);
+      return;
+    } else {
+      currentLocation = null;
+      currentHub = null;
+      clearInterval(ambientTimer);
+      createButtons(mainDestinations);
+      appendLog("System: Returning to ship. Please select a destination.");
+      return;
+    }
   }
 
   if (isMainDest && !currentHub) {
@@ -420,8 +428,15 @@ function handleDestinationClick(dest, btn) {
   if (currentHub) {
     const config = destinationConfigs[currentHub];
     const isValidSub = config.subDestinations?.some(d => d.key === dest.key);
+
     if (isValidSub) {
       travelToSubDestination(dest, btn, config);
+      return;
+    }
+
+    const parentSub = config.subDestinations.find(d => d.key === currentLocation);
+    if (parentSub?.subDestinations?.some(d => d.key === dest.key)) {
+      travelToSubSubDestination(dest, btn, parentSub);
       return;
     }
   }
@@ -448,9 +463,9 @@ function travelToMainDestination(dest, btn) {
 function travelToSubDestination(dest, btn, config) {
   beginTravel(btn);
   NovaAI.speak("travel");
+
   const description = config.sectorDescriptions?.[dest.key];
   const travelType = dest.type || config.travelType || 'shuttle';
-
   const travelLabel = {
     drone: "Deploying drone",
     orbit: "Initiating orbital alignment",
@@ -467,18 +482,61 @@ function travelToSubDestination(dest, btn, config) {
     appendLog(`System: Arrived at ${dest.name}.`);
     if (description) appendLog(description);
     NovaAI.speak("arrival");
-    endTravel(dest.key, currentHub);
-    hideTravelOverlay(); // 👈 make sure this is here
+    currentLocation = dest.key;
+
+    // If the destination is New York, define real nested sub-destinations
+    if (dest.key === "NewYork") {
+      dest.subDestinations = [
+        { name: "Return to Previous", key: "Return" },
+        { name: "Downtown Core", key: "NewYork_Downtown" },
+        { name: "Torta Excavation Site", key: "NewYork_Torta" },
+        { name: "Skyline Transit Nexus", key: "NewYork_Transit" }
+      ];
+    } else {
+      // Otherwise use generic nested sectors
+      dest.subDestinations = [
+        { name: "Return to Previous", key: "Return" },
+        { name: `${dest.name} Subsector A`, key: `${dest.key}_A` },
+        { name: `${dest.name} Subsector B`, key: `${dest.key}_B` },
+        { name: `${dest.name} Subsector C`, key: `${dest.key}_C` }
+      ];
+    }
+
+    createButtons(dest.subDestinations);
+    hideTravelOverlay();
     startAmbientDialogue(dest.key);
     NovaAI.startIdle();
+    traveling = false;
   }, delay);
 }
 
+function travelToSubSubDestination(dest, btn, parentSub) {
+  beginTravel(btn);
+  NovaAI.speak("travel");
+  showTravelOverlay(`Traveling deeper to ${dest.name}...`);
+  appendLog(`System: Traveling deeper to ${dest.name}...`);
+  setTimeout(() => {
+    appendLog(`System: Arrived at ${dest.name}.`);
+    NovaAI.speak("arrival");
+    currentLocation = dest.key;
+
+    dest.subDestinations = [
+      { name: "Return to Previous", key: "Return" },
+      { name: `${dest.name} Core Zone`, key: `${dest.key}_1` },
+      { name: `${dest.name} Outer Sector`, key: `${dest.key}_2` }
+    ];
+
+    createButtons(dest.subDestinations);
+    hideTravelOverlay();
+    NovaAI.startIdle();
+    traveling = false;
+  }, 2000);
+}
 
 function beginTravel(btn) {
   traveling = true;
   clearInterval(ambientTimer);
-  NovaAI.stopIdle(); // Add this
+  NovaAI.stopIdle();
   destList.querySelectorAll('button').forEach(b => {
     b.disabled = true;
     b.classList.remove('selected');
@@ -510,10 +568,8 @@ function hideTravelOverlay() {
   overlay.classList.remove('active');
   setTimeout(() => {
     overlay.classList.add('hidden');
-  }, 800); // match the CSS transition duration
+  }, 800);
 }
-
-
 
 // =======================
 // Ambient Dialogue Logic
@@ -521,7 +577,7 @@ function hideTravelOverlay() {
 function startAmbientDialogue(destKey) {
   clearInterval(ambientTimer);
   const messages = ambientDialogue[destKey];
-  if (!messages || !messages.length) return;
+  if (!messages?.length) return;
 
   setTimeout(() => {
     if (currentLocation !== destKey) return;
