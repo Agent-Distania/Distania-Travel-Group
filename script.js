@@ -527,11 +527,6 @@ function travelToSubSubDestination(dest, btn, parentSub) {
     appendLog(`System: Arrived at ${dest.name}.`);
     NovaAI.speak("arrival");
     currentLocation = dest.key;
-
-    dest.subDestinations = [
-      { name: "Return to Previous", key: "Return" },
-      { name: `${dest.name} Core Zone`, key: `${dest.key}_1` },
-      { name: `${dest.name} Outer Sector`, key: `${dest.key}_2` }
     ];
 
     createButtons(dest.subDestinations);
