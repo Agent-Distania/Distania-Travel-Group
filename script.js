@@ -1,4 +1,4 @@
-// =======================
+  // =======================
 // DOM Elements
 // =======================
 const startupScreen = document.getElementById('startupScreen');
@@ -128,20 +128,19 @@ const destinationConfigs = {
 };
 
 // =======================
-// Ambient Dialogue Pools (integrated with rare/rumor system)
+// Ambient Dialogue Data
 // =======================
-
-// Normal (existing) dialogue
-const NormalDialogue = {
+const ambientDialogue = {
+  // === Earth ===
   NewYork: [
     { speaker: "Technician", line: "Just patched another conduit. Third one this week." },
     { speaker: "Trader", line: "Shipping lanes are still backed up. Blame the kolki disaster and the amount of space debris it caused thats not cleaned up" },
     { speaker: "Civilian", line: "You ever wonder what’s *under* the megastructure?" },
     { speaker: "Courier", line: "My route got rerouted again...every damn time I do this job" },
     { speaker: "Patrolman", line: "Keep moving. Streets are restricted beyond block 5." },
-    { speaker: "ECS Marine", line: "What out for the torta structure friend, grounds unstable today" },
-    { speaker: "ECS Officer", line: "Enjoy your stay friend, the ECS HQ is at oregon if you need to visit, it'll be open for travel soon" },
-    { speaker: "Administrative AI", line: "Reminder: Only you can prevent another kilko disaster! Report occult activity or anything strange with mega structures to the authorities immediately!" }
+    { speaker: "ECS Marine", line: "What out for the torta structure friend, grounds unstable today"},
+    { speaker: "ECS Officer", line: "Enjoy your stay friend, the ECS HQ is at oregon if you need to visit, it'll be open for travel soon"},
+    { speaker: "Administrative AI", line: "Reminder: Only you can prevent another kilko disaster! Report occult activity or anything strange with mega structures to the authorities immediately!"}
   ],
   EarthSpacePort: [
     { speaker: "Dockmaster", line: "Cargo bay 3 is sealed. Ready for next drop." },
@@ -159,114 +158,151 @@ const NormalDialogue = {
     { speaker: "Communication Expert", line: "Relay's been glitching all morning. Again." },
     { speaker: "Researcher", line: "I was there during the kilko disaster, I was lukily in oregon, it was untouched by the disaster and is now home to a thriving mega city and ECS." },
     { speaker: "Secuirty Guard", line: "Your only authorized for floors 1-3 do not try and access 4-10 or I'll have to remove you from site" }
+  ],
+
+  // === Mars ===
+  ColonyCore: [
+    { speaker: "Botanist", line: "The trees are taking root. Finally." },
+    { speaker: "Historian", line: "We almost lost this city. Almost." },
+    { speaker: "Vendor", line: "Fresh synthfruit! Get it while it glows!" },
+    { speaker: "Child", line: "Are the stars different on earth?" },
+    { speaker: "Guard", line: "Routine scans. Don’t make this weird." },
+    { speaker: "Reactor AI", line: "Reactor working at 100%, all systems nominal"}
+
+  ],
+  TerraformingFields: [
+    { speaker: "DroneOperator", line: "Unit 42 stopped responding near the ridge." },
+    { speaker: "Terraformer", line: "Wind’s picking up. Sandstorm incoming, maybe." },
+    { speaker: "Mechanic", line: "Pump systems are jammed, I told them we need to set up sandstorm walls" },
+    { speaker: "Supervisor", line: "Check the eastern dome’s pressure seal." },
+    { speaker: "Biologist", line: "Soil sample B-17 is reacting... strangely." }
+  ],
+  AncientVault: [
+    { speaker: "Archeologist", line: "These symbols repeat every 88 meters." },
+    { speaker: "Linguist", line: "No match in any known dialect. Not even close." },
+    { speaker: "Archivist", line: "Kilko resonance patterns are increasing." },
+    { speaker: "Guard", line: "You hear that hum? It’s louder near the wall." },
+    { speaker: "Explorer", line: "Whatever this place is, it's *not* dead, the machinery is just sleeping" }
+  ],
+
+  // === Europa ===
+  ResearchBase: [
+    { speaker: "Scientist", line: "Cracks in the ice are forming faster now, I hope its natrual" },
+    { speaker: "Analyst", line: "Another drone went silent beneath layer 4, maybe elctromagnetic interference from the mega structure?" },
+    { speaker: "Engineer", line: "Pressure's spiking in the lower tunnels." },
+    { speaker: "Medic", line: "Radiation exposure checks are due, do not skip or the captian will have your head ona  pike!" },
+    { speaker: "Geologist", line: "There’s movement under the crust, sounds like tunneling?" }
+  ],
+  GroundCamp: [
+    { speaker: "Lead", line: "Keep your boots sealed — it’s colder than usual." },
+    { speaker: "Guard", line: "Ice wolves spotted on the south ridge, best to wait a bit if your going that way, big ones today." },
+    { speaker: "Surveyor", line: "We've got a partial reading from Node Delta, maybe its connected to the entrance at the south camp?" },
+    { speaker: "Cook", line: "Who left the heat dome open last night?" },
+    { speaker: "Rookie", line: "I swear the ice just... breathed." }
+  ],
+  Ruins: [
+    { speaker: "DroneOp", line: "Two more scouts lost signal in the main shaft, we're gonna waste more money replacing drones than actually paying people." },
+    { speaker: "Archeologist", line: "There’s geometry here that shouldn’t exist, feels like the whole structure folds in on itself." },
+    { speaker: "Signal Tech", line: "Frequency drift again. That’s the third time, its getting annoying having to realign everything." },
+    { speaker: "Commander", line: "No one goes deeper than sector 6. Orders, didn't go well last time due to the pressure." },
+    { speaker: "Echo Analyst", line: "The walls are *responding* to us..." }
+  ],
+
+  // === Jupiter ===
+  StormObservatory: [
+    { speaker: "Scientist", line: "The red storm’s pulse is intensifying again." },
+    { speaker: "Sensor Tech", line: "Telescopes realigned to track the outer vortex." },
+    { speaker: "Engineer", line: "We lost another stabilizer. Swell, I'll get the tools." },
+    { speaker: "Navigator", line: "Station drift is within margin. Barely." },
+    { speaker: "Commander", line: "Prepare fallback orbit in case of breach, if the stations falls in we're all going to jail." }
+  ],
+  GasHarvester: [
+    { speaker: "Operator", line: "Hydrogen levels are peaking. Cut intake 12%" },
+    { speaker: "Technician", line: "Someone needs to grease the extractor arms, their getting slow again." },
+    { speaker: "Pilot", line: "Watch for turbulence. Jupiter’s cranky today, we're on break until she calms down." },
+    { speaker: "Chemist", line: "We may have found trace organics..." },
+    { speaker: "Commander", line: "Prep for emergency cutoff. Always prep, best to get out and go back later than get trashed by a storm." },
+    { speaker: "Platform AI", line: "All fueling platforms tilts and gathered fuel are within acceptable perameters" }
+  ],
+  ResearchArray: [
+    { speaker: "Drone AI", line: "Node connection stable. No anomalies." },
+    { speaker: "Data Analyst", line: "The magnetic shift pattern is repeating." },
+    { speaker: "Admin", line: "Command uplink active. Relay is clear." },
+    { speaker: "Operator", line: "Sensor 19 is acting up again. Replace it." },
+    { speaker: "Monitor", line: "Telemetry from Saturn just went dark." },
+    { speaker: "Camera Operator", line: "Look at this, you can see the mega structures in incredible detail here, all the strange things attached, maybe their arms? Weapons?" }
+  ],
+  CoreRelay: [
+    { speaker: "Relay Tech", line: "Signal lag is under 12ms. Not bad." },
+    { speaker: "Comms Officer", line: "Keep relay frequency clear. Priority only." },
+    { speaker: "Engineer", line: "That relay beam just blinked. It’s not supposed to." },
+    { speaker: "Watch", line: "Atmospheric pressure’s climbing fast, keep a eye on the pressure gauge." },
+    { speaker: "Officer", line: "We’re close to the red eye. Stay sharp." }
+  ],
+  ExcavationPlatforms: [
+    { speaker: "Lead", line: "Platform 3 is vibrating again." },
+    { speaker: "Tech", line: "That artifact is glowing. Again." },
+    { speaker: "Diver", line: "I saw something move in the gas." },
+    { speaker: "Commander", line: "Keep scans tight. No slip-ups." },
+    { speaker: "Crew", line: "Who left the gravity dampeners off? You trying to kill us?" },
+    { speaker: "Diver", line: "You see things in the mega structure that defy anything you we're ever told" }
+  ],
+
+  // === Vega ===
+  CapitalCity: [
+    { speaker: "Resident", line: "The neon's brighter than usual." },
+    { speaker: "Vendor", line: "Get your bio-glass earrings! Freshly etched!" },
+    { speaker: "Runner", line: "Delivery bots are delayed. Manual runs it is." },
+    { speaker: "Security", line: "No entry without Vega ID clearance." },
+    { speaker: "Tourist", line: "Is that a real star fragment?" }
+  ],
+  OrbitalTradeRing: [
+    { speaker: "Trader", line: "Cargo’s cleared customs. Finally." },
+    { speaker: "Officer", line: "We intercepted a smuggler with Kilko tech." },
+    { speaker: "Drone Pilot", line: "Trade pod 7 just spun out. Recovering." },
+    { speaker: "Customs", line: "You need three forms for that? Ridiculous." },
+    { speaker: "Announcer", line: "Attention: minor delay in sector 4 shipping lanes." }
+  ],
+  StellarObservationSpire: [
+    { speaker: "Astronomer", line: "Another anomaly blinked at 5 AU." },
+    { speaker: "Analyst", line: "We caught a flare echo. From *outside*." },
+    { speaker: "Systems", line: "Array aligned. Holding stable." },
+    { speaker: "Observer", line: "The Kilko field’s visible again. Barely." },
+    { speaker: "Technician", line: "Sensor 3B needs realignment." }
+  ],
+  CrystalCanyonOutpost: [
+    { speaker: "Miner", line: "Drill's stuck. Again." },
+    { speaker: "Geologist", line: "These crystals resonate when we speak." },
+    { speaker: "Surveyor", line: "We mapped another chamber today." },
+    { speaker: "Medic", line: "Hydration levels low in Zone Delta." },
+    { speaker: "AI", line: "Caution: seismic tremors detected nearby." }
+  ],
+
+  // === Andromeda ===
+  ForwardRecon: [
+    { speaker: "Operator", line: "Signal spike. Something’s out there." },
+    { speaker: "Drone AI", line: "Scans incomplete. Retry in 3 minutes." },
+    { speaker: "Watcher", line: "The void feels... different today." },
+    { speaker: "Lead", line: "Automated beacon failure on channel 8." },
+    { speaker: "Guard", line: "Secure the station perimeter, don't want any void bats sucking up power again." },
+    { speaker: "Explorer", line: "I was on the last attempt to reach andromeda, why did they lie about why we failed?" }
+  ],
+  BlackSpire: [
+    { speaker: "Technician", line: "Echo packets doubled in the last hour." },
+    { speaker: "Watcher", line: "We’re still relaying signals from Sol, dunno why though, nothing beyond us." },
+    { speaker: "Guard", line: "I swear the asteroid moved. Just a little." },
+    { speaker: "Engineer", line: "Relay 9 is glowing. I hate the new bulbs they installed" },
+    { speaker: "Archivist", line: "We logged a pulse from Andromeda’s edge, quite an exciting thing!" }
+  ],
+  XenoArchives: [
+    { speaker: "Linguist", line: "Translation halted. Symbols just... shifted, fuck why dose this always happen when we make progress?" },
+    { speaker: "Curator", line: "No touching the containment field, it'll shock you badly, like every other time people touched it" },
+    { speaker: "Researcher", line: "This relic’s emitting a new frequency, maybe its some form od radio?" },
+    { speaker: "Language AI", line: "Unknown language pattern forming. Tracking..." },
+    { speaker: "Historian", line: "That statue wasn't facing that way yesterday." },
+    { speaker: "ARI Marine", line: "Those statues give me nightmares, I swear they move when you don't look" }
   ]
-  // (Other sectors already have their own pools below; you can expand them similarly if you want rare variants per sector)
 };
-
-// Rare / rumor dialogue
-const RareDialogue = {
-  NewYork: [
-    { speaker: "Whispered Voice", line: "They say the megastructure wasn’t built... it grew." },
-    { speaker: "Street Informant", line: "Watch the skies. A ghost ship’s been seen in orbit again." },
-    { speaker: "Elder", line: "Before the kilko disaster, the stars over New York shone differently." },
-    { speaker: "Unknown Transmission", line: "—[garbled]— THEY'RE STILL HERE —[signal lost]—" },
-    { speaker: "Courier", line: "A package I delivered yesterday… wasn’t there when they opened it." }
-  ],
-  EarthSpacePort: [
-    { speaker: "Dockside Rumormonger", line: "A freighter vanished mid-jump last night. All that came back was the hull… empty." },
-    { speaker: "Pilot", line: "There’s a corridor in bay 4 that isn’t on any blueprint." },
-    { speaker: "Ground Crew", line: "I heard a cry for help from inside a sealed cargo crate." },
-    { speaker: "Security Guard", line: "Keep your voice down—military’s moving something classified through here today." },
-    { speaker: "Maintenance Worker", line: "Bay 12’s radiation meters keep ticking up... even with no cargo inside." }
-  ],
-  Pacific: [
-    { speaker: "Diver", line: "Something followed me up from the trench... I swear I saw it in my reflection." },
-    { speaker: "Research Assistant", line: "The archive has a floor nobody’s allowed to talk about." },
-    { speaker: "AI Assistant", line: "Warning: Unknown sonar contact detected beneath your position." },
-    { speaker: "Marine Biologist", line: "These readings… they match the ones from the night before the kilko disaster." },
-    { speaker: "Oceanographer", line: "One of the drones came back with a human voice recorded... three kilometers under." }
-  ]
-};
-
-// Optional panic/emergency overrides
-const PanicOverrides = {
-  NewYork: [
-    { speaker: "Emergency Broadcaster", line: "Evacuate block 3. Structural resonance exceeds safe thresholds." },
-    { speaker: "Patrolman", line: "All civilians, clear the sector. Unauthorized presence will be detained." },
-    { speaker: "ECS Officer", line: "Containment breach in level 2. Do not approach without clearance." }
-  ],
-  EarthSpacePort: [
-    { speaker: "Dockmaster", line: "Unauthorized jump signature detected—lockdown initiated." },
-    { speaker: "Security Guard", line: "All personnel to safe zones. Intrusion in hyperspace corridor." },
-    { speaker: "Pilot", line: "Abort departure; nav beacons are spiking erratically." }
-  ],
-  Pacific: [
-    { speaker: "Researcher", line: "Seismic fluctuation escalating—pull all field teams back now!" },
-    { speaker: "AI Assistant", line: "Alert: Deep ocean anomaly expanding faster than predicted." },
-    { speaker: "Field Medic", line: "Casualty reports incoming. Prepare triage protocols." }
-  ]
-};
-
-// Cooldown state to avoid immediate repeats
-const recentCache = {
-  NewYork: { last: null, cooldown: 2, counter: 0 },
-  EarthSpacePort: { last: null, cooldown: 2, counter: 0 },
-  Pacific: { last: null, cooldown: 2, counter: 0 }
-  // extend for other keys if you apply rare/normal logic to them too
-};
-
-// === Ambient selection logic ===
-function getAmbientLine(location, options = {}) {
-  const { rareChance = 0.08, panic = false } = options;
-
-  if (panic) {
-    const pool = PanicOverrides[location] || [];
-    if (pool.length) {
-      return pool[Math.floor(Math.random() * pool.length)];
-    }
-  }
-
-  const useRare = Math.random() < rareChance;
-  const pool = useRare
-    ? (RareDialogue[location] || [])
-    : (NormalDialogue[location] || []);
-
-  if (!pool || pool.length === 0) {
-    return { speaker: "System", line: "No ambient data available." };
-  }
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function getAmbientLineWithCooldown(location, options = {}) {
-  const entry = getAmbientLine(location, options);
-  const state = recentCache[location];
-  if (state) {
-    if (state.last && entry.line === state.last.line && state.counter < state.cooldown) {
-      state.counter += 1;
-      // fallback to normal if possible
-      const fallbackPool = NormalDialogue[location] || [];
-      if (fallbackPool.length) {
-        const fallback = fallbackPool[Math.floor(Math.random() * fallbackPool.length)];
-        state.last = fallback;
-        state.counter = 0;
-        return fallback;
-      }
-    }
-    // accept entry
-    state.last = entry;
-    state.counter = 0;
-  }
-  return entry;
-}
-
-// Panic event controller
-let activePanic = { location: null, expiresAt: 0 };
-function triggerPanic(location, durationMs) {
-  activePanic = { location, expiresAt: Date.now() + durationMs };
-}
-function isPanicActive(location) {
-  return activePanic.location === location && Date.now() < activePanic.expiresAt;
-}
 
 // =======================
 // Core Functions
@@ -438,6 +474,7 @@ function travelToSubDestination(dest, btn, config) {
   }, delay);
 }
 
+
 function beginTravel(btn) {
   traveling = true;
   clearInterval(ambientTimer);
@@ -476,31 +513,34 @@ function hideTravelOverlay() {
   }, 800); // match the CSS transition duration
 }
 
+
+
 // =======================
-// Ambient Dialogue Logic (using rumor system)
+// Ambient Dialogue Logic
 // =======================
 function startAmbientDialogue(destKey) {
   clearInterval(ambientTimer);
-  if (!destKey) return;
+  const messages = ambientDialogue[destKey];
+  if (!messages || !messages.length) return;
 
-  // initial delayed line
   setTimeout(() => {
     if (currentLocation !== destKey) return;
-    const panic = isPanicActive(destKey);
-    const { speaker, line } = getAmbientLineWithCooldown(destKey, { rareChance: 0.08, panic }); // 8% base rare chance
+    const { speaker, line } = getRandomMessage(messages);
     appendLog(`${speaker}: "${line}"`);
   }, 8000);
 
-  // recurring
   ambientTimer = setInterval(() => {
     if (currentLocation !== destKey) {
       clearInterval(ambientTimer);
       return;
     }
-    const panic = isPanicActive(destKey);
-    const { speaker, line } = getAmbientLineWithCooldown(destKey, { rareChance: 0.08, panic });
+    const { speaker, line } = getRandomMessage(messages);
     appendLog(`${speaker}: "${line}"`);
   }, AMBIENT_INTERVAL);
+}
+
+function getRandomMessage(messages) {
+  return messages[Math.floor(Math.random() * messages.length)];
 }
 
 // =======================
