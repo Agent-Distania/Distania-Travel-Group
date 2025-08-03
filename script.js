@@ -463,11 +463,6 @@ function handleDestinationClick(dest, btn) {
     return;
   }
 
-  if (isMainDest) {
-    travelToMainDestination(dest, btn);
-  }
-}
-
 function travelToMainDestination(dest, btn) {
   beginTravel(btn);
   NovaAI.speak("travel");
