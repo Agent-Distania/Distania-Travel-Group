@@ -541,7 +541,6 @@ function travelToSubSubDestination(dest, btn, parentSub) {
     appendLog(`System: Arrived at ${dest.name}.`);
     NovaAI.speak("arrival");
     currentLocation = dest.key;
-    ];
 
     createButtons(dest.subDestinations);
     hideTravelOverlay();
