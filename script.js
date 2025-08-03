@@ -449,11 +449,9 @@ function handleDestinationClick(dest, btn) {
       return;
     }
 
-    // ✅ Fallback: Guess parent if user clicked directly into sub-sub-sector
-    const potentialParent = config.subDestinations.find(d => dest.key.startsWith(d.key + "_"));
-
-    if (potentialParent) {
-      travelToSubSubDestination(dest, btn, potentialParent);
+    const parentSub = config.subDestinations.find(d => d.key === currentLocation);
+    if (parentSub?.subDestinations?.some(d => d.key === dest.key)) {
+      travelToSubSubDestination(dest, btn, parentSub);
       return;
     }
   }
@@ -462,7 +460,6 @@ function handleDestinationClick(dest, btn) {
     travelToMainDestination(dest, btn);
   }
 }
-
 
 function travelToMainDestination(dest, btn) {
   beginTravel(btn);
@@ -540,23 +537,17 @@ function travelToSubSubDestination(dest, btn, parentSub) {
   NovaAI.speak("travel");
   showTravelOverlay(`Traveling deeper to ${dest.name}...`);
   appendLog(`System: Traveling deeper to ${dest.name}...`);
-
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
     NovaAI.speak("arrival");
     currentLocation = dest.key;
 
-    // ✅ Only show return button if it's the end of the line
-    createButtons([
-      { name: "Return to Previous", key: "Return" }
-    ]);
-
+    createButtons(dest.subDestinations);
     hideTravelOverlay();
     NovaAI.startIdle();
     traveling = false;
   }, 2000);
 }
-
 
 function beginTravel(btn) {
   traveling = true;
