@@ -158,7 +158,7 @@
   "ForwardRecon": [
     { "speaker": "Operator", "line": "Signal spike. Something’s out there." },
     { "speaker": "Drone AI", "line": "Scans incomplete. Retry in 3 minutes." },
-    { "speaker": "Watcher", "line":: "The void feels... different today." },
+    { "speaker": "Watcher", "line": "The void feels... different today." },
     { "speaker": "Lead", "line": "Automated beacon failure on channel 8." },
     { "speaker": "Guard", "line": "Secure the station perimeter, don't want any void bats sucking up power again." },
     { "speaker": "Explorer", "line": "I was on the last attempt to reach andromeda, why did they lie about why we failed?" }
