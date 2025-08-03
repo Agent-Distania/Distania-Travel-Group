@@ -1,31 +1,33 @@
 {
 
-  "NewYork": [
-    { "speaker": "Technician", "line": "Just patched another conduit. Third one this week." },
-    { "speaker": "Trader", "line": "Shipping lanes are still backed up. Blame the kolki disaster and the amount of space debris it caused thats not cleaned up" },
-    { "speaker": "Civilian", "line": "You ever wonder what’s *under* the megastructure?" },
-    { "speaker": "Courier", "line": "My route got rerouted again...every damn time I do this job" },
-    { "speaker": "Patrolman", "line": "Keep moving. Streets are restricted beyond block 5." },
-    { "speaker": "ECS Marine", "line": "What out for the torta structure friend, grounds unstable today" },
-    { "speaker": "ECS Officer", "line": "Enjoy your stay friend, the ECS HQ is at oregon if you need to visit, it'll be open for travel soon" },
-    { "speaker": "Administrative AI", "line": "Reminder: Only you can prevent another kilko disaster! Report occult activity or anything strange with mega structures to the authorities immediately!" }
+ // === Earth ===
+  NewYork: [
+    { speaker: "Technician", line: "Just patched another conduit. Third one this week." },
+    { speaker: "Trader", line: "Shipping lanes are still backed up. Blame the kolki disaster and the amount of space debris it caused thats not cleaned up" },
+    { speaker: "Civilian", line: "You ever wonder what’s *under* the megastructure?" },
+    { speaker: "Courier", line: "My route got rerouted again...every damn time I do this job" },
+    { speaker: "Patrolman", line: "Keep moving. Streets are restricted beyond block 5." },
+    { speaker: "ECS Marine", line: "What out for the torta structure friend, grounds unstable today"},
+    { speaker: "ECS Officer", line: "Enjoy your stay friend, the ECS HQ is at oregon if you need to visit, it'll be open for travel soon"},
+    { speaker: "Administrative AI", line: "Reminder: Only you can prevent another kilko disaster! Report occult activity or anything strange with mega structures to the authorities immediately!"}
   ],
-  "EarthSpacePort": [
-    { "speaker": "Dockmaster", "line": "Cargo bay 3 is sealed. Ready for next drop." },
-    { "speaker": "Security Guard", "line": "Keep an eye on bay 7. Something's off." },
-    { "speaker": "Engineer", "line": "Old warships still give me the chills, ghosts haunt them museum ships" },
-    { "speaker": "Pilot", "line": "A Venus run beats this chaos any day." },
-    { "speaker": "Load Chief", "line": "No one's touched bay 12 in hours. Go check." },
-    { "speaker": "Cargo mover", "line": "Bay 12 is cursed, during the red war some occult bastards bombed it, killed a lot of people, not everyone who died moved on" }
+  EarthSpacePort: [
+    { speaker: "Dockmaster", line: "Cargo bay 3 is sealed. Ready for next drop." },
+    { speaker: "Security Guard", line: "Keep an eye on bay 7. Something's off." },
+    { speaker: "Engineer", line: "Old warships still give me the chills, ghosts haunt them museum ships" },
+    { speaker: "Pilot", line: "A Venus run beats this chaos any day." },
+    { speaker: "Load Chief", line: "No one's touched bay 12 in hours. Go check." },
+    { speaker: "Cargo mover", line: "Bay 12 is cursed, during the red war some occult bastards bombed it, killed a lot of people, not everyone who died moved on" }
   ],
-  "Pacific": [
-    { "speaker": "Researcher", "line": "Another reading spike. That can't be good..." },
-    { "speaker": "AI Assistant", "line": "Reminder: hydration is optimal for humans." },
-    { "speaker": "Archivist", "line": "I swear one of the artifacts moved." },
-    { "speaker": "Diver", "line": "I saw light beneath grid 3. Unnatural light, but it was deeper than my approved depth limit." },
-    { "speaker": "Communication Expert", "line": "Relay's been glitching all morning. Again." },
-    { "speaker": "Researcher", "line": "I was there during the kilko disaster, I was lukily in oregon, it was untouched by the disaster and is now home to a thriving mega city and ECS." },
-    { "speaker": "Secuirty Guard", "line": "Your only authorized for floors 1-3 do not try and access 4-10 or I'll have to remove you from site" }
+  Pacific: [
+    { speaker: "Researcher", line: "Another reading spike. That can't be good..." },
+    { speaker: "AI Assistant", line: "Reminder: hydration is optimal for humans." },
+    { speaker: "Archivist", line: "I swear one of the artifacts moved." },
+    { speaker: "Diver", line: "I saw light beneath grid 3. Unnatural light, but it was deeper than my approved depth limit." },
+    { speaker: "Communication Expert", line: "Relay's been glitching all morning. Again." },
+    { speaker: "Researcher", line: "I was there during the kilko disaster, I was lukily in oregon, it was untouched by the disaster and is now home to a thriving mega city and ECS." },
+    { speaker: "Secuirty Guard", line: "Your only authorized for floors 1-3 do not try and access 4-10 or I'll have to remove you from site" }
+  ],
   ],
   "ColonyCore": [
     { "speaker": "Botanist", "line": "The trees are taking root. Finally." },
