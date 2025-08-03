@@ -104,10 +104,10 @@ const destinationConfigs = {
       { name: "Crystal Canyon Outpost", key: "CrystalCanyonOutpost", type: "shuttle" },
     ],
     sectorDescriptions: {
-      CapitalCity: "A neon metropolis untouched by the Kilko disaster.",
-      OrbitalTradeRing: "Commerce and supply hub for Vega Prime.",
-      StellarObservationSpire: "This is where the megastructures were first discovered.",
-      CrystalCanyonOutpost: "Gem mines that power everything from ships to phones."
+      CapitalCity: "A neon metropolis untouched by the Kilko disaster, its the most densly populated city near the sol system and a major trade hub.",
+      OrbitalTradeRing: "Commerce and supply hub for Vega Prime, all trading for the city is done here, along with many illegal activities",
+      StellarObservationSpire: "This is where the megastructures were first discovered on their approach for the sol system, but there was no time to warn them due to how fast they moved.",
+      CrystalCanyonOutpost: "Gem mines that power everything from ships to phones, odds are everything around you is powered by the gems from this mine, there are rumors a alien mega structure may reside in the abandonded tunnels."
     }
   },
   Andromeda: {
@@ -118,11 +118,13 @@ const destinationConfigs = {
       { name: "Forward Recon Station", key: "ForwardRecon", type: "drone" },
       { name: "Black Spire Relay", key: "BlackSpire" },
       { name: "Xeno Archives", key: "XenoArchives", type: "shuttle" },
+      { name: "Statue Research Wing", key: "StatueWing", type: "shuttle"},
     ],
     sectorDescriptions: {
-      ForwardRecon: "An unmanned station monitoring deep space anomalies.",
-      BlackSpire: "A jagged relay station transmitting signals between galaxies.",
-      XenoArchives: "Vault of alien artifacts and encrypted data."
+      ForwardRecon: "An unmanned station monitoring deep space anomalies, they keep a vigilante watch for any and everything",
+      BlackSpire: "A jagged relay station transmitting signals between galaxies, for what purpose though is unknown",
+      XenoArchives: "Vault of alien artifacts and encrypted data, it links to a room full of statues taken from the nearby 'Cyclops' mega structure.",
+      StatueWing: "A massive research wing of statues from the 'Cyclops' mega structure, many workers claim they move when no one is looking, so of course, there's no evidence to back this up."
     }
   }
 };
