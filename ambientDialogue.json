@@ -177,7 +177,14 @@
     { "speaker": "Language AI", "line": "Unknown language pattern forming. Tracking..." },
     { "speaker": "Historian", "line": "That statue wasn't facing that way yesterday." },
     { "speaker": "ARI Marine", "line": "Those statues give me nightmares, I swear they move when you don't look" }
-  ]
+  ],
+  "StatueWing": [
+    { "speaker": "Recovery Marine", "line": "I hate when they ask us to bring more statues in, their hard to find and harder to move, that place is a labyrinth" },
+    { "speaker": "Historian", "line": "These statues are made of a strange obsidian like rock, they seem to have been highly valued as their decorated with precious gems" },
+    { "speaker": "ECS Scholar", "line": "Ah welcome fellow exodus member! Have you come to study the statues to? Their quite fascinating!" },
+    { "speaker": "Crane Operator", "line": "Those statues are weird, I get told to re-adjust them every day, how are they always off center? I swear I'm doing everything right." },
+    { "speaker": "Delivery Pilot", "line": "I hate being so far away from home but these guys pay amazingly to ferry people and statues to and from the mega structure, seen some cool things in there to." },
+    { "speaker": "Security Guard", "line": "I'm glad they just ahve me lockup instead of staying and watching those things, I say we just throw them in the void." }
 
 
     }
