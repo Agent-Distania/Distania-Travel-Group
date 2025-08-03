@@ -39,15 +39,11 @@ const destinationConfigs = {
       { name: "New York Sector", key: "NewYork" },
       { name: "Earth Space Port", key: "EarthSpacePort" },
       { name: "Pacific Research Facility", key: "Pacific" },
-      { name: "Library Archives", key: "Library" },
-
     ],
     sectorDescriptions: {
       NewYork: "A massive sprawling city, a far cry from the concrete jungle of old, its more spread out layout in the modern day after its rebuilding has brought new york into the modern day. Its proximity to the Torta structures fuels its economy.",
       EarthSpacePort: "A large cargo and civilian port that once fueled the Red War, its defenses await an enemy long since defeated. Now a gateway for imports to Earth's mega cities.",
-      Pacific: "A massive floating research base that studies artifacts from the Kilko disaster and other megastructures across the system, its the main research hub for humanity but its reputation has been tarnished by the kilko disaster",
-      Library: "A grand archive housing pre-disaster literature, ancient blueprints, and rare physical books. Quiet, preserved, and echoing with whispers of the past."
-
+      Pacific: "A massive floating research base that studies artifacts from the Kilko disaster and other megastructures across the system, its the main research hub for humanity but its reputation has been tarnished by the kilko disaster"
     }
   },
   Mars: {
@@ -130,21 +126,6 @@ const destinationConfigs = {
     }
   }
 };
-
-const libraryBooks = [
-  {
-    title: "Kilko Disaster Report",
-    content: "An extensive government report analyzing the causes and aftermath of the Kilko megastructure failure. Classified sections are redacted."
-  },
-  {
-    title: "Earth's Rebuilding Era",
-    content: "Following the disaster, survivors organized mass rebuilding programs under the ECS. This marked the beginning of the New Infrastructure Movement..."
-  },
-  {
-    title: "Artifacts & Anomalies",
-    content: "A collection of field notes and interpretations from Pacific Research Facility scientists. The source of many anomalies remains unknown."
-  }
-];
 
 // =======================
 // Ambient Dialogue Data
@@ -515,42 +496,24 @@ function endTravel(newLocation, hubKey) {
 // =======================
 // Travel Overlay Logic
 // =======================
-function travelToSubDestination(dest, btn, config) {
-  beginTravel(btn);
-  NovaAI.speak("travel");
-  const description = config.sectorDescriptions?.[dest.key];
-  const travelType = dest.type || config.travelType || 'shuttle';
-
-  const travelLabel = {
-    drone: "Deploying drone",
-    orbit: "Initiating orbital alignment",
-    rover: "Boarding the rover",
-    shuttle: "Boarding the shuttle",
-    train: "Boarding the train"
-  }[travelType] || "Traveling";
-
-  showTravelOverlay(`${travelLabel} to ${dest.name}...`);
-  appendLog(`System: ${travelLabel} to ${dest.name}...`);
-
-  const delay = travelType === 'drone' ? 2000 : 3000;
-  setTimeout(() => {
-    appendLog(`System: Arrived at ${dest.name}.`);
-    if (description) appendLog(description);
-    NovaAI.speak("arrival");
-    endTravel(dest.key, currentHub);
-    hideTravelOverlay();
-
-    // ✅ Special case: handle Library destination
-    if (dest.key === "Library") {
-      displayLibraryBooks();
-      return;
-    }
-
-    // Start ambient dialogue for normal destinations
-    startAmbientDialogue(dest.key);
-    NovaAI.startIdle();
-  }, delay);
+function showTravelOverlay(message = "Engaging transit...") {
+  const overlay = document.getElementById('travelOverlay');
+  if (!overlay) return;
+  overlay.textContent = message;
+  overlay.classList.remove('hidden');
+  overlay.classList.add('active');
 }
+
+function hideTravelOverlay() {
+  const overlay = document.getElementById('travelOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('active');
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+  }, 800); // match the CSS transition duration
+}
+
+
 
 // =======================
 // Ambient Dialogue Logic
@@ -579,39 +542,6 @@ function startAmbientDialogue(destKey) {
 function getRandomMessage(messages) {
   return messages[Math.floor(Math.random() * messages.length)];
 }
-
-function displayLibraryBooks() {
-  clearDestinations();
-  const header = document.createElement('h2');
-  header.textContent = "Library Archives — Select a Book";
-  destList.appendChild(header);
-
-  libraryBooks.forEach(book => {
-    const btn = document.createElement('button');
-    btn.textContent = book.title;
-    btn.addEventListener('click', () => openBook(book));
-    destList.appendChild(btn);
-  });
-
-  const backBtn = document.createElement('button');
-  backBtn.textContent = "Return to Sub-Destinations";
-  backBtn.addEventListener('click', () => {
-    const config = destinationConfigs[currentHub];
-    createButtons(config.subDestinations);
-  });
-  destList.appendChild(backBtn);
-}
-
-function openBook(book) {
-  document.getElementById('bookTitle').textContent = book.title;
-  document.getElementById('bookContent').textContent = book.content;
-  document.getElementById('bookModal').classList.remove('hidden');
-}
-
-document.getElementById('closeBookModal').addEventListener('click', () => {
-  document.getElementById('bookModal').classList.add('hidden');
-});
-
 
 // =======================
 // Event Handlers
