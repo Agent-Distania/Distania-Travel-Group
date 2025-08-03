@@ -329,7 +329,7 @@ const NovaAI = {
       "Nova: Hull integrity holding at 100%, brace for arrival",
       "Nova: Did you know you could survive for up to 2 minutes in the vaccum of space? You'd lose consciousness after 15 seconds tho"
     ],
-    arrival: [
+      arrival: [
       "Nova: Arrival confirmed. No hull breaches detected.",
       "Nova: Welcome. Conditions seem... breathable.",
       "Nova: Surface scans are returning anomalies. Intriguing.",
@@ -337,7 +337,13 @@ const NovaAI = {
       "Nova: We've arrived. Try not to break anything, Captain.",
       "Nova: The stars are beautiful here at night",
       "Nova: Remember to take your pistol; thieves can't steal if they're not breathing!",
-      "Nova: If you can, get me an AI body. I'm tired of being a disembodied ship voice."
+      "Nova: If you can, get me an AI body. I'm tired of being a disembodied ship voice.",
+      "Nova: Amplifier is a joy to be around, you should stop by oregon when you can!",
+      "Nova: Did you know I'm 36 years old? I was created when smart AI's became a thing!",
+      "Nova: I can get us permits to visit the local mega structures if you want",
+      "Nova: Would yous still like me if I was a cat or something?",
+      "Nova: Void dragons are just the cutest mega creatures in space!",
+      "Nova: Thankfully we're not broke so I can pay for the landing"
     ],
     idle: [
       "Nova: Systems green. Do you require anything, Captain?",
@@ -347,7 +353,11 @@ const NovaAI = {
       "Nova: I've re-calibrated your neural quiet mode. You're welcome.",
       "Nova: I don't like it when you get quiet. Do I need to phone a friend?",
       "Nova: Please tell me you're not experiencing PTSD, Captain. The last time was... unideal.",
-      "Nova: I wish I had a body like that old video game character. Her name starts with a C?"
+      "Nova: I wish I had a body like that old video game character. Her name starts with a C?",
+      "Nova: You know I'm not attached to the ship right? I could accompany you!",
+      "Nova: I'm a disk in the main console, just unplug me and put me in your Datapad! I can come with you!",
+      "Nova: I am sure there is nothing to stress over while out here in the void",
+      "Nova: Remeber! There's always tomorrow"
     ]
   },
 
