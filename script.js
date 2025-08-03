@@ -327,11 +327,7 @@ const NovaAI = {
       "Nova: Next stop, the void between places.",
       "Nova: Ignore any impacts you hear, it's probably just an asteroid.",
       "Nova: Hull integrity holding at 100%, brace for arrival",
-      "Nova: Did you know you could survive for up to 2 minutes in the vaccum of space? You'd lose consciousness after 15 seconds tho",
-      "Nova: Zero-point travel is not entirely understood, we got it from the mega structures! Some had massive ship bays that had city sized ships inside!",
-      "Nova: The torta structures are connected to the mega structures, its believed they visited earth when it was just rock, billions of years ago!",
-      "Nova: Zero point travel is the only way to leave the sol system quickly, generation ships are simply unviable until we invent cryo stasis",
-      "Nova: Fuel levels holding, this new zero point core is very efficent!"
+      "Nova: Did you know you could survive for up to 2 minutes in the vaccum of space? You'd lose consciousness after 15 seconds tho"
     ],
     arrival: [
       "Nova: Arrival confirmed. No hull breaches detected.",
@@ -341,13 +337,7 @@ const NovaAI = {
       "Nova: We've arrived. Try not to break anything, Captain.",
       "Nova: The stars are beautiful here at night",
       "Nova: Remember to take your pistol; thieves can't steal if they're not breathing!",
-      "Nova: If you can, get me an AI body. I'm tired of being a disembodied ship voice.",
-      "Nova: Amplifier is a joy to be around, you should stop by oregon when you can!",
-      "Nova: Did you know I'm 36 years old? I was created when smart AI's became a thing!",
-      "Nova: I can get us permits to visit the local mega structures if you want",
-      "Nova: Would yous still like me if I was a cat or something?",
-      "Nova: Void dragons are just the cutest mega creatures in space!",
-      "Nova: Thankfully we're not broke so I can pay for the landing"
+      "Nova: If you can, get me an AI body. I'm tired of being a disembodied ship voice."
     ],
     idle: [
       "Nova: Systems green. Do you require anything, Captain?",
@@ -357,11 +347,7 @@ const NovaAI = {
       "Nova: I've re-calibrated your neural quiet mode. You're welcome.",
       "Nova: I don't like it when you get quiet. Do I need to phone a friend?",
       "Nova: Please tell me you're not experiencing PTSD, Captain. The last time was... unideal.",
-      "Nova: I wish I had a body like that old video game character. Her name starts with a C?",
-      "Nova: You know I'm not attached to the ship right? I could accompany you!",
-      "Nova: I'm a disk in the main console, just unplug me and put me in your Datapad! I can come with you!",
-      "Nova: I am sure there is nothing to stress over while out here in the void",
-      "Nova: Remeber! There's always tomorrow"
+      "Nova: I wish I had a body like that old video game character. Her name starts with a C?"
     ]
   },
 
@@ -541,6 +527,12 @@ function travelToSubSubDestination(dest, btn, parentSub) {
     appendLog(`System: Arrived at ${dest.name}.`);
     NovaAI.speak("arrival");
     currentLocation = dest.key;
+
+    dest.subDestinations = [
+      { name: "Return to Previous", key: "Return" },
+      { name: `${dest.name} Core Zone`, key: `${dest.key}_1` },
+      { name: `${dest.name} Outer Sector`, key: `${dest.key}_2` }
+    ];
 
     createButtons(dest.subDestinations);
     hideTravelOverlay();
