@@ -131,7 +131,17 @@ const destinationConfigs = {
 // Ambient Dialogue Data
 // =======================
 const ambientDialogue = {
-  // === Earth ===
+  // Load ambientDialogue from external JSON
+fetch("ambientDialogue.json")
+  .then(res => res.json())
+  .then(data => {
+    Object.assign(ambientDialogue, data);
+    console.log("Ambient dialogue loaded.");
+  })
+  .catch(err => {
+    console.error("Failed to load ambientDialogue.json:", err);
+  });
+
   
 
 // =======================
