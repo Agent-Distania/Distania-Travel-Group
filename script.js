@@ -130,8 +130,9 @@ const destinationConfigs = {
 // =======================
 // Ambient Dialogue Data
 // =======================
-const ambientDialogue = {
-  // Load ambientDialogue from external JSON
+const ambientDialogue = {};
+
+// Load ambientDialogue from external JSON
 fetch("ambientDialogue.json")
   .then(res => res.json())
   .then(data => {
@@ -141,8 +142,6 @@ fetch("ambientDialogue.json")
   .catch(err => {
     console.error("Failed to load ambientDialogue.json:", err);
   });
-
-  
 
 // =======================
 // Core Functions
