@@ -326,7 +326,8 @@ const NovaAI = {
       "Nova: Don't worry, I’ve run simulations. Only one exploded.",
       "Nova: Next stop, the void between places.",
       "Nova: Ignore any impacts you hear, it's probably just an asteroid.",
-      "Nova: Hull integrity holding at 100%, brace for arrival"
+      "Nova: Hull integrity holding at 100%, brace for arrival",
+      "Nova: Did you know you could survive for up to 2 minutes in the vaccum of space? You'd lose consciousness after 15 seconds tho"
     ],
     arrival: [
       "Nova: Arrival confirmed. No hull breaches detected.",
@@ -491,6 +492,12 @@ function travelToSubDestination(dest, btn, config) {
         { name: "Downtown Core", key: "NewYork_Downtown" },
         { name: "Torta Excavation Site", key: "NewYork_Torta" },
         { name: "Skyline Transit Nexus", key: "NewYork_Transit" }
+    if (dest.key === "EarthSpacePort") {
+         dest.subDestinations = [
+        { name: "Return to Previous", key: "Return" },
+        { name: "Processing", key: "EarthSpacePort_FrontDesk" },
+        { name: "Cargo Intake", key: "EarthSpacePort_Cargo" },
+        { name: "Docking Bay", key: "EarthSpacePort_Docking"
       ];
     } else {
       // Otherwise use generic nested sectors
