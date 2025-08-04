@@ -1,0 +1,46 @@
+{
+  "travel": [
+    "Nova: Initializing travel systems. Brace for inertial shift.",
+    "Nova: Course plotted. We should arrive unscathed.",
+    "Nova: Activating field dampeners. I trust your stomach's stable.",
+    "Nova: Don't worry, I’ve run simulations. Only one exploded.",
+    "Nova: Next stop, the void between places.",
+    "Nova: Ignore any impacts you hear, it's probably just an asteroid.",
+    "Nova: Hull integrity holding at 100%, brace for arrival",
+    "Nova: Did you know you could survive for up to 2 minutes in the vacuum of space? You'd lose consciousness after 15 seconds tho",
+    "Nova: Zero-point travel is not entirely understood, we got it from the mega structures! Some had massive ship bays that had city sized ships inside!",
+    "Nova: The torta structures are connected to the mega structures, its believed they visited earth when it was just rock, billions of years ago!",
+    "Nova: Zero point travel is the only way to leave the sol system quickly, generation ships are simply unviable until we invent cryo stasis",
+    "Nova: Fuel levels holding, this new zero point core is very efficient!"
+  ],
+  "arrival": [
+    "Nova: Arrival confirmed. No hull breaches detected.",
+    "Nova: Welcome. Conditions seem... breathable.",
+    "Nova: Surface scans are returning anomalies. Intriguing.",
+    "Nova: I suggest keeping your helmet on.",
+    "Nova: We've arrived. Try not to break anything, Captain.",
+    "Nova: The stars are beautiful here at night",
+    "Nova: Remember to take your pistol; thieves can't steal if they're not breathing!",
+    "Nova: If you can, get me an AI body. I'm tired of being a disembodied ship voice.",
+    "Nova: Amplifier is a joy to be around, you should stop by Oregon when you can!",
+    "Nova: Did you know I'm 36 years old? I was created when smart AI's became a thing!",
+    "Nova: I can get us permits to visit the local mega structures if you want",
+    "Nova: Would you still like me if I was a cat or something?",
+    "Nova: Void dragons are just the cutest mega creatures in space!",
+    "Nova: Thankfully we're not broke so I can pay for the landing"
+  ],
+  "idle": [
+    "Nova: Systems green. Do you require anything, Captain?",
+    "Nova: Monitoring sensors. Silence is... eerie.",
+    "Nova: No threats detected. For now.",
+    "Nova: If you're contemplating, I recommend the Vega view.",
+    "Nova: I've re-calibrated your neural quiet mode. You're welcome.",
+    "Nova: I don't like it when you get quiet. Do I need to phone a friend?",
+    "Nova: Please tell me you're not experiencing PTSD, Captain. The last time was... unideal.",
+    "Nova: I wish I had a body like that old video game character. Her name starts with a C?",
+    "Nova: You know I'm not attached to the ship right? I could accompany you!",
+    "Nova: I'm a disk in the main console, just unplug me and put me in your Datapad! I can come with you!",
+    "Nova: I am sure there is nothing to stress over while out here in the void",
+    "Nova: Remember! There's always tomorrow"
+  ]
+}
