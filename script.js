@@ -347,6 +347,12 @@ function showSubDestinations(dest, parentDest) {
 }
 
 function travelToMainDestination(dest, btn) {
+  console.log("=== DEBUGGING travelToMainDestination ===");
+  console.log("dest:", dest);
+  console.log("dest.key:", dest.key);
+  console.log("destinationConfigs:", destinationConfigs);
+  console.log("destinationConfigs[dest.key]:", destinationConfigs[dest.key]);
+  
   beginTravel(btn);
   NovaAI.speak("travel");
   appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
@@ -357,10 +363,16 @@ function travelToMainDestination(dest, btn) {
     endTravel(dest.key, dest.key);
     
     const config = destinationConfigs[dest.key];
+    console.log("config retrieved:", config);
+    console.log("config.description:", config?.description);
     
-    // ✅ ADD THIS: Display the planet description
-    if (config.description) {
+    // ✅ Display the planet description
+    if (config && config.description) {
+      console.log("Adding description to log:", config.description);
       appendLog(config.description);
+    } else {
+      console.log("❌ No description found!");
+      console.log("Available configs:", Object.keys(destinationConfigs));
     }
     
     createButtons(config.subDestinations);
