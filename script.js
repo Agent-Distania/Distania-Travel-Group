@@ -101,16 +101,6 @@ fetch("novaDialogue.json")
     console.error("Failed to load novaDialogue.json:", err);
   });
 
-
-  speak(category) {
-    const lines = this.dialogue[category];
-    if (!lines?.length) return;
-    const line = lines[Math.floor(Math.random() * lines.length)];
-    appendLog(line);
-  },
-
-  idleTimer: null,
-
   startIdle() {
     clearInterval(this.idleTimer);
     this.idleTimer = setInterval(() => {
@@ -354,25 +344,30 @@ function getRandomMessage(messages) {
 // =======================
 // Event Handlers
 // =======================
-proceedBtn.addEventListener('click', () => {
-  startupScreen.classList.add('hidden');
-  loginScreen.classList.remove('hidden');
-});
+window.addEventListener('DOMContentLoaded', () => {
+  const proceedBtn = document.getElementById('proceedBtn');
+  const onBtn = document.getElementById('onBtn');
 
-onBtn.addEventListener('click', () => {
-  loginScreen.classList.add('hidden');
-  travelScreen.classList.remove('hidden');
-  appendLog("System: Welcome, Captain. Please select a destination.");
+  proceedBtn?.addEventListener('click', () => {
+    startupScreen.classList.add('hidden');
+    loginScreen.classList.remove('hidden');
+  });
 
-  // Wait until destinations are loaded
-  if (mainDestinations.length > 0) {
-    createButtons(mainDestinations);
-  } else {
-    const waitForData = setInterval(() => {
-      if (mainDestinations.length > 0) {
-        clearInterval(waitForData);
-        createButtons(mainDestinations);
-      }
-    }, 100);
-  }
+  onBtn?.addEventListener('click', () => {
+    loginScreen.classList.add('hidden');
+    travelScreen.classList.remove('hidden');
+    appendLog("System: Welcome, Captain. Please select a destination.");
+
+    // Wait until destinations are loaded
+    if (mainDestinations.length > 0) {
+      createButtons(mainDestinations);
+    } else {
+      const waitForData = setInterval(() => {
+        if (mainDestinations.length > 0) {
+          clearInterval(waitForData);
+          createButtons(mainDestinations);
+        }
+      }, 100);
+    }
+  });
 });
