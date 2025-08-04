@@ -347,12 +347,6 @@ function showSubDestinations(dest, parentDest) {
 }
 
 function travelToMainDestination(dest, btn) {
-  console.log("=== DEBUGGING travelToMainDestination ===");
-  console.log("dest:", dest);
-  console.log("dest.key:", dest.key);
-  console.log("destinationConfigs:", destinationConfigs);
-  console.log("destinationConfigs[dest.key]:", destinationConfigs[dest.key]);
-  
   beginTravel(btn);
   NovaAI.speak("travel");
   appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
