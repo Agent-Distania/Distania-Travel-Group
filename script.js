@@ -30,9 +30,6 @@ fetch("destinations.json")
   })
   .catch(err => console.error("Failed to load destination data:", err));
 
-
-
-
 // =======================
 // Ambient Dialogue Data
 // =======================
@@ -48,8 +45,6 @@ fetch("ambientDialogue.json")
   .catch(err => {
     console.error("Failed to load ambientDialogue.json:", err);
   });
-
-
 
 // =======================
 // Core Functions
@@ -100,20 +95,6 @@ fetch("novaDialogue.json")
   .catch(err => {
     console.error("Failed to load novaDialogue.json:", err);
   });
-
-  startIdle() {
-    clearInterval(this.idleTimer);
-    this.idleTimer = setInterval(() => {
-      if (!traveling && Math.random() < 0.6) {
-        this.speak("idle");
-      }
-    }, 45000);
-  },
-
-  stopIdle() {
-    clearInterval(this.idleTimer);
-  }
-};
 
 function clearDestinations() {
   destList.innerHTML = '<h2>Select Destination</h2>';
@@ -227,11 +208,11 @@ function travelToSubDestination(dest, btn, config) {
     currentLocation = dest.key;
 
     if (dest.subDestinations) {
-  createButtons(dest.subDestinations);
-} else {
-  dest.subDestinations = generateDefaultSubDestinations(dest);
-  createButtons(dest.subDestinations);
-}
+      createButtons(dest.subDestinations);
+    } else {
+      dest.subDestinations = generateDefaultSubDestinations(dest);
+      createButtons(dest.subDestinations);
+    }
 
     hideTravelOverlay();
     startAmbientDialogue(dest.key);
@@ -258,6 +239,7 @@ function travelToSubSubDestination(dest, btn, parentSub) {
       createButtons(dest.subDestinations);
     } else {
       dest.subDestinations = generateDefaultSubDestinations(dest);
+      createButtons(dest.subDestinations);
     }
 
     hideTravelOverlay();
@@ -312,7 +294,6 @@ function generateDefaultSubDestinations(dest) {
   ];
 }
 
-
 // =======================
 // Ambient Dialogue Logic
 // =======================
@@ -345,29 +326,42 @@ function getRandomMessage(messages) {
 // Event Handlers
 // =======================
 window.addEventListener('DOMContentLoaded', () => {
+  // Get elements again to ensure they exist
   const proceedBtn = document.getElementById('proceedBtn');
   const onBtn = document.getElementById('onBtn');
+  
+  console.log('DOM loaded, proceedBtn:', proceedBtn, 'onBtn:', onBtn); // Debug log
 
-  proceedBtn?.addEventListener('click', () => {
-    startupScreen.classList.add('hidden');
-    loginScreen.classList.remove('hidden');
-  });
+  if (proceedBtn) {
+    proceedBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('Proceed button clicked'); // Debug log
+      startupScreen.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+    });
+  }
 
-  onBtn?.addEventListener('click', () => {
-    loginScreen.classList.add('hidden');
-    travelScreen.classList.remove('hidden');
-    appendLog("System: Welcome, Captain. Please select a destination.");
+  if (onBtn) {
+    onBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('ON button clicked'); // Debug log
+      loginScreen.classList.add('hidden');
+      travelScreen.classList.remove('hidden');
+      appendLog("System: Welcome, Captain. Please select a destination.");
 
-    // Wait until destinations are loaded
-    if (mainDestinations.length > 0) {
-      createButtons(mainDestinations);
-    } else {
-      const waitForData = setInterval(() => {
-        if (mainDestinations.length > 0) {
-          clearInterval(waitForData);
-          createButtons(mainDestinations);
-        }
-      }, 100);
-    }
-  });
+      // Wait until destinations are loaded
+      if (mainDestinations.length > 0) {
+        createButtons(mainDestinations);
+      } else {
+        const waitForData = setInterval(() => {
+          if (mainDestinations.length > 0) {
+            clearInterval(waitForData);
+            createButtons(mainDestinations);
+          }
+        }, 100);
+      }
+    });
+  } else {
+    console.error('ON button not found!'); // Debug log
+  }
 });
