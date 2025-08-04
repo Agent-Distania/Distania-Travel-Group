@@ -15,6 +15,7 @@ const logEl = document.getElementById('log');
 let traveling = false;
 let currentLocation = null;
 let currentHub = null;
+let currentSubLocation = null; // Added for tracking sub-destinations
 let ambientTimer = null;
 const AMBIENT_INTERVAL = 30000;
 
@@ -115,57 +116,111 @@ function createButtons(destinations) {
   });
 }
 
+// Helper function to find a destination by key in nested structure
+function findDestinationByKey(key, destinations) {
+  for (const dest of destinations) {
+    if (dest.key === key) {
+      return dest;
+    }
+    if (dest.subDestinations) {
+      const found = findDestinationByKey(key, dest.subDestinations);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
 function handleDestinationClick(dest, btn) {
   if (traveling) return;
 
   const isReturn = dest.key === 'Return';
   const isMainDest = mainDestinations.some(d => d.key === dest.key);
 
+  console.log(`Clicked: ${dest.name}, Key: ${dest.key}, Current Hub: ${currentHub}, Current Location: ${currentLocation}, Current Sub: ${currentSubLocation}`);
+
   if (isReturn) {
-    if (currentLocation && currentLocation !== currentHub) {
-      const config = destinationConfigs[currentHub];
-      currentLocation = currentHub;
-      createButtons(config.subDestinations);
-      appendLog(`System: Returning to ${currentHub} sectors.`);
-      return;
-    } else {
-      currentLocation = null;
-      currentHub = null;
-      clearInterval(ambientTimer);
-      createButtons(mainDestinations);
-      appendLog("System: Returning to ship. Please select a destination.");
-      return;
-    }
+    handleReturnClick();
+    return;
   }
 
   if (isMainDest && !currentHub) {
-    const config = destinationConfigs[dest.key];
-    currentHub = dest.key;
-    currentLocation = dest.key;
-    appendLog(`System: ${dest.description || config.description}`);
-    createButtons(config.subDestinations);
-    appendLog(`System: Accessing ${dest.name} sectors.`);
+    travelToMainDestination(dest, btn);
     return;
   }
 
   if (currentHub) {
     const config = destinationConfigs[currentHub];
-    const isValidSub = config.subDestinations?.some(d => d.key === dest.key);
-
-    if (isValidSub) {
+    
+    // Check if it's a direct sub-destination of the hub
+    const isDirectSub = config.subDestinations?.some(d => d.key === dest.key);
+    
+    if (isDirectSub) {
       travelToSubDestination(dest, btn, config);
       return;
     }
 
-    const parentSub = config.subDestinations.find(d => d.key === currentLocation);
-    if (parentSub?.subDestinations?.some(d => d.key === dest.key)) {
-      travelToSubSubDestination(dest, btn, parentSub);
+    // Check if it's a sub-sub-destination (third level)
+    if (currentSubLocation) {
+      const parentSub = findDestinationByKey(currentSubLocation, config.subDestinations);
+      if (parentSub?.subDestinations?.some(d => d.key === dest.key)) {
+        travelToSubSubDestination(dest, btn, parentSub);
+        return;
+      }
+    }
+
+    // Check if current location has sub-destinations to show
+    const currentDest = findDestinationByKey(currentLocation, config.subDestinations);
+    if (currentDest?.subDestinations?.some(d => d.key === dest.key)) {
+      // This is navigating to a sub-destination's sub-destinations
+      showSubDestinations(dest, currentDest);
       return;
     }
   }
 
-  if (isMainDest) {
-    travelToMainDestination(dest, btn);
+  console.log("No matching handler found for destination:", dest);
+}
+
+function handleReturnClick() {
+  if (currentSubLocation && currentSubLocation !== currentHub) {
+    // Return from sub-sub-destination to sub-destination
+    const config = destinationConfigs[currentHub];
+    const parentSub = findDestinationByKey(currentSubLocation, config.subDestinations);
+    if (parentSub) {
+      currentLocation = currentSubLocation;
+      createButtons(parentSub.subDestinations);
+      appendLog(`System: Returning to ${parentSub.name}.`);
+      currentSubLocation = null;
+      return;
+    }
+  }
+  
+  if (currentLocation && currentLocation !== currentHub) {
+    // Return from sub-destination to hub
+    const config = destinationConfigs[currentHub];
+    currentLocation = currentHub;
+    currentSubLocation = null;
+    createButtons(config.subDestinations);
+    appendLog(`System: Returning to ${currentHub} sectors.`);
+    return;
+  }
+  
+  // Return to ship
+  currentLocation = null;
+  currentHub = null;
+  currentSubLocation = null;
+  clearInterval(ambientTimer);
+  createButtons(mainDestinations);
+  appendLog("System: Returning to ship. Please select a destination.");
+}
+
+function showSubDestinations(dest, parentDest) {
+  // This handles showing the sub-destinations without "traveling"
+  currentSubLocation = currentLocation;
+  currentLocation = dest.key;
+  createButtons(dest.subDestinations);
+  appendLog(`System: Accessing ${dest.name}.`);
+  if (dest.description) {
+    appendLog(dest.description);
   }
 }
 
@@ -178,6 +233,10 @@ function travelToMainDestination(dest, btn) {
     appendLog(`System: Zero-point travel finished. Welcome to ${dest.name}.`);
     NovaAI.speak("arrival");
     endTravel(dest.key, dest.key);
+    
+    const config = destinationConfigs[dest.key];
+    createButtons(config.subDestinations);
+    
     hideTravelOverlay();
     NovaAI.startIdle();
   }, 3000);
@@ -206,6 +265,7 @@ function travelToSubDestination(dest, btn, config) {
     if (description) appendLog(description);
     NovaAI.speak("arrival");
     currentLocation = dest.key;
+    currentSubLocation = null;
 
     if (dest.subDestinations) {
       createButtons(dest.subDestinations);
