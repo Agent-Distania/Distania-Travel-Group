@@ -1,45 +1,85 @@
-{
+ {
+  "NewYork_Downtown": [
+    { "speaker": "Transit Officer", "line": "All lanes clear. Metro 5 is delayed due to power reroute." },
+    { "speaker": "Vendor", "line": "Get your synth-tacos! Grown under real UV!" },
+    { "speaker": "Courier", "line": "Skylift was stuck again. I'm climbing that thing next time." },
+    { "speaker": "Civilian", "line": "They say the archives are haunted — like real ghosts from the Red War." }
+  ],
+  "NewYork_Downtown_Core": [
+    { "speaker": "Security Drone", "line": "Core ID confirmed. Proceed to elevator cluster B." },
+    { "speaker": "Corporate Assistant", "line": "Your 09:00 with Kiltech Logistics is delayed — as usual." },
+    { "speaker": "Lift Tech", "line": "Zero-g platforms are down again. Enjoy the stairs." }
+  ],
+  "NewYork_Downtown_Outer": [
+    { "speaker": "Street Preacher", "line": "Repent! The megastructures *breathe* in silence!" },
+    { "speaker": "Retired Marine", "line": "This block used to be a frontline. Feels weird seeing kids here." },
+    { "speaker": "Resident", "line": "You can still smell the fire if the wind's just right." }
+  ],
+  "NewYork_Torta": [
+    { "speaker": "Excavator", "line": "Torta shell’s denser than we thought. Plasma cutters barely scratch it." },
+    { "speaker": "ECS Engineer", "line": "Stay off the red-marked zones. Last week one just... collapsed." },
+    { "speaker": "Research AI", "line": "Caution: ambient radiation near node six exceeds safe levels." },
+    { "speaker": "Foreman", "line": "Get that drone out of the dig trench or we lose it *again*." }
+  ],
+  "NewYork_Transit": [
+    { "speaker": "Nexus Operator", "line": "Shuttle seven rerouted. Atmospheric traffic dense over Tier 4." },
+    { "speaker": "Security", "line": "Scan complete. You're clean. Move." },
+    { "speaker": "Announcer", "line": "Please keep limbs inside transit cars during ascension." },
+    { "speaker": "Technician", "line": "Mag-lift coils just burned out — again. We need replacements from Mars." }
+  ],
+  "EarthSpacePort_FrontDesk": [
+    { "speaker": "Customs AI", "line": "Declare all kilko artifacts immediately. Failure results in fines." },
+    { "speaker": "Pilot", "line": "Some of these tourists are bringing in *void berries*. That’s not legal yet, right?" },
+    { "speaker": "Port Staff", "line": "Dock 8's inspection line is backed up. Again." }
+  ],
+  "EarthSpacePort_FrontDesk_Core": [
+    { "speaker": "Admin AI", "line": "All operations green. Transit permits authorized." },
+    { "speaker": "Security Officer", "line": "Core clearance required beyond this point. No exceptions." },
+    { "speaker": "Supervisor", "line": "Meeting room 12 flooded again. Someone tell maintenance." }
+  ],
+  "EarthSpacePort_FrontDesk_Outer": [
+    { "speaker": "Traveler", "line": "I’ve been waiting for *six hours*. They said it was a short line!" },
+    { "speaker": "Terminal Announcer", "line": "Shuttle to Vega Prime delayed due to solar interference." },
+    { "speaker": "Guard", "line": "Don't wander past the yellow line. That's drone territory." }
+  ],
+  "EarthSpacePort_Cargo": [
+    { "speaker": "Loader", "line": "This crate’s got old markings… like *Red War* era." },
+    { "speaker": "Dockmaster", "line": "Cargo bay 12 is leaking again. Someone patch it up." },
+    { "speaker": "Security", "line": "No one touches the frozen containers. Orders from above." }
+  ],
+  "EarthSpacePort_Docking": [
+    { "speaker": "Dockhand", "line": "Another civilian shuttle just clipped the gantry. That's the third this week." },
+    { "speaker": "Pilot", "line": "Got fuel, got clearance, still sitting here. Typical Earth port." },
+    { "speaker": "Boarding Agent", "line": "Next group to Europa, line up at Dock 17." }
+  ],
+
 
 
   
-  "NewYork": [
-    { "speaker": "Technician", "line": "Just patched another conduit. Third one this week." },
-    { "speaker": "Trader", "line": "Shipping lanes are still backed up. Blame the kolki disaster and the amount of space debris it caused thats not cleaned up" },
-    { "speaker": "Civilian", "line": "You ever wonder what’s *under* the megastructure?" },
-    { "speaker": "Courier", "line": "My route got rerouted again...every damn time I do this job" },
-    { "speaker": "Patrolman", "line": "Keep moving. Streets are restricted beyond block 5." },
-    { "speaker": "ECS Marine", "line": "What out for the torta structure friend, grounds unstable today"},
-    { "speaker": "ECS Officer", "line": "Enjoy your stay friend, the ECS HQ is at oregon if you need to visit, it'll be open for travel soon"},
-    { "speaker": "Administrative AI", "line": "Reminder: Only you can prevent another kilko disaster! Report occult activity or anything strange with mega structures to the authorities immediately!"}
-
+  "ColonyCore_Residential": [
+    { "speaker": "Resident", "line": "The filtration system hums differently today. Something’s off." },
+    { "speaker": "Teacher", "line": "Kids learned how Earth grass smells — using a VR module, of course." },
+    { "speaker": "Medic", "line": "Report all headaches or dizziness. Dome pressure fluctuated last night." }
   ],
-  "EarthSpacePort": [
-    { "speaker": "Dockmaster", "line": "Cargo bay 3 is sealed. Ready for next drop." },
-    { "speaker": "Security Guard", "line": "Keep an eye on bay 7. Something's off." },
-    { "speaker": "Engineer", "line": "Old warships still give me the chills, ghosts haunt them museum ships" },
-    { "speaker": "Pilot", "line": "A Venus run beats this chaos any day." },
-    { "speaker": "Load Chief", "line": "No one's touched bay 12 in hours. Go check." },
-    { "speaker": "Cargo mover", "line": "Bay 12 is cursed, during the red war some occult bastards bombed it, killed a lot of people, not everyone who died moved on" }
+  "ColonyCore_Market": [
+    { "speaker": "Vendor", "line": "Synthberry juice, 40% off! Ignore the warning label!" },
+    { "speaker": "Smuggler", "line": "Looking for exo-grade components? I might have what you need..." },
+    { "speaker": "Patroller", "line": "Keep your permits visible. We’re cracking down on unauthorized traders." }
   ],
-  "Pacific": [
-    { "speaker": "Researcher", "line": "Another reading spike. That can't be good..." },
-    { "speaker": "AI Assistant", "line": "Reminder: hydration is optimal for humans." },
-    { "speaker": "Archivist", "line": "I swear one of the artifacts moved." },
-    { "speaker": "Diver", "line": "I saw light beneath grid 3. Unnatural light, but it was deeper than my approved depth limit." },
-    { "speaker": "Communication Expert", "line": "Relay's been glitching all morning. Again." },
-    { "speaker": "Researcher", "line": "I was there during the kilko disaster, I was lukily in oregon, it was untouched by the disaster and is now home to a thriving mega city and ECS." },
-    { "speaker":"Secuirty Guard", "line": "Your only authorized for floors 1-3 do not try and access 4-10 or I'll have to remove you from site" }
+  "ColonyCore_Power": [
+    { "speaker": "Technician", "line": "Main capacitor grid’s stable... for now." },
+    { "speaker": "Core AI", "line": "Thermal flow operating within acceptable parameters." },
+    { "speaker": "Security", "line": "No entry to sub-core maintenance without direct orders." }
   ],
-
-
-  
-  "ColonyCore": [
-    { "speaker": "Botanist", "line": "The trees are taking root. Finally." },
-    { "speaker": "Historian", "line": "We almost lost this city. Almost." },
-    { "speaker": "Vendor", "line": "Fresh synthfruit! Get it while it glows!" },
-    { "speaker": "Child", "line": "Are the stars different on earth?" },
-    { "speaker": "Guard", "line": "Routine scans. Don’t make this weird." },
-    { "speaker": "Reactor AI", "line": "Reactor working at 100%, all systems nominal" }
+  "ColonyCore_Power_Core": [
+    { "speaker": "Engineer", "line": "Fusion core output’s spiking again. Better call diagnostics." },
+    { "speaker": "AI Controller", "line": "Coolant cycle nominal. Backup venting engaged." },
+    { "speaker": "Operator", "line": "Why does the containment unit *sing* at night?" }
+  ],
+  "ColonyCore_Power_Outer": [
+    { "speaker": "Maintenance Bot", "line": "Scanning... turbine housing misaligned." },
+    { "speaker": "Technician", "line": "Zone D’s auxiliary coils just blew. This is the third time this month." },
+    { "speaker": "Trainee", "line": "I dropped my tool kit behind the vent. It’s gone now. Just gone." }
   ],
   "TerraformingFields": [
     { "speaker": "DroneOperator", "line": "Unit 42 stopped responding near the ridge." },
