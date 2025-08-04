@@ -23,6 +23,11 @@
     { "speaker": "Announcer", "line": "Please keep limbs inside transit cars during ascension, we do not need any traumatic injuries." },
     { "speaker": "Technician", "line": "Mag-lift coils just burned out — again. We need replacements from Mars, the consequences of not upgrading since the kolki disaster." }
   ],
+   "EarthSpacePort": [
+    { "speaker": "Sleep deprived worker", "line": "So many crates and vehicles to load and unload..." },
+    { "speaker": "Process Officer", "line": "All immigrants please fill out the file before you so we can begin processing" },
+    { "speaker": "PCS Officer", "line": "The port civil service is a easier job, its basically just the coast guard but re-named, you know, those pre kilko disaster guys?" }
+  ],
   "EarthSpacePort_FrontDesk": [
     { "speaker": "Customs AI", "line": "Declare all mega structure artifacts immediately. Failure results in fines or prison if you lack a permit and do not declare." },
     { "speaker": "Pilot", "line": "Some of these tourists are bringing in *void berries*. That's not legal yet, right?" },
