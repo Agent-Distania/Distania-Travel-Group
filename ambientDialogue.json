@@ -1,6 +1,6 @@
 {
   "NewYork_Downtown": [
-    { "speaker": "Transit Officer", "line": "All lanes clear. Metro 5 is delayed due to power reroute." },
+    { "speaker": "Transit Officer", "line": "All lanes clear. Metro 5 is delayed due to power reroute, it'll be back in a few minutes." },
     { "speaker": "Vendor", "line": "Get your synth-tacos! Grown under real UV!" },
     { "speaker": "Courier", "line": "Skylift was stuck again. I'm climbing that thing next time." },
     { "speaker": "Civilian", "line": "They say the archives are haunted — like real ghosts from the Red War." }
@@ -8,74 +8,74 @@
   "NewYork_Torta": [
     { "speaker": "Excavator", "line": "Torta shell's denser than we thought. Plasma cutters barely scratch it." },
     { "speaker": "ECS Engineer", "line": "Stay off the red-marked zones. Last week one just... collapsed." },
-    { "speaker": "Research AI", "line": "Caution: ambient radiation near node six exceeds safe levels." },
-    { "speaker": "Foreman", "line": "Get that drone out of the dig trench or we lose it *again*." }
+    { "speaker": "Research AI", "line": "Caution: ambient radiation near node six exceeds safe levels, you'll get radiation poisoning." },
+    { "speaker": "Foreman", "line": "Get that drone out of the dig trench or we lose it *again*. The boss will kill us if we lose it." }
   ],
   "NewYork_Transit": [
     { "speaker": "Nexus Operator", "line": "Shuttle seven rerouted. Atmospheric traffic dense over Tier 4." },
-    { "speaker": "Security", "line": "Scan complete. You're clean. Move." },
-    { "speaker": "Announcer", "line": "Please keep limbs inside transit cars during ascension." },
-    { "speaker": "Technician", "line": "Mag-lift coils just burned out — again. We need replacements from Mars." }
+    { "speaker": "Security Guard", "line": "Scan complete. You're clean. Move." },
+    { "speaker": "Announcer", "line": "Please keep limbs inside transit cars during ascension, we do not need any traumatic injuries." },
+    { "speaker": "Technician", "line": "Mag-lift coils just burned out — again. We need replacements from Mars, the consequences of not upgrading since the kolki disaster." }
   ],
   "EarthSpacePort_FrontDesk": [
-    { "speaker": "Customs AI", "line": "Declare all kilko artifacts immediately. Failure results in fines." },
+    { "speaker": "Customs AI", "line": "Declare all mega structure artifacts immediately. Failure results in fines or prison if you lack a permit and do not declare." },
     { "speaker": "Pilot", "line": "Some of these tourists are bringing in *void berries*. That's not legal yet, right?" },
-    { "speaker": "Port Staff", "line": "Dock 8's inspection line is backed up. Again." }
+    { "speaker": "Port Staff", "line": "Dock 8's inspection line is backed up. Why do they keep letting mega freighters unload cagrgo there?!" }
   ],
   "EarthSpacePort_Cargo": [
-    { "speaker": "Loader", "line": "This crate's got old markings… like *Red War* era." },
-    { "speaker": "Dockmaster", "line": "Cargo bay 12 is leaking again. Someone patch it up." },
-    { "speaker": "Security", "line": "No one touches the frozen containers. Orders from above." }
+    { "speaker": "Loader", "line": "This crate's got old markings… like *Red War* era, kinda scared to touch it." },
+    { "speaker": "Dockmaster", "line": "Cargo bay 12 is leaking again. Someone patch it up or we're gonna get sued if zero point energy kills someone." },
+    { "speaker": "Security", "line": "No one touches the frozen containers. Orders from above, and I'd rather not know what needs to be frozen." }
   ],
   "EarthSpacePort_Docking": [
-    { "speaker": "Dockhand", "line": "Another civilian shuttle just clipped the gantry. That's the third this week." },
-    { "speaker": "Pilot", "line": "Got fuel, got clearance, still sitting here. Typical Earth port." },
-    { "speaker": "Boarding Agent", "line": "Next group to Europa, line up at Dock 17." }
+    { "speaker": "Tired Dockhand", "line": "Another civilian shuttle just clipped the gantry. That's the third this week, getting tiring to repair." },
+    { "speaker": "Annoyed Pilot", "line": "Got fuel, got clearance, still sitting here. Typical Earth port." },
+    { "speaker": "Boarding Agent", "line": "Next group to Europa, line up at Dock 17, move quick and orderly!" }
   ],
   "Pacific": [
-    { "speaker": "Marine Biologist", "line": "Deep sea readings are off the charts today." },
-    { "speaker": "Research Tech", "line": "Another Kilko artifact surfaced near the thermal vents." },
-    { "speaker": "Platform Chief", "line": "Keep the dive teams close to base. Something's stirring down there." },
-    { "speaker": "Scientist", "line": "The anomaly signatures match pre-disaster patterns." }
+    { "speaker": "Marine Biologist", "line": "Deep sea readings are off the charts today, makes me excited!" },
+    { "speaker": "Research Tech", "line": "Another ortho mega structure artifact surfaced near the thermal vents." },
+    { "speaker": "Platform Chief", "line": "Keep the dive teams close to base. Something's stirring down there, we gotta be ready to react." },
+    { "speaker": "Scientist", "line": "The anomaly signatures match pre-disaster patterns, very concerning!" }
   ],
   "ColonyCore_Residential": [
-    { "speaker": "Resident", "line": "The filtration system hums differently today. Something's off." },
-    { "speaker": "Teacher", "line": "Kids learned how Earth grass smells — using a VR module, of course." },
-    { "speaker": "Medic", "line": "Report all headaches or dizziness. Dome pressure fluctuated last night." }
+    { "speaker": "Resident", "line": "The filtration system hums differently today. Something's off, I'll file a requets for the filters to be checked." },
+    { "speaker": "Teacher", "line": "Kids learned how Earth grass smells — using a VR module, of course, I hope mars will be green when they grow up." },
+    { "speaker": "Medic", "line": "Report all headaches or dizziness. Dome pressure fluctuated last night, nose bleeds can also be a symptom." }
   ],
   "ColonyCore_Market": [
-    { "speaker": "Vendor", "line": "Synthberry juice, 40% off! Ignore the warning label!" },
-    { "speaker": "Smuggler", "line": "Looking for exo-grade components? I might have what you need..." },
-    { "speaker": "Patroller", "line": "Keep your permits visible. We're cracking down on unauthorized traders." }
+    { "speaker": "Mischievous Vendor", "line": "Synthberry juice, 40% off! Ignore the warning label! Perfectly Safe!" },
+    { "speaker": "Smuggler", "line": "Looking for exo-grade components? I might have what you need...provided you won't tell." },
+    { "speaker": "Frustrated Patroller", "line": "Keep your permits visible. We're cracking down on unauthorized traders, bastards tried to smuggle in guns, we got enough trouble makers, we don't need corpses." }
   ],
   "ColonyCore_Power": [
-    { "speaker": "Technician", "line": "Main capacitor grid's stable... for now." },
-    { "speaker": "Core AI", "line": "Thermal flow operating within acceptable parameters." },
-    { "speaker": "Security", "line": "No entry to sub-core maintenance without direct orders." }
+    { "speaker": "Relieved Technician", "line": "Main capacitor grid's stable... for now." },
+    { "speaker": "Core AI", "line": "Thermal flow operating within acceptable parameters, please maintain watch to ensure no dramatic changes occur." },
+    { "speaker": "Core Security", "line": "No entry to sub-core maintenance without direct orders, place is dangerous and hot." }
   ],
   "TerraformingFields": [
-    { "speaker": "DroneOperator", "line": "Unit 42 stopped responding near the ridge." },
-    { "speaker": "Terraformer", "line": "Wind's picking up. Sandstorm incoming, maybe." },
-    { "speaker": "Mechanic", "line": "Pump systems are jammed, I told them we need to set up sandstorm walls" },
-    { "speaker": "Supervisor", "line": "Check the eastern dome's pressure seal." },
-    { "speaker": "Biologist", "line": "Soil sample B-17 is reacting... strangely." }
+    { "speaker": "DroneOperator", "line": "Unit 42 stopped responding near the ridge, gotta get it quick before the storm arrives or it'll be a pain to find." },
+    { "speaker": "Terraformer technician", "line": "Wind's picking up. Sandstorm incoming, hopefully the winds change." },
+    { "speaker": "Annoyed Mechanic", "line": "Pump systems are jammed, I told them we need to set up sandstorm walls" },
+    { "speaker": "Exhausted Supervisor", "line": "Check the eastern dome's pressure seal, don't wanna a depressurization again." },
+    { "speaker": "Curios Biologist", "line": "Soil sample B-17 is reacting... strangely." }
   ],
   "AncientVault": [
-    { "speaker": "Archeologist", "line": "These symbols repeat every 88 meters." },
-    { "speaker": "Linguist", "line": "No match in any known dialect. Not even close." },
-    { "speaker": "Archivist", "line": "Kilko resonance patterns are increasing." },
-    { "speaker": "Guard", "line": "You hear that hum? It's louder near the wall." },
+    { "speaker": "Frustrated Archeologist", "line": "These symbols repeat every 88 meters, do they even mean anything?" },
+    { "speaker": "Linguist", "line": "No match in any known dialect. Not even close, as usual." },
+    { "speaker": "Archivist", "line": "Mega structure resonance patterns are increasing." },
+    { "speaker": "ECS Guard", "line": "You hear that hum? It's louder near the wall." },
     { "speaker": "Explorer", "line": "Whatever this place is, it's *not* dead, the machinery is just sleeping" }
   ],
   "StormObservatory_Sensors": [
-    { "speaker": "Sensor Tech", "line": "Electromagnetic readings are spiking again." },
+    { "speaker": "Sensor Tech", "line": "Electromagnetic readings are spiking again, possible storm." },
     { "speaker": "Technician", "line": "Sensor array 7 needs recalibration." },
     { "speaker": "AI Monitor", "line": "Particle field density increasing 12%." },
-    { "speaker": "Engineer", "line": "These readings don't match anything in our database." }
+    { "speaker": "Engineer", "line": "These readings don't match anything in our database, the mega structure must be causing the surroundin storms, but why?" }
   ],
   "StormObservatory_Lab": [
-    { "speaker": "Scientist", "line": "The red storm's pulse is intensifying again." },
-    { "speaker": "Research Lead", "line": "Jupiter's weather patterns are completely unprecedented." },
+    { "speaker": "Scientist", "line": "The red storm's pulse is intensifying again, at least the red eye is beautiful this close" },
+    { "speaker": "Research Lead", "line": "Jupiter's weather patterns are completely unprecedented, that mega structure has to be responsible." },
     { "speaker": "Meteorologist", "line": "That's not a natural storm formation." },
     { "speaker": "Navigator", "line": "Station drift is within margin. Barely." }
   ],
@@ -98,23 +98,23 @@
   "CoreRelay": [
     { "speaker": "Relay Tech", "line": "Signal lag is under 12ms. Not bad." },
     { "speaker": "Comms Officer", "line": "Keep relay frequency clear. Priority only." },
-    { "speaker": "Engineer", "line": "That relay beam just blinked. It's not supposed to." },
+    { "speaker": "Engineer", "line": "That relay beam just blinked. It's not supposed to, damn storms." },
     { "speaker": "Watch", "line": "Atmospheric pressure's climbing fast, keep a eye on the pressure gauge." },
     { "speaker": "Officer", "line": "We're close to the red eye. Stay sharp." }
   ],
   "ExcavationPlatforms": [
-    { "speaker": "Lead", "line": "Platform 3 is vibrating again." },
-    { "speaker": "Tech", "line": "That artifact is glowing. Again." },
+    { "speaker": "Foxtrot team lead", "line": "Platform 3 is vibrating again." },
+    { "speaker": "Tired Artifact Loader", "line": "The artifact they brought back glows as if your staring into a star, have to wear these contacts for the rest of the day now to prevent eye damage." },
     { "speaker": "Diver", "line": "I saw something move in the gas." },
     { "speaker": "Commander", "line": "Keep scans tight. No slip-ups." },
     { "speaker": "Crew", "line": "Who left the gravity dampeners off? You trying to kill us?" },
-    { "speaker": "Diver", "line": "You see things in the mega structure that defy anything you we're ever told" }
+    { "speaker": "Diver", "line": "You see things in the mega structure that defy everything you we're ever told" }
   ],
   "ResearchBase_Tunnels": [
     { "speaker": "Explorer", "line": "These tunnel walls... they're not ice. They're something else." },
     { "speaker": "Mapper", "line": "The tunnels keep changing layout. That's impossible." },
-    { "speaker": "Guard", "line": "I heard footsteps echoing. But we're the only ones down here." },
-    { "speaker": "Scientist", "line": "The ice is warm to the touch in sector 7." }
+    { "speaker": "Security Guard", "line": "I heard footsteps echoing. But we're the only ones down here, then again I see shadows in the ice sometimes..." },
+    { "speaker": "Scientist", "line": "The ice is warm to the touch in sector 7, yet not melting" }
   ],
   "ResearchBase_Lab": [
     { "speaker": "AI Researcher", "line": "The containment protocols just updated themselves." },
@@ -171,45 +171,45 @@
     { "speaker": "ECS Scholar", "line": "Ah welcome fellow exodus member! Have you come to study the statues to? Their quite fascinating!" },
     { "speaker": "Crane Operator", "line": "Those statues are weird, I get told to re-adjust them every day, how are they always off center? I swear I'm doing everything right." },
     { "speaker": "Delivery Pilot", "line": "I hate being so far away from home but these guys pay amazingly to ferry people and statues to and from the mega structure, seen some cool things in there to." },
-    { "speaker": "Security Guard", "line": "I'm glad they just ahve me lockup instead of staying and watching those things, I say we just throw them in the void." }
+    { "speaker": "Security Guard", "line": "I'm glad they just have me lockup instead of staying and watching those things, I say we just throw them in the void." }
   ],
   "CapitalCity_Tech": [
-    { "speaker": "Startup CEO", "line": "Our new AI just passed the Turing test. Again." },
+    { "speaker": "Startup CEO", "line": "We're making some new drilling machines for the crystal canyon, hopefully it'll work..." },
     { "speaker": "Programmer", "line": "The code is writing itself now. That's... concerning." },
-    { "speaker": "Investor", "line": "Kilko-tech integration is the future. Get on board or get left behind." },
-    { "speaker": "Security", "line": "Another corporate espionage attempt. Third this week." }
+    { "speaker": "Investor", "line": "The future is mega structure technology, if your not exploring and extracting your missing out!" },
+    { "speaker": "Security", "line": "Another corporate espionage attempt. Third this week, god I hate my job." }
   ],
   "CapitalCity_Market": [
     { "speaker": "Black Market Dealer", "line": "Neural implants, fresh off the transport. No questions asked." },
     { "speaker": "Smuggler", "line": "Looking for rare components? I might know a guy." },
-    { "speaker": "Fence", "line": "That artifact's hot. Cool it down for a week before selling." },
-    { "speaker": "Underground Doc", "line": "Modifications done quick and quiet. No records." }
+    { "speaker": "Fence", "line": "That artifact's hot. Cool it down for a week before selling, yes I mean its literally hot." },
+    { "speaker": "Underground Doc", "line": "Modifications done quick and quiet. No records, no trace, no problems." }
   ],
   "CapitalCity_Core": [
-    { "speaker": "City AI", "line": "All systems operating within normal parameters." },
+    { "speaker": "City AI", "line": "All systems operating within normal parameters, please report any unusual activity to me or the authorities!" },
     { "speaker": "Systems Admin", "line": "Traffic flow optimized. Commute time reduced 3%." },
     { "speaker": "Power Tech", "line": "Energy grid stable. No anomalies detected." },
     { "speaker": "Security Chief", "line": "Maintain surveillance on all entry points." }
   ],
   "OrbitalTradeRing": [
-    { "speaker": "Trader", "line": "Cargo's cleared customs. Finally." },
-    { "speaker": "Officer", "line": "We intercepted a smuggler with Kilko tech." },
-    { "speaker": "Drone Pilot", "line": "Trade pod 7 just spun out. Recovering." },
-    { "speaker": "Customs", "line": "You need three forms for that? Ridiculous." },
-    { "speaker": "Announcer", "line": "Attention: minor delay in sector 4 shipping lanes." }
+    { "speaker": "Trader", "line": "Cargo's cleared customs. Finally, I was losing money this whole time." },
+    { "speaker": "Customs Officer", "line": "We intercepted a smuggler with mega structure tech, what an idiot." },
+    { "speaker": "Drone Pilot", "line": "Trade pod 7 just spun out. Recovering, god these things are ancient." },
+    { "speaker": "Frustrated Trader", "line": "You need three forms for that? Ridiculous, why would we need three forms?!" },
+    { "speaker": "Announcer", "line": "Attention: minor delay in sector 4 shipping lanes, a swarm of void bats has been sighted." }
   ],
   "StellarObservationSpire": [
-    { "speaker": "Astronomer", "line": "Another anomaly blinked at 5 AU." },
+    { "speaker": "Astronomer", "line": "Another anomaly blinked at 5 AU, possible signal or mega structure" },
     { "speaker": "Analyst", "line": "We caught a flare echo. From *outside*." },
     { "speaker": "Systems", "line": "Array aligned. Holding stable." },
-    { "speaker": "Observer", "line": "The Kilko field's visible again. Barely." },
-    { "speaker": "Technician", "line": "Sensor 3B needs realignment." }
+    { "speaker": "Observer", "line": "The cyclops mega structure is impossible to describe, you just have to expereince it." },
+    { "speaker": "Technician", "line": "Sensor 3B needs realignment or we're gonna have hell to pay during the next signal check." }
   ],
   "CrystalCanyonOutpost": [
-    { "speaker": "Miner", "line": "Drill's stuck. Again." },
-    { "speaker": "Geologist", "line": "These crystals resonate when we speak." },
-    { "speaker": "Surveyor", "line": "We mapped another chamber today." },
-    { "speaker": "Medic", "line": "Hydration levels low in Zone Delta." },
-    { "speaker": "AI", "line": "Caution: seismic tremors detected nearby." }
+    { "speaker": "Miner", "line": "Drill's stuck. Get the tech before I start kicking it." },
+    { "speaker": "Geologist", "line": "These crystals resonate when we speak, its pretty cool." },
+    { "speaker": "Surveyor", "line": "We mapped another chamber today, still no way into the mega structure." },
+    { "speaker": "Medic", "line": "Hydration levels low in Zone Delta, get more down here or we'll have to shut the place down until you do." },
+    { "speaker": "AI", "line": "Caution: seismic tremors detected nearby, please watch for evacuation alerts." }
   ]
 }
