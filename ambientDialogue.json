@@ -3,7 +3,7 @@
    { "speaker": "Bored Civilian", "line": "You ever seen those old holo movies? The one with the killer robot from the future with a shotugn is my favorite."},
    { "speaker": "ECM Soldier", "line": "They say the old aircraft carrier, Midway I think? Used to be the best ship in the world, kinda hard to believe we had water fleets at one point"},
    { "speaker": "Market Worker", "line": "I've never even heard of the ortho mega structure till those nerds at the PRS talked about it, some underwater mega structure I think?"},
-   { "speaker": "ECM Officer", "line": "Don't loiter here please, the street cleaners will be here soon"
+   { "speaker": "ECM Officer", "line": "Don't loiter here please, the street cleaners will be here soon"}
   ],
   "NewYork_Downtown": [
     { "speaker": "Transit Officer", "line": "All lanes clear. Metro 5 is delayed due to power reroute, it'll be back in a few minutes." },
