@@ -23,13 +23,26 @@ const mainDestinations = [];
 const destinationConfigs = {};
 
 fetch("destinations.json")
-  .then(res => res.json())
+  .then(res => {
+    console.log("Fetch response status:", res.status);
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    return res.json();
+  })
   .then(data => {
+    console.log("Raw destination data:", data);
     mainDestinations.push(...data.mainDestinations);
     Object.assign(destinationConfigs, data.destinationConfigs);
-    console.log("Destination data loaded.");
+    console.log("Destination data loaded. Main destinations:", mainDestinations.length);
+    console.log("Destination configs:", Object.keys(destinationConfigs));
   })
-  .catch(err => console.error("Failed to load destination data:", err));
+  .catch(err => {
+    console.error("Failed to load destination data:", err);
+    // Fallback: load hardcoded data if JSON file fails
+    console.log("Loading fallback destination data...");
+    loadFallbackDestinations();
+  });
 
 // =======================
 // Ambient Dialogue Data
@@ -48,8 +61,80 @@ fetch("ambientDialogue.json")
   });
 
 // =======================
-// Core Functions
+// Fallback Data (in case JSON file fails to load)
 // =======================
+function loadFallbackDestinations() {
+  const fallbackData = {
+    "mainDestinations": [
+      { "name": "Earth", "key": "Earth" },
+      { "name": "Mars Colony Alpha", "key": "Mars" },
+      { "name": "Jupiter Orbital Station", "key": "Jupiter" },
+      { "name": "Europa Research Base", "key": "Europa" },
+      { "name": "Andromeda Outpost", "key": "Andromeda" },
+      { "name": "Vega Prime", "key": "Vega" }
+    ],
+    "destinationConfigs": {
+      "Earth": {
+        "description": "Orbiting Earth, the fractured home of humanity.",
+        "travelType": "train",
+        "subDestinations": [
+          { "name": "Return to Ship", "key": "Return" },
+          { "name": "New York Sector", "key": "NewYork", "description": "A massive sprawling city rebuilt after the Kilko disaster." },
+          { "name": "Earth Space Port", "key": "EarthSpacePort", "description": "A large cargo and civilian port." },
+          { "name": "Pacific Research Facility", "key": "Pacific", "description": "A massive floating research base." }
+        ]
+      },
+      "Mars": {
+        "description": "Orbiting Mars Colony Alpha, a sprawling network of habitats.",
+        "travelType": "shuttle",
+        "subDestinations": [
+          { "name": "Return to Ship", "key": "Return" },
+          { "name": "Colony Core", "key": "ColonyCore", "description": "The heart of Martian habitation." },
+          { "name": "Terraforming Fields", "key": "TerraformingFields", "description": "Sprawling atmosphere processors." },
+          { "name": "Ancient Vault", "key": "AncientVault", "description": "Mysterious pre-human vault." }
+        ]
+      },
+      "Jupiter": {
+        "description": "Orbiting the Jupiter Orbital Station.",
+        "subDestinations": [
+          { "name": "Return to Ship", "key": "Return" },
+          { "name": "Storm Observatory", "key": "StormObservatory", "description": "Observes Jupiter's massive storms." },
+          { "name": "Gas Harvesting Platform", "key": "GasHarvester", "description": "Siphons valuable gases." }
+        ]
+      },
+      "Europa": {
+        "description": "Orbiting Europa Research Base.",
+        "travelType": "rover",
+        "subDestinations": [
+          { "name": "Return to Ship", "key": "Return" },
+          { "name": "Research Base", "key": "ResearchBase", "description": "Core base for studying Europa." },
+          { "name": "Ground Camp", "key": "GroundCamp", "description": "Temporary field base." }
+        ]
+      },
+      "Andromeda": {
+        "description": "Orbiting the Andromeda Outpost.",
+        "travelType": "shuttle",
+        "subDestinations": [
+          { "name": "Return to Ship", "key": "Return" },
+          { "name": "Forward Recon Station", "key": "ForwardRecon", "description": "Unmanned outpost." },
+          { "name": "Black Spire Relay", "key": "BlackSpire", "description": "Quantum signal relay." }
+        ]
+      },
+      "Vega": {
+        "description": "Orbiting Vega Prime, a vibrant star system hub.",
+        "subDestinations": [
+          { "name": "Return to Ship", "key": "Return" },
+          { "name": "Capital City", "key": "CapitalCity", "description": "A neon metropolis and trade center." },
+          { "name": "Orbital Trade Ring", "key": "OrbitalTradeRing", "description": "Ring-shaped station for trade." }
+        ]
+      }
+    }
+  };
+  
+  mainDestinations.push(...fallbackData.mainDestinations);
+  Object.assign(destinationConfigs, fallbackData.destinationConfigs);
+  console.log("Fallback data loaded successfully");
+}
 function appendLog(text) {
   const line = document.createElement('div');
   line.textContent = text;
@@ -410,15 +495,30 @@ window.addEventListener('DOMContentLoaded', () => {
       appendLog("System: Welcome, Captain. Please select a destination.");
 
       // Wait until destinations are loaded
+      console.log("Checking if destinations are loaded...", mainDestinations.length);
       if (mainDestinations.length > 0) {
+        console.log("Creating buttons with destinations:", mainDestinations);
         createButtons(mainDestinations);
       } else {
+        console.log("Waiting for destination data to load...");
         const waitForData = setInterval(() => {
+          console.log("Still waiting... destinations count:", mainDestinations.length);
           if (mainDestinations.length > 0) {
+            console.log("Destinations loaded! Creating buttons...");
             clearInterval(waitForData);
             createButtons(mainDestinations);
           }
         }, 100);
+        
+        // Timeout after 5 seconds and force load fallback data
+        setTimeout(() => {
+          if (mainDestinations.length === 0) {
+            console.log("Timeout reached, forcing fallback data load");
+            clearInterval(waitForData);
+            loadFallbackDestinations();
+            createButtons(mainDestinations);
+          }
+        }, 5000);
       }
     });
   } else {
