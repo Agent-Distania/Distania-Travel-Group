@@ -110,7 +110,6 @@
         }
       ]
     },
-
     "Mars": {
       "description": "Orbiting Mars Colony Alpha, a sprawling network of habitats and terraforming stations.",
       "travelType": "shuttle",
@@ -182,7 +181,6 @@
         }
       ]
     },
-
     "Jupiter": {
       "description": "Orbiting the Jupiter Orbital Station, a gateway to the planet's storms and gas resources.",
       "subDestinations": [
@@ -260,7 +258,6 @@
         }
       ]
     },
-
     "Europa": {
       "description": "Orbiting Europa Research Base, a scientific station monitoring the icy moon's hidden ocean.",
       "travelType": "rover",
@@ -329,7 +326,6 @@
         }
       ]
     },
-
     "Andromeda": {
       "description": "Orbiting the Andromeda Outpost, a forward base for deep space exploration.",
       "travelType": "shuttle",
@@ -370,3 +366,89 @@
           "key": "StatueWing",
           "description": "Massive chamber of alien statues; many researchers claim the statues move.",
           "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" },
+            { "name": "Core Zone", "key": "StatueWing_Core", "description": "The main statue chamber with constant surveillance and research teams." },
+            { "name": "Outer Zone", "key": "StatueWing_Outer", "description": "Observation decks and monitoring stations around the statue chamber." }
+          ]
+        }
+      ]
+    },
+    "Vega": {
+      "description": "Orbiting Vega Prime, a vibrant star system hub untouched by disaster.",
+      "subDestinations": [
+        { "name": "Return to Ship", "key": "Return" },
+        {
+          "name": "Capital City",
+          "key": "CapitalCity",
+          "description": "A neon metropolis and trade center thriving beyond Sol.",
+          "subDestinations": [
+            {
+              "name": "Return to Previous",
+              "key": "Return"
+            },
+            {
+              "name": "Tech District",
+              "key": "CapitalCity_Tech",
+              "description": "Startup hubs and AI incubation vaults run by private corps.",
+              "subDestinations": [
+                { "name": "Return to Previous", "key": "Return" },
+                { "name": "Core Zone", "key": "CapitalCity_Tech_Core", "description": "Main corporate headquarters and advanced AI development labs." },
+                { "name": "Outer Zone", "key": "CapitalCity_Tech_Outer", "description": "Startup incubators and experimental technology testing areas." }
+              ]
+            },
+            {
+              "name": "Underdeck Market",
+              "key": "CapitalCity_Market",
+              "description": "Black market hub for rare parts and unauthorized implants.",
+              "subDestinations": [
+                { "name": "Return to Previous", "key": "Return" },
+                { "name": "Core Zone", "key": "CapitalCity_Market_Core", "description": "Main black market trading floor with high-value illegal goods." },
+                { "name": "Outer Zone", "key": "CapitalCity_Market_Outer", "description": "Smuggler hideouts and underground modification shops." }
+              ]
+            },
+            {
+              "name": "Central Core",
+              "key": "CapitalCity_Core",
+              "description": "The brain of the city — central processors and energy grid.",
+              "subDestinations": [
+                { "name": "Return to Previous", "key": "Return" },
+                { "name": "Core Zone", "key": "CapitalCity_Core_Zone", "description": "City's operating AI and political centers." },
+                { "name": "Outer Core", "key": "CapitalCity_Core_Outer", "description": "Surrounding cyber zones with heavy data traffic." }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orbital Trade Ring",
+          "key": "OrbitalTradeRing",
+          "description": "Ring-shaped station for trade, deals, and occasional piracy.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" },
+            { "name": "Core Zone", "key": "OrbitalTradeRing_Core", "description": "Main trading hub with legitimate commerce and official docking bays." },
+            { "name": "Outer Zone", "key": "OrbitalTradeRing_Outer", "description": "Questionable deals and pirate-friendly establishments on the ring's edge." }
+          ]
+        },
+        {
+          "name": "Stellar Observation Spire",
+          "key": "StellarObservationSpire",
+          "description": "This spire was the first to detect the incoming megastructures.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" },
+            { "name": "Core Zone", "key": "StellarObservationSpire_Core", "description": "Primary observation equipment and deep space monitoring systems." },
+            { "name": "Outer Zone", "key": "StellarObservationSpire_Outer", "description": "Secondary sensors and emergency communication arrays." }
+          ]
+        },
+        {
+          "name": "Crystal Canyon Outpost",
+          "key": "CrystalCanyonOutpost",
+          "description": "Gem mines deep in Vega's crust — rumored to house alien tech.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" },
+            { "name": "Core Zone", "key": "CrystalCanyonOutpost_Core", "description": "Main mining operations and crystal processing facilities." },
+            { "name": "Outer Zone", "key": "CrystalCanyonOutpost_Outer", "description": "Mining camps and suspected alien artifact discovery sites." }
+          ]
+        }
+      ]
+    }
+  }
+}
