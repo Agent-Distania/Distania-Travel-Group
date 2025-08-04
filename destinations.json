@@ -9,100 +9,327 @@
   ],
   "destinationConfigs": {
     "Earth": {
-      "description": "Orbiting Earth, the fractured home of humanity. The once-beautiful world lies fractured, but humanity persists in the ruins of the kilko disaster",
+      "description": "Orbiting Earth, the fractured home of humanity...",
       "travelType": "train",
       "subDestinations": [
-        { "name": "Return to Ship", "key": "Return" },
-        { "name": "New York Sector", "key": "NewYork" },
-        { "name": "Earth Space Port", "key": "EarthSpacePort" },
-        { "name": "Pacific Research Facility", "key": "Pacific" }
-      ],
-      "sectorDescriptions": {
-        "NewYork": "A massive sprawling city...",
-        "EarthSpacePort": "A large cargo and civilian port...",
-        "Pacific": "A massive floating research base..."
-      }
+        {
+          "name": "Return to Ship",
+          "key": "Return"
+        },
+        {
+          "name": "New York Sector",
+          "key": "NewYork",
+          "subDestinations": [
+            {
+              "name": "Return to Previous",
+              "key": "Return"
+            },
+            {
+              "name": "Downtown Core",
+              "key": "NewYork_Downtown",
+              "subDestinations": [
+                {
+                  "name": "Return to Previous",
+                  "key": "Return"
+                },
+                {
+                  "name": "Core Zone",
+                  "key": "NewYork_Downtown_Core"
+                },
+                {
+                  "name": "Outer Core",
+                  "key": "NewYork_Downtown_Outer"
+                }
+              ]
+            },
+            {
+              "name": "Torta Excavation Site",
+              "key": "NewYork_Torta"
+            },
+            {
+              "name": "Skyline Transit Nexus",
+              "key": "NewYork_Transit"
+            }
+          ]
+        },
+        {
+          "name": "Earth Space Port",
+          "key": "EarthSpacePort",
+          "subDestinations": [
+            {
+              "name": "Return to Previous",
+              "key": "Return"
+            },
+            {
+              "name": "Processing",
+              "key": "EarthSpacePort_FrontDesk",
+              "subDestinations": [
+                {
+                  "name": "Return to Previous",
+                  "key": "Return"
+                },
+                {
+                  "name": "Core Zone",
+                  "key": "EarthSpacePort_FrontDesk_Core"
+                },
+                {
+                  "name": "Outer Core",
+                  "key": "EarthSpacePort_FrontDesk_Outer"
+                }
+              ]
+            },
+            {
+              "name": "Cargo Intake",
+              "key": "EarthSpacePort_Cargo"
+            },
+            {
+              "name": "Docking Bay",
+              "key": "EarthSpacePort_Docking"
+            }
+          ]
+        },
+        {
+          "name": "Pacific Research Facility",
+          "key": "Pacific"
+        }
+      ]
     },
+
     "Mars": {
       "description": "Orbiting Mars Colony Alpha...",
       "travelType": "shuttle",
       "subDestinations": [
-        { "name": "Return to Ship", "key": "Return" },
-        { "name": "Colony Core", "key": "ColonyCore" },
-        { "name": "Terraforming Fields", "key": "TerraformingFields" },
-        { "name": "Ancient Vault", "key": "AncientVault" }
-      ],
-      "sectorDescriptions": {
-        "ColonyCore": "The beating heart of the terraforming effort...",
-        "TerraformingFields": "Engineers work here...",
-        "AncientVault": "An ancient vault emerged during the Kilko disaster..."
-      }
+        {
+          "name": "Return to Ship",
+          "key": "Return"
+        },
+        {
+          "name": "Colony Core",
+          "key": "ColonyCore",
+          "subDestinations": [
+            {
+              "name": "Residential Dome",
+              "key": "ColonyCore_Residential"
+            },
+            {
+              "name": "Central Market",
+              "key": "ColonyCore_Market"
+            },
+            {
+              "name": "Power Hub",
+              "key": "ColonyCore_Power",
+              "subDestinations": [
+                {
+                  "name": "Return to Previous",
+                  "key": "Return"
+                },
+                {
+                  "name": "Core Zone",
+                  "key": "ColonyCore_Power_Core"
+                },
+                {
+                  "name": "Outer Core",
+                  "key": "ColonyCore_Power_Outer"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Terraforming Fields",
+          "key": "TerraformingFields"
+        },
+        {
+          "name": "Ancient Vault",
+          "key": "AncientVault"
+        }
+      ]
     },
+
+    "Jupiter": {
+      "description": "Orbiting the Jupiter Orbital Station...",
+      "subDestinations": [
+        {
+          "name": "Return to Ship",
+          "key": "Return"
+        },
+        {
+          "name": "Storm Observatory",
+          "key": "StormObservatory",
+          "subDestinations": [
+            {
+              "name": "Sensor Array",
+              "key": "StormObservatory_Sensors"
+            },
+            {
+              "name": "Atmospheric Lab",
+              "key": "StormObservatory_Lab",
+              "subDestinations": [
+                {
+                  "name": "Return to Previous",
+                  "key": "Return"
+                },
+                {
+                  "name": "Core Zone",
+                  "key": "StormObservatory_Lab_Core"
+                },
+                {
+                  "name": "Outer Core",
+                  "key": "StormObservatory_Lab_Outer"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Gas Harvesting Platform",
+          "key": "GasHarvester"
+        },
+        {
+          "name": "Research Array",
+          "key": "ResearchArray"
+        },
+        {
+          "name": "Deep Core Relay",
+          "key": "CoreRelay"
+        },
+        {
+          "name": "Excavation Platforms",
+          "key": "ExcavationPlatforms"
+        }
+      ]
+    },
+
     "Europa": {
       "description": "Orbiting Europa Research Base...",
       "travelType": "rover",
       "subDestinations": [
-        { "name": "Return to Ship", "key": "Return" },
-        { "name": "Research Base", "key": "ResearchBase" },
-        { "name": "Ground Camp", "key": "GroundCamp" },
-        { "name": "Ruins", "key": "Ruins" }
-      ],
-      "sectorDescriptions": {
-        "ResearchBase": "A hub of scientific activity...",
-        "GroundCamp": "A rugged outpost supporting field teams...",
-        "Ruins": "A hidden megastructure buried under Europa's ice..."
-      }
+        {
+          "name": "Return to Ship",
+          "key": "Return"
+        },
+        {
+          "name": "Research Base",
+          "key": "ResearchBase",
+          "subDestinations": [
+            {
+              "name": "Subsurface Tunnels",
+              "key": "ResearchBase_Tunnels"
+            },
+            {
+              "name": "AI Lab",
+              "key": "ResearchBase_Lab"
+            },
+            {
+              "name": "Core Chamber",
+              "key": "ResearchBase_Core",
+              "subDestinations": [
+                {
+                  "name": "Return to Previous",
+                  "key": "Return"
+                },
+                {
+                  "name": "Core Zone",
+                  "key": "ResearchBase_Core_Zone"
+                },
+                {
+                  "name": "Outer Core",
+                  "key": "ResearchBase_Core_Outer"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Ground Camp",
+          "key": "GroundCamp"
+        },
+        {
+          "name": "Ruins",
+          "key": "Ruins"
+        }
+      ]
     },
-    "Jupiter": {
-      "description": "Orbiting the Jupiter Orbital Station...",
-      "subDestinations": [
-        { "name": "Return to Ship", "key": "Return" },
-        { "name": "Storm Observatory", "key": "StormObservatory" },
-        { "name": "Gas Harvesting Platform", "key": "GasHarvester" },
-        { "name": "Research Array", "key": "ResearchArray" },
-        { "name": "Deep Core Relay", "key": "CoreRelay" },
-        { "name": "Excavation Platforms", "key": "ExcavationPlatforms" }
-      ],
-      "sectorDescriptions": {
-        "StormObservatory": "Observes Jupiter’s massive storms...",
-        "GasHarvester": "Harvests gases for fuel...",
-        "ResearchArray": "Sensor nodes study Jupiter's magnetic field...",
-        "CoreRelay": "Deep in the atmosphere...",
-        "ExcavationPlatforms": "Digs into Jupiter’s gas layers..."
-      }
-    },
-    "Vega": {
-      "description": "Orbiting Vega Prime, a vibrant star system hub...",
-      "subDestinations": [
-        { "name": "Return to Ship", "key": "Return" },
-        { "name": "Capital City", "key": "CapitalCity" },
-        { "name": "Orbital Trade Ring", "key": "OrbitalTradeRing" },
-        { "name": "Stellar Observation Spire", "key": "StellarObservationSpire" },
-        { "name": "Crystal Canyon Outpost", "key": "CrystalCanyonOutpost" }
-      ],
-      "sectorDescriptions": {
-        "CapitalCity": "A neon metropolis untouched by the Kilko disaster...",
-        "OrbitalTradeRing": "Commerce and supply hub for Vega Prime...",
-        "StellarObservationSpire": "This is where the megastructures were first discovered...",
-        "CrystalCanyonOutpost": "Gem mines that power everything..."
-      }
-    },
+
     "Andromeda": {
       "description": "Orbiting the Andromeda Outpost...",
       "travelType": "shuttle",
       "subDestinations": [
-        { "name": "Return to Ship", "key": "Return" },
-        { "name": "Forward Recon Station", "key": "ForwardRecon" },
-        { "name": "Black Spire Relay", "key": "BlackSpire" },
-        { "name": "Xeno Archives", "key": "XenoArchives" },
-        { "name": "Statue Research Wing", "key": "StatueWing" }
-      ],
-      "sectorDescriptions": {
-        "ForwardRecon": "An unmanned station monitoring deep space anomalies...",
-        "BlackSpire": "A jagged relay station...",
-        "XenoArchives": "Vault of alien artifacts...",
-        "StatueWing": "A massive research wing of statues..."
-      }
+        {
+          "name": "Return to Ship",
+          "key": "Return"
+        },
+        {
+          "name": "Forward Recon Station",
+          "key": "ForwardRecon"
+        },
+        {
+          "name": "Black Spire Relay",
+          "key": "BlackSpire"
+        },
+        {
+          "name": "Xeno Archives",
+          "key": "XenoArchives"
+        },
+        {
+          "name": "Statue Research Wing",
+          "key": "StatueWing"
+        }
+      ]
+    },
+
+    "Vega": {
+      "description": "Orbiting Vega Prime, a vibrant star system hub...",
+      "subDestinations": [
+        {
+          "name": "Return to Ship",
+          "key": "Return"
+        },
+        {
+          "name": "Capital City",
+          "key": "CapitalCity",
+          "subDestinations": [
+            {
+              "name": "Tech District",
+              "key": "CapitalCity_Tech"
+            },
+            {
+              "name": "Underdeck Market",
+              "key": "CapitalCity_Market"
+            },
+            {
+              "name": "Central Core",
+              "key": "CapitalCity_Core",
+              "subDestinations": [
+                {
+                  "name": "Return to Previous",
+                  "key": "Return"
+                },
+                {
+                  "name": "Core Zone",
+                  "key": "CapitalCity_Core_Zone"
+                },
+                {
+                  "name": "Outer Core",
+                  "key": "CapitalCity_Core_Outer"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Orbital Trade Ring",
+          "key": "OrbitalTradeRing"
+        },
+        {
+          "name": "Stellar Observation Spire",
+          "key": "StellarObservationSpire"
+        },
+        {
+          "name": "Crystal Canyon Outpost",
+          "key": "CrystalCanyonOutpost"
+        }
+      ]
     }
   }
 }
