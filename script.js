@@ -9,6 +9,16 @@ const onBtn = document.getElementById('onBtn');
 const destList = document.querySelector('.dest-list');
 const logEl = document.getElementById('log');
 
+// Debug DOM elements
+console.log("DOM Elements found:");
+console.log("startupScreen:", startupScreen);
+console.log("loginScreen:", loginScreen);
+console.log("travelScreen:", travelScreen);
+console.log("proceedBtn:", proceedBtn);
+console.log("onBtn:", onBtn);
+console.log("destList:", destList);
+console.log("logEl:", logEl);
+
 // =======================
 // State Variables
 // =======================
@@ -183,7 +193,13 @@ fetch("novaDialogue.json")
   });
 
 function clearDestinations() {
-  destList.innerHTML = '<h2>Select Destination</h2>';
+  console.log("clearDestinations called, destList:", destList);
+  if (destList) {
+    destList.innerHTML = '<h2>Select Destination</h2>';
+    console.log("destList cleared, innerHTML:", destList.innerHTML);
+  } else {
+    console.error("ERROR: Cannot clear destinations - destList not found");
+  }
 }
 
 function enableButtons() {
@@ -191,14 +207,35 @@ function enableButtons() {
 }
 
 function createButtons(destinations) {
+  console.log("createButtons called with:", destinations);
+  console.log("destList element:", destList);
+  
+  if (!destList) {
+    console.error("ERROR: destList element not found! Make sure you have an element with class 'dest-list'");
+    return;
+  }
+  
+  if (!destinations || destinations.length === 0) {
+    console.error("ERROR: No destinations provided to createButtons");
+    return;
+  }
+  
   clearDestinations();
-  destinations.forEach(dest => {
+  
+  destinations.forEach((dest, index) => {
+    console.log(`Creating button ${index}:`, dest);
     const btn = document.createElement('button');
     btn.textContent = dest.name;
     btn.dataset.dest = dest.key;
+    btn.style.margin = '5px';
+    btn.style.padding = '10px';
+    btn.style.display = 'block';
     destList.appendChild(btn);
     btn.addEventListener('click', () => handleDestinationClick(dest, btn));
+    console.log(`Button created and added:`, btn);
   });
+  
+  console.log("All buttons created. destList children count:", destList.children.length);
 }
 
 // Helper function to find a destination by key in nested structure
