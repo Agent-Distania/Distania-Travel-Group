@@ -246,22 +246,34 @@
         {
           "name": "Forward Recon Station",
           "key": "ForwardRecon",
-          "description": "Unmanned outpost tracking deep-space threats and anomalies."
+          "description": "Unmanned outpost tracking deep-space threats and anomalies.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" }
+          ]
         },
         {
           "name": "Black Spire Relay",
           "key": "BlackSpire",
-          "description": "Long-distance quantum signal relay — its origins remain unclear."
+          "description": "Long-distance quantum signal relay — its origins remain unclear.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" }
+          ]
         },
         {
           "name": "Xeno Archives",
           "key": "XenoArchives",
-          "description": "Vault of alien artifacts and cryptic data recovered from ruins."
+          "description": "Vault of alien artifacts and cryptic data recovered from ruins.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" }
+          ]
         },
         {
           "name": "Statue Research Wing",
           "key": "StatueWing",
-          "description": "Massive chamber of alien statues; many researchers claim the statues move."
+          "description": "Massive chamber of alien statues; many researchers claim the statues move.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" }
+          ]
         }
       ]
     },
@@ -298,17 +310,26 @@
         {
           "name": "Orbital Trade Ring",
           "key": "OrbitalTradeRing",
-          "description": "Ring-shaped station for trade, deals, and occasional piracy."
+          "description": "Ring-shaped station for trade, deals, and occasional piracy.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" }
+          ]
         },
         {
           "name": "Stellar Observation Spire",
           "key": "StellarObservationSpire",
-          "description": "This spire was the first to detect the incoming megastructures."
+          "description": "This spire was the first to detect the incoming megastructures.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" }
+          ]
         },
         {
           "name": "Crystal Canyon Outpost",
           "key": "CrystalCanyonOutpost",
-          "description": "Gem mines deep in Vega's crust — rumored to house alien tech."
+          "description": "Gem mines deep in Vega's crust — rumored to house alien tech.",
+          "subDestinations": [
+            { "name": "Return to Previous", "key": "Return" }
+          ]
         }
       ]
     }
