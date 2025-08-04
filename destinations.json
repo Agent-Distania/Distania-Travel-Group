@@ -1,0 +1,108 @@
+{
+  "mainDestinations": [
+    { "name": "Earth", "key": "Earth" },
+    { "name": "Mars Colony Alpha", "key": "Mars" },
+    { "name": "Jupiter Orbital Station", "key": "Jupiter" },
+    { "name": "Europa Research Base", "key": "Europa" },
+    { "name": "Andromeda Outpost", "key": "Andromeda" },
+    { "name": "Vega Prime", "key": "Vega" }
+  ],
+  "destinationConfigs": {
+    "Earth": {
+      "description": "Orbiting Earth, the fractured home of humanity. The once-beautiful world lies fractured, but humanity persists in the ruins of the kilko disaster",
+      "travelType": "train",
+      "subDestinations": [
+        { "name": "Return to Ship", "key": "Return" },
+        { "name": "New York Sector", "key": "NewYork" },
+        { "name": "Earth Space Port", "key": "EarthSpacePort" },
+        { "name": "Pacific Research Facility", "key": "Pacific" }
+      ],
+      "sectorDescriptions": {
+        "NewYork": "A massive sprawling city...",
+        "EarthSpacePort": "A large cargo and civilian port...",
+        "Pacific": "A massive floating research base..."
+      }
+    },
+    "Mars": {
+      "description": "Orbiting Mars Colony Alpha...",
+      "travelType": "shuttle",
+      "subDestinations": [
+        { "name": "Return to Ship", "key": "Return" },
+        { "name": "Colony Core", "key": "ColonyCore" },
+        { "name": "Terraforming Fields", "key": "TerraformingFields" },
+        { "name": "Ancient Vault", "key": "AncientVault" }
+      ],
+      "sectorDescriptions": {
+        "ColonyCore": "The beating heart of the terraforming effort...",
+        "TerraformingFields": "Engineers work here...",
+        "AncientVault": "An ancient vault emerged during the Kilko disaster..."
+      }
+    },
+    "Europa": {
+      "description": "Orbiting Europa Research Base...",
+      "travelType": "rover",
+      "subDestinations": [
+        { "name": "Return to Ship", "key": "Return" },
+        { "name": "Research Base", "key": "ResearchBase" },
+        { "name": "Ground Camp", "key": "GroundCamp" },
+        { "name": "Ruins", "key": "Ruins" }
+      ],
+      "sectorDescriptions": {
+        "ResearchBase": "A hub of scientific activity...",
+        "GroundCamp": "A rugged outpost supporting field teams...",
+        "Ruins": "A hidden megastructure buried under Europa's ice..."
+      }
+    },
+    "Jupiter": {
+      "description": "Orbiting the Jupiter Orbital Station...",
+      "subDestinations": [
+        { "name": "Return to Ship", "key": "Return" },
+        { "name": "Storm Observatory", "key": "StormObservatory" },
+        { "name": "Gas Harvesting Platform", "key": "GasHarvester" },
+        { "name": "Research Array", "key": "ResearchArray" },
+        { "name": "Deep Core Relay", "key": "CoreRelay" },
+        { "name": "Excavation Platforms", "key": "ExcavationPlatforms" }
+      ],
+      "sectorDescriptions": {
+        "StormObservatory": "Observes Jupiter’s massive storms...",
+        "GasHarvester": "Harvests gases for fuel...",
+        "ResearchArray": "Sensor nodes study Jupiter's magnetic field...",
+        "CoreRelay": "Deep in the atmosphere...",
+        "ExcavationPlatforms": "Digs into Jupiter’s gas layers..."
+      }
+    },
+    "Vega": {
+      "description": "Orbiting Vega Prime, a vibrant star system hub...",
+      "subDestinations": [
+        { "name": "Return to Ship", "key": "Return" },
+        { "name": "Capital City", "key": "CapitalCity" },
+        { "name": "Orbital Trade Ring", "key": "OrbitalTradeRing" },
+        { "name": "Stellar Observation Spire", "key": "StellarObservationSpire" },
+        { "name": "Crystal Canyon Outpost", "key": "CrystalCanyonOutpost" }
+      ],
+      "sectorDescriptions": {
+        "CapitalCity": "A neon metropolis untouched by the Kilko disaster...",
+        "OrbitalTradeRing": "Commerce and supply hub for Vega Prime...",
+        "StellarObservationSpire": "This is where the megastructures were first discovered...",
+        "CrystalCanyonOutpost": "Gem mines that power everything..."
+      }
+    },
+    "Andromeda": {
+      "description": "Orbiting the Andromeda Outpost...",
+      "travelType": "shuttle",
+      "subDestinations": [
+        { "name": "Return to Ship", "key": "Return" },
+        { "name": "Forward Recon Station", "key": "ForwardRecon" },
+        { "name": "Black Spire Relay", "key": "BlackSpire" },
+        { "name": "Xeno Archives", "key": "XenoArchives" },
+        { "name": "Statue Research Wing", "key": "StatueWing" }
+      ],
+      "sectorDescriptions": {
+        "ForwardRecon": "An unmanned station monitoring deep space anomalies...",
+        "BlackSpire": "A jagged relay station...",
+        "XenoArchives": "Vault of alien artifacts...",
+        "StatueWing": "A massive research wing of statues..."
+      }
+    }
+  }
+}
