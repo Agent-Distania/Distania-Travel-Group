@@ -10,14 +10,7 @@
     { "speaker": "Patrolman", "line": "Keep moving. Streets are restricted beyond block 5." },
     { "speaker": "ECS Marine", "line": "What out for the torta structure friend, grounds unstable today"},
     { "speaker": "ECS Officer", "line": "Enjoy your stay friend, the ECS HQ is at oregon if you need to visit, it'll be open for travel soon"},
-    { "speaker": "Administrative AI", "line": "Reminder: Only you can prevent another kilko disaster! Report occult activity or anything strange with mega structures to the authorities immediately!"},
-    
-    "NewYork_Downtown": [
-  { "speaker": "Transit Officer", "line": "All lanes clear. Metro 5 is delayed due to power reroute." },
-  { "speaker": "Vendor", "line": "Get your synth-tacos! Grown under real UV!" },
-  { "speaker": "Courier", "line": "Skylift was stuck again. I'm climbing that thing next time." },
-  { "speaker": "Civilian", "line": "They say the archives are haunted — like real ghosts from the Red War." }
-],
+    { "speaker": "Administrative AI", "line": "Reminder: Only you can prevent another kilko disaster! Report occult activity or anything strange with mega structures to the authorities immediately!"}
 
   ],
   "EarthSpacePort": [
