@@ -181,7 +181,7 @@ function handleDestinationClick(dest, btn) {
     const config = destinationConfigs[dest.key];
     currentHub = dest.key;
     currentLocation = dest.key;
-    appendLog(`System: ${config.description}`);
+    appendLog(`System: ${dest.description || config.description}`);
     createButtons(config.subDestinations);
     appendLog(`System: Accessing ${dest.name} sectors.`);
     return;
@@ -226,7 +226,7 @@ function travelToSubDestination(dest, btn, config) {
   beginTravel(btn);
   NovaAI.speak("travel");
 
-  const description = config.sectorDescriptions?.[dest.key];
+  const description = dest.description || config.sectorDescriptions?.[dest.key];
   const travelType = dest.type || config.travelType || 'shuttle';
   const travelLabel = {
     drone: "Deploying drone",
@@ -286,8 +286,9 @@ function travelToSubSubDestination(dest, btn, parentSub) {
   appendLog(`System: Traveling deeper to ${dest.name}...`);
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
-    NovaAI.speak("arrival");
-    currentLocation = dest.key;
+if (dest.description) appendLog(dest.description);
+NovaAI.speak("arrival");
+currentLocation = dest.key;
 
     dest.subDestinations = [
       { name: "Return to Previous", key: "Return" },
