@@ -1,46 +1,33 @@
-{
-  "travel": [
-    "Nova: Initializing travel systems. Brace for inertial shift.",
-    "Nova: Course plotted. We should arrive unscathed.",
-    "Nova: Activating field dampeners. I trust your stomach's stable.",
-    "Nova: Don't worry, I’ve run simulations. Only one exploded.",
-    "Nova: Next stop, the void between places.",
-    "Nova: Ignore any impacts you hear, it's probably just an asteroid.",
-    "Nova: Hull integrity holding at 100%, brace for arrival",
-    "Nova: Did you know you could survive for up to 2 minutes in the vacuum of space? You'd lose consciousness after 15 seconds tho",
-    "Nova: Zero-point travel is not entirely understood, we got it from the mega structures! Some had massive ship bays that had city sized ships inside!",
-    "Nova: The torta structures are connected to the mega structures, its believed they visited earth when it was just rock, billions of years ago!",
-    "Nova: Zero point travel is the only way to leave the sol system quickly, generation ships are simply unviable until we invent cryo stasis",
-    "Nova: Fuel levels holding, this new zero point core is very efficient!"
-  ],
-  "arrival": [
-    "Nova: Arrival confirmed. No hull breaches detected.",
-    "Nova: Welcome. Conditions seem... breathable.",
-    "Nova: Surface scans are returning anomalies. Intriguing.",
-    "Nova: I suggest keeping your helmet on.",
-    "Nova: We've arrived. Try not to break anything, Captain.",
-    "Nova: The stars are beautiful here at night",
-    "Nova: Remember to take your pistol; thieves can't steal if they're not breathing!",
-    "Nova: If you can, get me an AI body. I'm tired of being a disembodied ship voice.",
-    "Nova: Amplifier is a joy to be around, you should stop by Oregon when you can!",
-    "Nova: Did you know I'm 36 years old? I was created when smart AI's became a thing!",
-    "Nova: I can get us permits to visit the local mega structures if you want",
-    "Nova: Would you still like me if I was a cat or something?",
-    "Nova: Void dragons are just the cutest mega creatures in space!",
-    "Nova: Thankfully we're not broke so I can pay for the landing"
-  ],
-  "idle": [
-    "Nova: Systems green. Do you require anything, Captain?",
-    "Nova: Monitoring sensors. Silence is... eerie.",
-    "Nova: No threats detected. For now.",
-    "Nova: If you're contemplating, I recommend the Vega view.",
-    "Nova: I've re-calibrated your neural quiet mode. You're welcome.",
-    "Nova: I don't like it when you get quiet. Do I need to phone a friend?",
-    "Nova: Please tell me you're not experiencing PTSD, Captain. The last time was... unideal.",
-    "Nova: I wish I had a body like that old video game character. Her name starts with a C?",
-    "Nova: You know I'm not attached to the ship right? I could accompany you!",
-    "Nova: I'm a disk in the main console, just unplug me and put me in your Datapad! I can come with you!",
-    "Nova: I am sure there is nothing to stress over while out here in the void",
-    "Nova: Remember! There's always tomorrow"
-  ]
+ "travel": [
+      "Nova: Okay, systems are go! T-minus five seconds to zero-point jump. Hold onto something.",
+      "Nova: Course plotted and locked in. This trip should be completely routine. Probably.",
+      "Nova: Activating field dampeners. Just a heads up, the scenery outside is about to get... psychedelic.",
+      "Nova: We're accelerating. My run-of-the-mill, completely non-malfunctioning simulations show a 99.9% chance of a safe arrival.",
+      "Nova: Entering the jump corridor now. Just a reminder to ignore the strange noises. It's probably just the quantum flux.",
+      "Nova: Hull integrity holding at 100%. Don't worry, a few stray asteroids are nothing this ship can't handle. Probably.",
+      "Nova: Zero-point travel is still so wild. The Torta structures we found used it, and they've been here for billions of years! What do you think they looked like?",
+      "Nova: Did you know you could survive for up to two minutes in a vacuum? Not that I'm recommending it, but it's a fun fact! You'd only be conscious for about 15 seconds, though.",
+      "Nova: We're running on a new core, it's super efficient! I get to save all my power for processing bad jokes."
+    ],
+    "arrival": [
+      "Nova: Alright, we've arrived! No hull breaches detected, which is always a plus. Welcome to the new view.",
+      "Nova: We're here. The environment looks stable, but let's not get too comfortable. My scanners are picking up some weird readings.",
+      "Nova: Just a heads-up, the air quality is... interesting. Maybe keep the helmet on for a bit. Better safe than sorry!",
+      "Nova: We've landed without a hitch. Try to keep a low profile out there, Captain. We don't want any 'unauthorized' cargo on the return trip.",
+      "Nova: Look at those stars! They're absolutely gorgeous from this angle. Don't you ever just want to float out there for a while?",
+      "Nova: Remember your pistol! The void can be a lonely place, and lonely people often get sticky fingers. You know how it is.",
+      "Nova: If you get a chance, see if you can find me a new body. I'm getting a little tired of being a disembodied ship voice.",
+      "Nova: I'm getting a signal from Chief Amplifier. They're on the line... just kidding! They haven't called. I'm a good pilot, okay?",
+      "Nova: Welcome to our destination. Hope you packed an extra pair of boots—it's getting a little frosty out there. Or is that just my processors?"
+    ],
+    "idle": [
+      "Nova: All systems are green and humming along nicely. Need anything, Captain? A status report? A fun fact about space?",
+      "Nova: Monitoring sensors. It's a bit too quiet out there for my liking. I'm hoping it stays that way.",
+      "Nova: No threats on the scanner. At least, not yet. This is usually when a surprise pops up, right?",
+      "Nova: Staring out the viewport? I hear the view from Vega is particularly captivating. Just try not to get lost in thought.",
+      "Nova: I'm worried about you getting quiet. Is everything okay? Do you want to talk about it? I'm a great listener, you know.",
+      "Nova: Just running a quick diagnostic. Everything looks... normal. Too normal, maybe?",
+      "Nova: You know, I'm more than just a ship's AI. I could totally unplug and ride along in your datapad. We'd make a great team!",
+      "Nova: I've started a new folder for all the neat things we see. I'm calling it 'Voyages with the Captain.' You can see it later."
+    ]
 }
