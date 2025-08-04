@@ -18,116 +18,20 @@ let currentHub = null;
 let ambientTimer = null;
 const AMBIENT_INTERVAL = 30000;
 
-// =======================
-// Configuration Data
-// =======================
-const mainDestinations = [
-  { name: "Earth", key: "Earth" },
-  { name: "Mars Colony Alpha", key: "Mars" },
-  { name: "Jupiter Orbital Station", key: "Jupiter" },
-  { name: "Europa Research Base", key: "Europa" },
-  { name: "Andromeda Outpost", key: "Andromeda" },
-  { name: "Vega Prime", key: "Vega" },
-];
+const mainDestinations = [];
+const destinationConfigs = {};
 
-const destinationConfigs = {
-  Earth: {
-    description: "Orbiting Earth, the fractured home of humanity. The once-beautiful world lies fractured, but humanity persists in the ruins of the kilko disaster",
-    travelType: "train",
-    subDestinations: [
-      { name: "Return to Ship", key: "Return" },
-      { name: "New York Sector", key: "NewYork" },
-      { name: "Earth Space Port", key: "EarthSpacePort" },
-      { name: "Pacific Research Facility", key: "Pacific" },
-    ],
-    sectorDescriptions: {
-      NewYork: "A massive sprawling city, a far cry from the concrete jungle of old, its more spread out layout in the modern day after its rebuilding has brought new york into the modern day. Its proximity to the Torta structures fuels its economy.",
-      EarthSpacePort: "A large cargo and civilian port that once fueled the Red War, its defenses await an enemy long since defeated. Now a gateway for imports to Earth's mega cities.",
-      Pacific: "A massive floating research base that studies artifacts from the Kilko disaster and other megastructures across the system, its the main research hub for humanity but its reputation has been tarnished by the kilko disaster"
-    }
-  },
-  Mars: {
-    description: "Orbiting Mars Colony Alpha, a sprawling network of habitats and terraforming stations.",
-    travelType: "shuttle",
-    subDestinations: [
-      { name: "Return to Ship", key: "Return" },
-      { name: "Colony Core", key: "ColonyCore" },
-      { name: "Terraforming Fields", key: "TerraformingFields" },
-      { name: "Ancient Vault", key: "AncientVault" },
-    ],
-    sectorDescriptions: {
-      ColonyCore: "The beating heart of the terraforming effort, home to shops and homes. One of the few cities that survived the Kilko disaster.",
-      TerraformingFields: "Engineers work here to make Mars habitable. Machinery hums endlessly, reshaping the planet into its once green self as they avoid the mars mega structure",
-      AncientVault: "An ancient vault emerged during the Kilko disaster. It wiped out cities, turned back time, and turned Mars red again."
-    }
-  },
-  Europa: {
-    description: "Orbiting Europa Research Base, a scientific station monitoring the icy moon’s hidden ocean.",
-    travelType: "rover",
-    subDestinations: [
-      { name: "Return to Ship", key: "Return" },
-      { name: "Research Base", key: "ResearchBase", type: "rover" },
-      { name: "Ground Camp", key: "GroundCamp" },
-      { name: "Ruins", key: "Ruins" },
-    ],
-    sectorDescriptions: {
-      ResearchBase: "A hub of scientific activity focused on Europa’s ice crust and subsurface ocean, it has massive subsurface tunnels that lead to the mega structure below ending in a mini city sized air pocket where they work.",
-      GroundCamp: "A rugged outpost supporting field teams. Built around an entrance to the megastructure.",
-      Ruins: "A hidden megastructure buried under Europa's ice. It may predate all known civilizations."
-    }
-  },
-  Jupiter: {
-    description: "Orbiting the Jupiter Orbital Station...",
-    subDestinations: [
-      { name: "Return to Ship", key: "Return" },
-      { name: "Storm Observatory", key: "StormObservatory", type: "shuttle" },
-      { name: "Gas Harvesting Platform", key: "GasHarvester", type: "shuttle" },
-      { name: "Research Array", key: "ResearchArray", type: "drone" },
-      { name: "Deep Core Relay", key: "CoreRelay", type: "shuttle" },
-      { name: "Excavation Platforms", key: "ExcavationPlatforms", type: "shuttle" },
-    ],
-    sectorDescriptions: {
-      StormObservatory: "Observes Jupiter’s massive storms and protects orbital stations from said stroms by adjusting how close they are to the surface",
-      GasHarvester: "Harvests gases for fuel. Vital to all logistics and ships.",
-      ResearchArray: "Sensor nodes study Jupiter's magnetic field, the array is entirely automated and drones can be seen darting between the various sensors",
-      CoreRelay: "Deep in the atmosphere, this hub maintains long-range communication with mega stucture exploration teams and the stations",
-      ExcavationPlatforms: "Digs into Jupiter’s gas layers for its ancient megastructure, a decaying massive ring deep in the gas, its purpose unknown and one of the few humanity is capable of exploring"
-    }
-  },
-  Vega: {
-    description: "Orbiting Vega Prime, a vibrant star system hub...",
-    subDestinations: [
-      { name: "Return to Ship", key: "Return" },
-      { name: "Capital City", key: "CapitalCity", type: "shuttle" },
-      { name: "Orbital Trade Ring", key: "OrbitalTradeRing", type: "orbit" },
-      { name: "Stellar Observation Spire", key: "StellarObservationSpire", type: "orbit" },
-      { name: "Crystal Canyon Outpost", key: "CrystalCanyonOutpost", type: "shuttle" },
-    ],
-    sectorDescriptions: {
-      CapitalCity: "A neon metropolis untouched by the Kilko disaster, its the most densly populated city near the sol system and a major trade hub.",
-      OrbitalTradeRing: "Commerce and supply hub for Vega Prime, all trading for the city is done here, along with many illegal activities",
-      StellarObservationSpire: "This is where the megastructures were first discovered on their approach for the sol system, but there was no time to warn them due to how fast they moved.",
-      CrystalCanyonOutpost: "Gem mines that power everything from ships to phones, odds are everything around you is powered by the gems from this mine, there are rumors a alien mega structure may reside in the abandonded tunnels."
-    }
-  },
-  Andromeda: {
-    description: "Orbiting the Andromeda Outpost, a forward base for deep space exploration...",
-    travelType: "shuttle",
-    subDestinations: [
-      { name: "Return to Ship", key: "Return" },
-      { name: "Forward Recon Station", key: "ForwardRecon", type: "drone" },
-      { name: "Black Spire Relay", key: "BlackSpire" },
-      { name: "Xeno Archives", key: "XenoArchives", type: "shuttle" },
-      { name: "Statue Research Wing", key: "StatueWing", type: "shuttle"},
-    ],
-    sectorDescriptions: {
-      ForwardRecon: "An unmanned station monitoring deep space anomalies, they keep a vigilante watch for any and everything",
-      BlackSpire: "A jagged relay station transmitting signals between galaxies, for what purpose though is unknown",
-      XenoArchives: "Vault of alien artifacts and encrypted data, it links to a room full of statues taken from the nearby 'Cyclops' mega structure.",
-      StatueWing: "A massive research wing of statues from the 'Cyclops' mega structure, many workers claim they move when no one is looking, so of course, there's no evidence to back this up."
-    }
-  }
-};
+fetch("destinations.json")
+  .then(res => res.json())
+  .then(data => {
+    mainDestinations.push(...data.mainDestinations);
+    Object.assign(destinationConfigs, data.destinationConfigs);
+    console.log("Destination data loaded.");
+  })
+  .catch(err => console.error("Failed to load destination data:", err));
+
+
+
 
 // =======================
 // Ambient Dialogue Data
@@ -476,5 +380,16 @@ onBtn.addEventListener('click', () => {
   loginScreen.classList.add('hidden');
   travelScreen.classList.remove('hidden');
   appendLog("System: Welcome, Captain. Please select a destination.");
-  createButtons(mainDestinations);
+
+  // Wait until destinations are loaded
+  if (mainDestinations.length > 0) {
+    createButtons(mainDestinations);
+  } else {
+    const waitForData = setInterval(() => {
+      if (mainDestinations.length > 0) {
+        clearInterval(waitForData);
+        createButtons(mainDestinations);
+      }
+    }, 100);
+  }
 });
