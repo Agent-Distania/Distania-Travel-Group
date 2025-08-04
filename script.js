@@ -74,11 +74,11 @@ const NovaAI = {
       "Nova: Next stop, the void between places.",
       "Nova: Ignore any impacts you hear, it's probably just an asteroid.",
       "Nova: Hull integrity holding at 100%, brace for arrival",
-      "Nova: Did you know you could survive for up to 2 minutes in the vaccum of space? You'd lose consciousness after 15 seconds tho",
+      "Nova: Did you know you could survive for up to 2 minutes in the vacuum of space? You'd lose consciousness after 15 seconds tho",
       "Nova: Zero-point travel is not entirely understood, we got it from the mega structures! Some had massive ship bays that had city sized ships inside!",
       "Nova: The torta structures are connected to the mega structures, its believed they visited earth when it was just rock, billions of years ago!",
       "Nova: Zero point travel is the only way to leave the sol system quickly, generation ships are simply unviable until we invent cryo stasis",
-      "Nova: Fuel levels holding, this new zero point core is very efficent!"
+      "Nova: Fuel levels holding, this new zero point core is very efficient!"
     ],
       arrival: [
       "Nova: Arrival confirmed. No hull breaches detected.",
@@ -89,10 +89,10 @@ const NovaAI = {
       "Nova: The stars are beautiful here at night",
       "Nova: Remember to take your pistol; thieves can't steal if they're not breathing!",
       "Nova: If you can, get me an AI body. I'm tired of being a disembodied ship voice.",
-      "Nova: Amplifier is a joy to be around, you should stop by oregon when you can!",
+      "Nova: Amplifier is a joy to be around, you should stop by Oregon when you can!",
       "Nova: Did you know I'm 36 years old? I was created when smart AI's became a thing!",
       "Nova: I can get us permits to visit the local mega structures if you want",
-      "Nova: Would yous still like me if I was a cat or something?",
+      "Nova: Would you still like me if I was a cat or something?",
       "Nova: Void dragons are just the cutest mega creatures in space!",
       "Nova: Thankfully we're not broke so I can pay for the landing"
     ],
@@ -108,7 +108,7 @@ const NovaAI = {
       "Nova: You know I'm not attached to the ship right? I could accompany you!",
       "Nova: I'm a disk in the main console, just unplug me and put me in your Datapad! I can come with you!",
       "Nova: I am sure there is nothing to stress over while out here in the void",
-      "Nova: Remeber! There's always tomorrow"
+      "Nova: Remember! There's always tomorrow"
     ]
   },
 
@@ -246,32 +246,13 @@ function travelToSubDestination(dest, btn, config) {
     NovaAI.speak("arrival");
     currentLocation = dest.key;
 
-    // If the destination is New York, define real nested sub-destinations
-    if (dest.key === "NewYork") {
-  dest.subDestinations = [
-    { name: "Return to Previous", key: "Return" },
-    { name: "Downtown Core", key: "NewYork_Downtown" },
-    { name: "Torta Excavation Site", key: "NewYork_Torta" },
-    { name: "Skyline Transit Nexus", key: "NewYork_Transit" }
-  ];
-} else if (dest.key === "EarthSpacePort") {
-  dest.subDestinations = [
-    { name: "Return to Previous", key: "Return" },
-    { name: "Processing", key: "EarthSpacePort_FrontDesk" },
-    { name: "Cargo Intake", key: "EarthSpacePort_Cargo" },
-    { name: "Docking Bay", key: "EarthSpacePort_Docking" }
-  ];
+    if (dest.subDestinations) {
+  createButtons(dest.subDestinations);
 } else {
-  // Otherwise use generic nested sectors
-  dest.subDestinations = [
-    { name: "Return to Previous", key: "Return" },
-    { name: `${dest.name} Subsector A`, key: `${dest.key}_A` },
-    { name: `${dest.name} Subsector B`, key: `${dest.key}_B` },
-    { name: `${dest.name} Subsector C`, key: `${dest.key}_C` }
-  ];
+  dest.subDestinations = generateDefaultSubDestinations(dest);
+  createButtons(dest.subDestinations);
 }
 
-    createButtons(dest.subDestinations);
     hideTravelOverlay();
     startAmbientDialogue(dest.key);
     NovaAI.startIdle();
@@ -284,19 +265,21 @@ function travelToSubSubDestination(dest, btn, parentSub) {
   NovaAI.speak("travel");
   showTravelOverlay(`Traveling deeper to ${dest.name}...`);
   appendLog(`System: Traveling deeper to ${dest.name}...`);
+
   setTimeout(() => {
     appendLog(`System: Arrived at ${dest.name}.`);
-if (dest.description) appendLog(dest.description);
-NovaAI.speak("arrival");
-currentLocation = dest.key;
+    if (dest.description) {
+      appendLog(dest.description);
+    }
+    NovaAI.speak("arrival");
+    currentLocation = dest.key;
 
-    dest.subDestinations = [
-      { name: "Return to Previous", key: "Return" },
-      { name: `${dest.name} Core Zone`, key: `${dest.key}_1` },
-      { name: `${dest.name} Outer Sector`, key: `${dest.key}_2` }
-    ];
+    if (dest.subDestinations) {
+      createButtons(dest.subDestinations);
+    } else {
+      dest.subDestinations = generateDefaultSubDestinations(dest);
+    }
 
-    createButtons(dest.subDestinations);
     hideTravelOverlay();
     NovaAI.startIdle();
     traveling = false;
@@ -340,6 +323,15 @@ function hideTravelOverlay() {
     overlay.classList.add('hidden');
   }, 800);
 }
+
+function generateDefaultSubDestinations(dest) {
+  return [
+    { name: "Return to Previous", key: "Return" },
+    { name: `${dest.name} Core Zone`, key: `${dest.key}_1` },
+    { name: `${dest.name} Outer Sector`, key: `${dest.key}_2` }
+  ];
+}
+
 
 // =======================
 // Ambient Dialogue Logic
