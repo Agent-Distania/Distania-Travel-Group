@@ -357,6 +357,12 @@ function travelToMainDestination(dest, btn) {
     endTravel(dest.key, dest.key);
     
     const config = destinationConfigs[dest.key];
+    
+    // ✅ ADD THIS: Display the planet description
+    if (config.description) {
+      appendLog(config.description);
+    }
+    
     createButtons(config.subDestinations);
     
     hideTravelOverlay();
