@@ -28,6 +28,8 @@ let currentHub = null;
 let currentSubLocation = null; // Added for tracking sub-destinations
 let ambientTimer = null;
 const AMBIENT_INTERVAL = 30000;
+let interactiveElements = {};
+let discoveredElements = new Set(); // Track what player has found
 
 const mainDestinations = [];
 const destinationConfigs = {};
@@ -53,6 +55,25 @@ fetch("destinations.json")
     console.log("Loading fallback destination data...");
     loadFallbackDestinations();
   });
+
+fetch("interactiveElements.json")
+  .then(res => {
+    console.log("Interactive elements fetch response status:", res.status);
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    return res.json();
+  })
+  .then(data => {
+    console.log("Interactive elements data loaded:", data);
+    interactiveElements = data.interactiveElements || {};
+    console.log("Interactive elements available for locations:", Object.keys(interactiveElements));
+  })
+  .catch(err => {
+    console.error("Failed to load interactive elements:", err);
+    // You could add fallback data here if needed
+  });
+
 
 // =======================
 // Ambient Dialogue Data
@@ -408,6 +429,9 @@ function travelToSubDestination(dest, btn, config) {
       createButtons(dest.subDestinations);
     }
 
+    // ✅ Add interactive elements
+    showInteractiveElements(dest.key);
+
     hideTravelOverlay();
     startAmbientDialogue(dest.key);
     NovaAI.startIdle();
@@ -517,25 +541,56 @@ function getRandomMessage(messages) {
 }
 
 // =======================
+// Interactive Elements Logic (outside of any blocks)
+// =======================
+
+function showInteractiveElements(locationKey) {
+  const elements = interactiveElements[locationKey];
+  if (!elements) return;
+
+  const interactiveSection = document.createElement('div');
+  interactiveSection.className = 'interactive-section';
+  interactiveSection.innerHTML = '<h3>Points of Interest</h3>';
+
+  // Add sections for each interactive type...
+}
+
+function playAudioLog(log) {
+  // ...
+}
+
+function readHistoricalMarker(marker) {
+  // ...
+}
+
+function accessResearchTerminal(terminal) {
+  // ...
+}
+
+function getPlayerAccessLevel() {
+  return "Public";
+}
+
+function canAccessFile(classification, playerLevel) {
+  // ...
+}
+
+// =======================
 // Event Handlers
 // =======================
 window.addEventListener('DOMContentLoaded', () => {
-  // Get elements again to ensure they exist
   const proceedBtn = document.getElementById('proceedBtn');
   const onBtn = document.getElementById('onBtn');
-  
-  console.log('DOM loaded, proceedBtn:', proceedBtn, 'onBtn:', onBtn); // Debug log
 
   if (proceedBtn) {
     proceedBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      console.log('Proceed button clicked'); // Debug log
       startupScreen.classList.add('hidden');
       loginScreen.classList.remove('hidden');
     });
   }
 
-  if (onBtn) {
+    if (onBtn) {
     onBtn.addEventListener('click', (e) => {
       e.preventDefault();
       console.log('ON button clicked'); // Debug log
@@ -558,7 +613,7 @@ window.addEventListener('DOMContentLoaded', () => {
             createButtons(mainDestinations);
           }
         }, 100);
-        
+
         // Timeout after 5 seconds and force load fallback data
         setTimeout(() => {
           if (mainDestinations.length === 0) {
@@ -571,6 +626,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   } else {
-    console.error('ON button not found!'); // Debug log
+    console.error('ON button not found!');
   }
 });
