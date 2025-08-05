@@ -69,12 +69,32 @@
           "description": "A large cargo and civilian port that once fueled the Red War, its defenses gather dusta s they wait for a chance to prove themsleves ina  war that will never come, it is now a hub for mega city trade."
         },
         {
-          "name": "Pacific Research Facility",
-          "key": "Pacific",
-          "description": "A massive floating research base investigating Kilko artifacts and deep-sea anomalies.",
-          "subDestinations": [
-            { "name": "Return to Previous", "key": "Return" }
-          ]
+          {
+  "name": "Pacific Research Facility",
+  "key": "Pacific",
+  "description": "A massive floating research base investigating Kilko artifacts and deep-sea anomalies.",
+  "subDestinations": [
+    { 
+      "name": "Return to Previous", 
+      "key": "Return" 
+    },
+    {
+      "name": "Kilko Artifact Lab",
+      "key": "Pacific_ArtifactLab",
+      "description": "Secure containment and analysis facility for recovered Kilko debris and energy readings."
+    },
+    {
+      "name": "Deep Sea Observatory",
+      "key": "Pacific_Observatory",
+      "description": "Submersible launch bay and monitoring station tracking anomalous ocean floor activity."
+    },
+    {
+      "name": "Abyssal Research Wing",
+      "key": "Pacific_Abyssal",
+      "description": "Pressurized labs studying life forms and structures found in deep ocean trenches."
+    }
+  ]
+}
         }
       ]
     },
