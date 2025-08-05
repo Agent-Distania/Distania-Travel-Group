@@ -152,6 +152,42 @@
     { "speaker": "Marine Geologist", "line": "These rock samples contain materials that shouldn't exist on Earth."},
     { "speaker": "Safety Coordinator", "line": "All deep dives are suspended until we understand what's happening down there."}
   ],
+  "Pacific_ArtifactLab": [
+    { "speaker": "Containment Specialist", "line": "Artifact 7-Alpha is showing increased energy readings. Raise containment to level 3." },
+    { "speaker": "Research Scientist", "line": "These Kilko fragments are reacting to each other across separate containment fields." },
+    { "speaker": "Lab Technician", "line": "The debris samples are getting warmer. Temperature's been climbing for three days straight." },
+    { "speaker": "Safety Officer", "line": "Radiation levels spiked again near the main Kilko specimen. Evacuate section B." },
+    { "speaker": "Materials Analyst", "line": "Molecular structure changes every time we scan it. Like it's adapting to our instruments." },
+    { "speaker": "Lab AI", "line": "Warning: anomalous energy patterns detected in containment unit 12. Initiating lockdown protocols." },
+    { "speaker": "Quantum Physicist", "line": "The Kilko artifacts are entangled somehow. Disturbing one affects all the others instantly." },
+    { "speaker": "Documentation Officer", "line": "Another researcher reported temporal displacement. They lost four hours of memory in the artifact room." },
+    { "speaker": "Hazmat Specialist", "line": "New protective suits are melting after prolonged exposure. We need better shielding materials." },
+    { "speaker": "Research Director", "line": "The artifacts aren't just debris. They're components of something much larger and still active." }
+  ],
+  "Pacific_Observatory": [
+    { "speaker": "Submersible Pilot", "line": "Sub Bay 3 is launching in ten minutes. Deep trench reconnaissance mission." },
+    { "speaker": "Sonar Operator", "line": "Getting massive returns from the ocean floor. Something the size of a city down there." },
+    { "speaker": "Deep Sea Monitor", "line": "Water temperature at 4000 meters is rising exponentially. That's not natural." },
+    { "speaker": "Oceanographer", "line": "Current patterns have completely reversed. The ocean is flowing toward something." },
+    { "speaker": "Communications Tech", "line": "Lost contact with Deep Explorer 7. Last transmission mentioned 'impossible structures.'" },
+    { "speaker": "Environmental Sensor", "line": "Chemical composition of deep water shows unknown compounds increasing daily." },
+    { "speaker": "Observatory AI", "line": "Seismic activity suggests something massive is moving beneath the ocean floor." },
+    { "speaker": "Marine Biologist", "line": "Found organisms at crushing depths that shouldn't be able to survive. They're glowing." },
+    { "speaker": "Dive Coordinator", "line": "All deep dives suspended until we understand what's causing the pressure anomalies." },
+    { "speaker": "Geology Specialist", "line": "Tectonic readings indicate artificial structures spanning the entire Pacific basin." }
+  ],
+  "Pacific_Abyssal": [
+    { "speaker": "Pressure Systems Engineer", "line": "Lab pressure holding at 400 atmospheres. Simulating deep trench conditions perfectly." },
+    { "speaker": "Marine Xenobiologist", "line": "These organisms don't match any known species. Evolution doesn't work this fast." },
+    { "speaker": "Deep Sample Analyst", "line": "Life forms from the trenches are incorporating metallic elements into their biology." },
+    { "speaker": "Atmospheric Monitor", "line": "Gas composition in the pressure chambers is changing on its own. Something's modifying it." },
+    { "speaker": "Research Coordinator", "line": "Specimens are displaying intelligence levels that shouldn't exist in deep sea life." },
+    { "speaker": "Biocontainment Officer", "line": "The organisms are communicating with each other through bioluminescent patterns." },
+    { "speaker": "Genetic Sequencer", "line": "DNA analysis shows impossible genetic structures. This isn't terrestrial life." },
+    { "speaker": "Laboratory AI", "line": "Specimens are adapting to laboratory conditions faster than evolutionary theory allows." },
+    { "speaker": "Deep Sea Physiologist", "line": "These creatures can survive in both crushing depths and normal atmospheric pressure." },
+    { "speaker": "Emergency Response", "line": "Containment breach in lab 7. The organisms dissolved the reinforced barriers somehow." }
+  ],
   "ColonyCore_Residential": [
     { "speaker": "Resident", "line": "The filtration system hums differently today. Something's off, I'll file a request for the filters to be checked." },
     { "speaker": "Teacher", "line": "Kids learned how Earth grass smells — using a VR module, of course, I hope mars will be green when they grow up." },
