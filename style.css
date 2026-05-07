@@ -1,12 +1,18 @@
-/* Global tech panel background */
+/* =========================================================
+   Global
+   ========================================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
   background: #01040a;
   background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(15, 64, 64, 0.2) 10px, rgba(15, 64, 64, 0.2) 11px),
-    repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(15, 64, 64, 0.2) 10px, rgba(15, 64, 64, 0.2) 11px);
+    repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(15,64,64,0.2) 10px, rgba(15,64,64,0.2) 11px),
+    repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(15,64,64,0.2) 10px, rgba(15,64,64,0.2) 11px);
   font-family: 'Orbitron', sans-serif;
   color: #8dfd8d;
   display: flex;
@@ -14,35 +20,32 @@ body {
   align-items: center;
 }
 
-/* Frame around screens with decorative corners */
+/* =========================================================
+   Panel frame
+   ========================================================= */
 .panel-frame {
   position: relative;
   padding: 1.5rem;
-  background: rgba(0, 20, 40, 0.8);
+  background: rgba(0,20,40,0.8);
   border: 3px solid #0f4;
-  box-shadow: 0 0 30px rgba(15, 255, 15, 0.3);
+  box-shadow: 0 0 30px rgba(15,255,15,0.3);
 }
 
-.panel-frame::before, .panel-frame::after {
+/* Decorative corner brackets */
+.panel-frame::before,
+.panel-frame::after {
   content: '';
   position: absolute;
   width: 20px;
   height: 20px;
   border: 3px solid #0f4;
 }
+.panel-frame::before { top: -3px; left: -3px; border-right: none; border-bottom: none; }
+.panel-frame::after  { bottom: -3px; right: -3px; border-left: none; border-top: none; }
 
-.panel-frame::before {
-  top: -3px; left: -3px;
-  border-right: none;
-  border-bottom: none;
-}
-
-.panel-frame::after {
-  bottom: -3px; right: -3px;
-  border-left: none;
-  border-top: none;
-}
-
+/* =========================================================
+   Screens
+   ========================================================= */
 .screen {
   width: 90vw;
   max-width: 780px;
@@ -57,13 +60,13 @@ body {
   align-items: center;
   text-align: center;
   position: relative;
-  box-sizing: border-box;
 }
 
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
+/* =========================================================
+   Typography
+   ========================================================= */
 h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
@@ -71,104 +74,64 @@ h1 {
   text-shadow: 0 0 8px rgba(15,255,15,0.5);
 }
 
-.btn, .dest-list button {
+/* =========================================================
+   Buttons (shared base)
+   ========================================================= */
+.btn,
+.dest-list button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  color: #01040a;
-  background: #8dfd8d;
+  font-family: 'Orbitron', sans-serif;
   border: none;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-  font-family: 'Orbitron', sans-serif;
 }
 
-.btn:hover, .dest-list button:hover {
+/* Primary action button (startup / login) */
+.btn {
+  color: #01040a;
+  background: #8dfd8d;
+}
+.btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 10px rgba(15,255,15,0.5);
 }
 
+/* Destination list buttons */
 .dest-list button {
   width: 100%;
-  margin: 0.5rem 0;
-  border: 1px solid #0a3;
+  margin: 0.4rem 0;
   background: transparent;
   color: #8dfd8d;
-}
-
-.dest-list button:hover {
-  background: rgba(15, 255, 15, 0.1);
-  transform: none;
-}
-
-.dest-list button.selected {
-  background: rgba(15, 255, 15, 0.2);
-}
-
-.dest-list button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* Fix log panel collapsing in flex containers */
-.log {
-  flex: 1 1 0;
-  min-height: 0;
-  overflow-y: auto;
-  white-space: pre-wrap;
-  font-size: 0.9rem;
-  width: 100%;
+  border: 1px solid #0a3;
   text-align: left;
-  padding-left: 0.5rem;
-  text-shadow: 0 0 4px rgba(0,255,140,0.3);
-  box-sizing: border-box;
+}
+.dest-list button:hover    { background: rgba(15,255,15,0.1); }
+.dest-list button.selected { background: rgba(15,255,15,0.2); }
+.dest-list button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Pulse glow while traveling */
+button.traveling {
+  background: rgba(15,255,15,0.1);
+  border: 1px solid #0f4;
+  color: #8dfd8d;
+  animation: pulseGlow 1s infinite alternate;
+}
+@keyframes pulseGlow {
+  from { box-shadow: 0 0 6px rgba(15,255,15,0.3); }
+  to   { box-shadow: 0 0 18px rgba(15,255,15,0.6); }
 }
 
-#log > div {
-  margin-bottom: 1rem;
-}
-
-/* Custom scrollbar to match theme */
-.log::-webkit-scrollbar,
-.dest-list::-webkit-scrollbar,
-.panel::-webkit-scrollbar {
-  width: 6px;
-}
-
-.log::-webkit-scrollbar-track,
-.dest-list::-webkit-scrollbar-track,
-.panel::-webkit-scrollbar-track {
-  background: rgba(0, 10, 20, 0.5);
-}
-
-.log::-webkit-scrollbar-thumb,
-.dest-list::-webkit-scrollbar-thumb,
-.panel::-webkit-scrollbar-thumb {
-  background: rgba(15, 255, 15, 0.3);
-  border-radius: 3px;
-}
-
-.log::-webkit-scrollbar-thumb:hover,
-.dest-list::-webkit-scrollbar-thumb:hover,
-.panel::-webkit-scrollbar-thumb:hover {
-  background: rgba(15, 255, 15, 0.6);
-}
-
-/* Firefox scrollbar */
-.log,
-.dest-list,
-.panel {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(15, 255, 15, 0.3) rgba(0, 10, 20, 0.5);
-}
-
+/* =========================================================
+   Travel console layout
+   ========================================================= */
 .console {
   width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  /* Fix: allow children to shrink below their content size */
-  min-height: 0;
+  min-height: 0; /* allow grid children to shrink */
 }
 
 .panel {
@@ -179,9 +142,7 @@ h1 {
   flex-direction: column;
   align-items: flex-start;
   background: rgba(0,10,20,0.5);
-  /* Fix: allow panel to shrink correctly inside flex/grid */
-  min-height: 0;
-  box-sizing: border-box;
+  min-height: 0; /* allow panel to shrink inside grid */
 }
 
 .panel h2 {
@@ -190,37 +151,53 @@ h1 {
   border-bottom: 1px solid #0a3;
   padding-bottom: 0.5rem;
   width: 100%;
-  text-shadow: 0 0 6px rgba(15,255,15,0.4);
-  /* Prevent h2 from shrinking away */
   flex-shrink: 0;
+  text-shadow: 0 0 6px rgba(15,255,15,0.4);
 }
 
-/* === Travel Feedback (Visual Transitions) === */
-button.traveling {
-  background: rgba(15, 255, 15, 0.1);
-  box-shadow: 0 0 8px rgba(15, 255, 15, 0.4), 0 0 20px rgba(15, 255, 15, 0.2) inset;
-  animation: pulseGlow 1s infinite alternate;
-  border: 1px solid #0f4;
-  color: #8dfd8d;
+/* Navigation log */
+.log {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  width: 100%;
+  text-align: left;
+  padding-left: 0.5rem;
+  text-shadow: 0 0 4px rgba(0,255,140,0.3);
 }
+#log > div { margin-bottom: 1rem; }
 
-@keyframes pulseGlow {
-  from {
-    box-shadow: 0 0 6px rgba(15, 255, 15, 0.3);
-  }
-  to {
-    box-shadow: 0 0 18px rgba(15, 255, 15, 0.6);
-  }
+/* =========================================================
+   Scrollbars (themed)
+   ========================================================= */
+.log,
+.dest-list,
+.panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15,255,15,0.3) rgba(0,10,20,0.5);
 }
+.log::-webkit-scrollbar,
+.dest-list::-webkit-scrollbar,
+.panel::-webkit-scrollbar          { width: 6px; }
+.log::-webkit-scrollbar-track,
+.dest-list::-webkit-scrollbar-track,
+.panel::-webkit-scrollbar-track    { background: rgba(0,10,20,0.5); }
+.log::-webkit-scrollbar-thumb,
+.dest-list::-webkit-scrollbar-thumb,
+.panel::-webkit-scrollbar-thumb    { background: rgba(15,255,15,0.3); border-radius: 3px; }
+.log::-webkit-scrollbar-thumb:hover,
+.dest-list::-webkit-scrollbar-thumb:hover,
+.panel::-webkit-scrollbar-thumb:hover { background: rgba(15,255,15,0.6); }
 
-/* Fixed: changed position from absolute to fixed so it reliably covers the viewport */
+/* =========================================================
+   Travel overlay
+   ========================================================= */
 .travel-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 255, 140, 0.03);
+  position: fixed; /* fixed so it always covers the full viewport */
+  inset: 0;
+  background: rgba(0,255,140,0.03);
   backdrop-filter: blur(4px);
   color: #8dfd8d;
   font-size: 1.2rem;
@@ -234,8 +211,70 @@ button.traveling {
   pointer-events: none;
   text-shadow: 0 0 8px rgba(15,255,15,0.5);
 }
-
 .travel-overlay.active {
   opacity: 1;
   pointer-events: auto;
 }
+
+/* =========================================================
+   Mission log overlay
+   ========================================================= */
+.mission-log-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,5,15,0.92);
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  font-size: 0.9rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15,255,15,0.3) rgba(0,10,20,0.5);
+}
+.mission-log-overlay.hidden { display: none !important; }
+
+.mission-log-overlay h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
+  border-bottom: 1px solid #0a3;
+  padding-bottom: 0.5rem;
+  text-shadow: 0 0 6px rgba(15,255,15,0.4);
+}
+
+.mission-log-overlay .log-entry {
+  margin-bottom: 0.6rem;
+  border-left: 2px solid #0a3;
+  padding-left: 0.75rem;
+  color: #8dfd8d;
+}
+
+.mission-log-overlay .close-btn {
+  align-self: flex-end;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1.25rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  background: transparent;
+  color: #8dfd8d;
+  border: 1px solid #0a3;
+  cursor: pointer;
+}
+.mission-log-overlay .close-btn:hover { background: rgba(15,255,15,0.1); }
+
+/* Journal toggle button (fixed bottom-right) */
+#journalToggle {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  padding: 0.6rem 1.1rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  background: rgba(0,20,40,0.9);
+  color: #8dfd8d;
+  border: 1px solid #0a3;
+  cursor: pointer;
+  z-index: 8000;
+  display: none; /* shown only once travel screen is active */
+}
+#journalToggle:hover { background: rgba(15,255,15,0.1); }
