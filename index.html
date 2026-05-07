@@ -4,25 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Distania Travel Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <div class="panel-frame">
-    <!-- Startup Screen -->
+
+    <!-- Startup / Boot Screen -->
     <div id="startupScreen" class="screen">
-      <h1>Exodus Civil Service</h1>
-      <p>
-        Welcome recruit to the Exodus Civil Service or ECS. We work for the unified governments to explore the mega structures that arrived during the Kilko disaster. We must discover who built them, their purpose, how old they are, and most importantly, why they are here. Good luck explorer, your ship is waiting. When you get there press the On button to begin.
-      </p>
-      <p style="font-style: italic;">– Chief Amplifier</p>
-      <button id="proceedBtn" class="btn">Acknowledge</button>
+      <div class="boot-header">
+        <div class="boot-logo">ECS</div>
+        <div class="boot-subtitle">EXODUS CIVIL SERVICE</div>
+        <div class="boot-divider"></div>
+      </div>
+      <p id="bootText" class="boot-text"></p>
+      <p class="boot-sig" id="bootSig">– Chief Amplifier</p>
+      <button id="proceedBtn" class="btn hidden">Acknowledge</button>
     </div>
 
     <!-- Login Screen -->
     <div id="loginScreen" class="screen hidden">
-      <h1>Distania Travel Group</h1>
-      <p>Your journey is our guarantee</p>
-      <button id="onBtn" class="btn">On</button>
+      <div class="login-logo">
+        <div class="login-title">Distania Travel Group</div>
+        <div class="login-tagline">Your journey is our guarantee</div>
+        <div class="login-divider"></div>
+        <div class="login-status">SYSTEM READY</div>
+      </div>
+      <button id="onBtn" class="btn">Power On</button>
     </div>
 
     <!-- Travel Console Screen -->
@@ -30,17 +40,42 @@
       <div class="console">
         <div class="panel dest-list">
           <h2>Select Destination</h2>
-          <!-- Destination buttons injected here -->
         </div>
-        <div class="panel">
-          <h2>Navigation Log</h2>
+        <div class="panel log-panel">
+          <h2>
+            Navigation Log
+            <span id="missionIndicator" class="mission-indicator hidden">● MISSION ACTIVE</span>
+          </h2>
           <div id="log" class="log"></div>
         </div>
       </div>
     </div>
+
   </div>
 
-<div id="travelOverlay" class="travel-overlay hidden">Engaging transit...</div>
+  <!-- Travel Overlay -->
+  <div id="travelOverlay" class="travel-overlay hidden">Engaging transit...</div>
+
+  <!-- Journal Overlay -->
+  <div id="missionLogOverlay" class="mission-log-overlay hidden">
+    <div class="mission-log-inner">
+      <div class="mission-log-header">
+        <h2>FIELD JOURNAL</h2>
+        <button class="close-btn" id="closeJournal">[ CLOSE ]</button>
+      </div>
+      <div class="mission-log-tabs">
+        <button class="tab-btn active" data-tab="missions">Missions</button>
+        <button class="tab-btn" data-tab="heard">Overheard</button>
+        <button class="tab-btn" data-tab="collected">Collected</button>
+      </div>
+      <div id="tab-missions"  class="tab-content active"><div id="missionsList"></div></div>
+      <div id="tab-heard"     class="tab-content hidden"><div id="heardList"></div></div>
+      <div id="tab-collected" class="tab-content hidden"><div id="collectedList"></div></div>
+    </div>
+  </div>
+
+  <!-- Journal Toggle (fixed bottom-right, visible only in travel screen) -->
+  <button id="journalToggle" class="hidden">[ JOURNAL ]</button>
 
   <script src="script.js"></script>
 </body>
