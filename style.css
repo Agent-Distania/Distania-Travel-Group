@@ -22,6 +22,7 @@ body {
   border: 3px solid #0f4;
   box-shadow: 0 0 30px rgba(15, 255, 15, 0.3);
 }
+
 .panel-frame::before, .panel-frame::after {
   content: '';
   position: absolute;
@@ -29,11 +30,13 @@ body {
   height: 20px;
   border: 3px solid #0f4;
 }
+
 .panel-frame::before {
   top: -3px; left: -3px;
   border-right: none;
   border-bottom: none;
 }
+
 .panel-frame::after {
   bottom: -3px; right: -3px;
   border-left: none;
@@ -54,10 +57,11 @@ body {
   align-items: center;
   text-align: center;
   position: relative;
+  box-sizing: border-box;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 h1 {
@@ -75,7 +79,9 @@ h1 {
   border: none;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  font-family: 'Orbitron', sans-serif;
 }
+
 .btn:hover, .dest-list button:hover {
   transform: scale(1.05);
   box-shadow: 0 0 10px rgba(15,255,15,0.5);
@@ -88,20 +94,25 @@ h1 {
   background: transparent;
   color: #8dfd8d;
 }
+
 .dest-list button:hover {
   background: rgba(15, 255, 15, 0.1);
   transform: none;
 }
+
 .dest-list button.selected {
   background: rgba(15, 255, 15, 0.2);
 }
+
 .dest-list button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
+/* Fix log panel collapsing in flex containers */
 .log {
-  height: calc(100% - 2rem);
+  flex: 1 1 0;
+  min-height: 0;
   overflow-y: auto;
   white-space: pre-wrap;
   font-size: 0.9rem;
@@ -109,10 +120,45 @@ h1 {
   text-align: left;
   padding-left: 0.5rem;
   text-shadow: 0 0 4px rgba(0,255,140,0.3);
+  box-sizing: border-box;
 }
 
 #log > div {
-  margin-bottom: 1rem; /* This creates the line spacing */
+  margin-bottom: 1rem;
+}
+
+/* Custom scrollbar to match theme */
+.log::-webkit-scrollbar,
+.dest-list::-webkit-scrollbar,
+.panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log::-webkit-scrollbar-track,
+.dest-list::-webkit-scrollbar-track,
+.panel::-webkit-scrollbar-track {
+  background: rgba(0, 10, 20, 0.5);
+}
+
+.log::-webkit-scrollbar-thumb,
+.dest-list::-webkit-scrollbar-thumb,
+.panel::-webkit-scrollbar-thumb {
+  background: rgba(15, 255, 15, 0.3);
+  border-radius: 3px;
+}
+
+.log::-webkit-scrollbar-thumb:hover,
+.dest-list::-webkit-scrollbar-thumb:hover,
+.panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 255, 15, 0.6);
+}
+
+/* Firefox scrollbar */
+.log,
+.dest-list,
+.panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 255, 15, 0.3) rgba(0, 10, 20, 0.5);
 }
 
 .console {
@@ -121,6 +167,8 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+  /* Fix: allow children to shrink below their content size */
+  min-height: 0;
 }
 
 .panel {
@@ -131,6 +179,9 @@ h1 {
   flex-direction: column;
   align-items: flex-start;
   background: rgba(0,10,20,0.5);
+  /* Fix: allow panel to shrink correctly inside flex/grid */
+  min-height: 0;
+  box-sizing: border-box;
 }
 
 .panel h2 {
@@ -140,6 +191,8 @@ h1 {
   padding-bottom: 0.5rem;
   width: 100%;
   text-shadow: 0 0 6px rgba(15,255,15,0.4);
+  /* Prevent h2 from shrinking away */
+  flex-shrink: 0;
 }
 
 /* === Travel Feedback (Visual Transitions) === */
@@ -160,8 +213,9 @@ button.traveling {
   }
 }
 
+/* Fixed: changed position from absolute to fixed so it reliably covers the viewport */
 .travel-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
