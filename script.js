@@ -4,62 +4,57 @@
 const startupScreen = document.getElementById('startupScreen');
 const loginScreen = document.getElementById('loginScreen');
 const travelScreen = document.getElementById('travelScreen');
-const proceedBtn = document.getElementById('proceedBtn');
-const onBtn = document.getElementById('onBtn');
 const destList = document.querySelector('.dest-list');
 const logEl = document.getElementById('log');
-
-// Debug DOM elements
-console.log("DOM Elements found:");
-console.log("startupScreen:", startupScreen);
-console.log("loginScreen:", loginScreen);
-console.log("travelScreen:", travelScreen);
-console.log("proceedBtn:", proceedBtn);
-console.log("onBtn:", onBtn);
-console.log("destList:", destList);
-console.log("logEl:", logEl);
 
 // =======================
 // State Variables
 // =======================
 let traveling = false;
-let currentLocation = null;
-let currentHub = null;
-let currentSubLocation = null; // Added for tracking sub-destinations
+let currentLocation = null;  // The specific sub-location key we are currently at
+let currentHub = null;        // The main destination key (Earth, Mars, etc.)
+let currentSubLocation = null; // Parent key when at a level-3 (sub-sub) destination
 let ambientTimer = null;
 const AMBIENT_INTERVAL = 30000;
 
 const mainDestinations = [];
 const destinationConfigs = {};
 
+// Track whether destinations have been loaded to avoid double createButtons calls
+let destinationsLoaded = false;
+let pendingCreateButtons = false;
+
 fetch("destinations.json")
   .then(res => {
-    console.log("Fetch response status:", res.status);
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return res.json();
   })
   .then(data => {
-    console.log("Raw destination data:", data);
     mainDestinations.push(...data.mainDestinations);
     Object.assign(destinationConfigs, data.destinationConfigs);
-    console.log("Destination data loaded. Main destinations:", mainDestinations.length);
-    console.log("Destination configs:", Object.keys(destinationConfigs));
+    destinationsLoaded = true;
+    console.log("Destination data loaded:", mainDestinations.length, "destinations");
+    // If the ON button was already pressed while we were loading, create buttons now
+    if (pendingCreateButtons) {
+      pendingCreateButtons = false;
+      createButtons(mainDestinations);
+    }
   })
   .catch(err => {
     console.error("Failed to load destination data:", err);
-    // Fallback: load hardcoded data if JSON file fails
-    console.log("Loading fallback destination data...");
     loadFallbackDestinations();
+    destinationsLoaded = true;
+    if (pendingCreateButtons) {
+      pendingCreateButtons = false;
+      createButtons(mainDestinations);
+    }
   });
 
 // =======================
 // Ambient Dialogue Data
 // =======================
-const ambientDialogue = {};  // declare as empty object
+const ambientDialogue = {};
 
-// ✅ Load ambientDialogue from external JSON
 fetch("ambientDialogue.json")
   .then(res => res.json())
   .then(data => {
@@ -71,9 +66,10 @@ fetch("ambientDialogue.json")
   });
 
 // =======================
-// Fallback Data (in case JSON file fails to load)
+// Fallback Data
 // =======================
 function loadFallbackDestinations() {
+  console.log("Loading fallback destination data...");
   const fallbackData = {
     "mainDestinations": [
       { "name": "Earth", "key": "Earth" },
@@ -89,9 +85,30 @@ function loadFallbackDestinations() {
         "travelType": "train",
         "subDestinations": [
           { "name": "Return to Ship", "key": "Return" },
-          { "name": "New York Sector", "key": "NewYork", "description": "A massive sprawling city rebuilt after the Kilko disaster." },
-          { "name": "Earth Space Port", "key": "EarthSpacePort", "description": "A large cargo and civilian port." },
-          { "name": "Pacific Research Facility", "key": "Pacific", "description": "A massive floating research base." }
+          { "name": "New York Sector", "key": "NewYork", "description": "A massive sprawling city rebuilt after the Kilko disaster.",
+            "subDestinations": [
+              { "name": "Return to Previous", "key": "Return" },
+              { "name": "Downtown Core", "key": "NewYork_Downtown", "description": "The center of the rebuilt New York." },
+              { "name": "Torta Excavation Site", "key": "NewYork_Torta", "description": "Ongoing digs into ancient megastructure debris." },
+              { "name": "Skyline Transit Nexus", "key": "NewYork_Transit", "description": "A massive floating station for vertical transit." }
+            ]
+          },
+          { "name": "Earth Space Port", "key": "EarthSpacePort", "description": "A large cargo and civilian port.",
+            "subDestinations": [
+              { "name": "Return to Previous", "key": "Return" },
+              { "name": "Processing", "key": "EarthSpacePort_FrontDesk", "description": "Entry zone for civilian and cargo inspection." },
+              { "name": "Cargo Intake", "key": "EarthSpacePort_Cargo", "description": "Freight and military shipments arrive here." },
+              { "name": "Docking Bay", "key": "EarthSpacePort_Docking", "description": "Where ships refuel, dock, and load passengers." }
+            ]
+          },
+          { "name": "Pacific Research Facility", "key": "Pacific", "description": "A massive floating research base.",
+            "subDestinations": [
+              { "name": "Return to Previous", "key": "Return" },
+              { "name": "Kilko Artifact Lab", "key": "Pacific_ArtifactLab", "description": "Secure containment and analysis facility." },
+              { "name": "Deep Sea Observatory", "key": "Pacific_Observatory", "description": "Submersible launch bay and monitoring station." },
+              { "name": "Abyssal Research Wing", "key": "Pacific_Abyssal", "description": "Pressurized labs studying deep ocean trenches." }
+            ]
+          }
         ]
       },
       "Mars": {
@@ -99,17 +116,45 @@ function loadFallbackDestinations() {
         "travelType": "shuttle",
         "subDestinations": [
           { "name": "Return to Ship", "key": "Return" },
-          { "name": "Colony Core", "key": "ColonyCore", "description": "The heart of Martian habitation." },
-          { "name": "Terraforming Fields", "key": "TerraformingFields", "description": "Sprawling atmosphere processors." },
-          { "name": "Ancient Vault", "key": "AncientVault", "description": "Mysterious pre-human vault." }
+          { "name": "Colony Core", "key": "ColonyCore", "description": "The heart of Martian habitation.",
+            "subDestinations": [
+              { "name": "Return to Previous", "key": "Return" },
+              { "name": "Residential Dome", "key": "ColonyCore_Residential", "description": "Living quarters for colonists." },
+              { "name": "Central Market", "key": "ColonyCore_Market", "description": "Bustling commercial hub." },
+              { "name": "Power Hub", "key": "ColonyCore_Power", "description": "Power station for life support." }
+            ]
+          },
+          { "name": "Terraforming Fields", "key": "TerraformingFields", "description": "Sprawling atmosphere processors.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Ancient Vault", "key": "AncientVault", "description": "Mysterious pre-human vault.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          }
         ]
       },
       "Jupiter": {
         "description": "Orbiting the Jupiter Orbital Station.",
         "subDestinations": [
           { "name": "Return to Ship", "key": "Return" },
-          { "name": "Storm Observatory", "key": "StormObservatory", "description": "Observes Jupiter's massive storms." },
-          { "name": "Gas Harvesting Platform", "key": "GasHarvester", "description": "Siphons valuable gases." }
+          { "name": "Storm Observatory", "key": "StormObservatory", "description": "Observes Jupiter's massive storms.",
+            "subDestinations": [
+              { "name": "Return to Previous", "key": "Return" },
+              { "name": "Sensor Array", "key": "StormObservatory_Sensors", "description": "Measures electromagnetic fields from storms." },
+              { "name": "Atmospheric Lab", "key": "StormObservatory_Lab", "description": "Researchers studying Jupiter's weather." }
+            ]
+          },
+          { "name": "Gas Harvesting Platform", "key": "GasHarvester", "description": "Siphons valuable gases.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Research Array", "key": "ResearchArray", "description": "Drone-controlled scientific sensors.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Deep Core Relay", "key": "CoreRelay", "description": "Communications hub in Jupiter's atmosphere.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Excavation Platforms", "key": "ExcavationPlatforms", "description": "Structures digging into ancient rings.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          }
         ]
       },
       "Europa": {
@@ -117,8 +162,20 @@ function loadFallbackDestinations() {
         "travelType": "rover",
         "subDestinations": [
           { "name": "Return to Ship", "key": "Return" },
-          { "name": "Research Base", "key": "ResearchBase", "description": "Core base for studying Europa." },
-          { "name": "Ground Camp", "key": "GroundCamp", "description": "Temporary field base." }
+          { "name": "Research Base", "key": "ResearchBase", "description": "Core base for studying Europa.",
+            "subDestinations": [
+              { "name": "Return to Previous", "key": "Return" },
+              { "name": "Subsurface Tunnels", "key": "ResearchBase_Tunnels", "description": "Ancient tunnels beneath the ice." },
+              { "name": "AI Lab", "key": "ResearchBase_Lab", "description": "Off-world AI behavior and containment." },
+              { "name": "Core Chamber", "key": "ResearchBase_Core", "description": "A deep, partially flooded cavern." }
+            ]
+          },
+          { "name": "Ground Camp", "key": "GroundCamp", "description": "Temporary field base.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Ruins", "key": "Ruins", "description": "Ancient megastructure under kilometers of ice.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          }
         ]
       },
       "Andromeda": {
@@ -126,28 +183,58 @@ function loadFallbackDestinations() {
         "travelType": "shuttle",
         "subDestinations": [
           { "name": "Return to Ship", "key": "Return" },
-          { "name": "Forward Recon Station", "key": "ForwardRecon", "description": "Unmanned outpost." },
-          { "name": "Black Spire Relay", "key": "BlackSpire", "description": "Quantum signal relay." }
+          { "name": "Forward Recon Station", "key": "ForwardRecon", "description": "Unmanned outpost.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Black Spire Relay", "key": "BlackSpire", "description": "Quantum signal relay.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Xeno Archives", "key": "XenoArchives", "description": "Vault of alien artifacts.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Statue Research Wing", "key": "StatueWing", "description": "Chamber of alien statues.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          }
         ]
       },
       "Vega": {
         "description": "Orbiting Vega Prime, a vibrant star system hub.",
         "subDestinations": [
           { "name": "Return to Ship", "key": "Return" },
-          { "name": "Capital City", "key": "CapitalCity", "description": "A neon metropolis and trade center." },
-          { "name": "Orbital Trade Ring", "key": "OrbitalTradeRing", "description": "Ring-shaped station for trade." }
+          { "name": "Capital City", "key": "CapitalCity", "description": "A neon metropolis and trade center.",
+            "subDestinations": [
+              { "name": "Return to Previous", "key": "Return" },
+              { "name": "Tech District", "key": "CapitalCity_Tech", "description": "Startup hubs and AI incubation vaults." },
+              { "name": "Underdeck Market", "key": "CapitalCity_Market", "description": "Black market hub for rare parts." },
+              { "name": "Central Core", "key": "CapitalCity_Core", "description": "Central processors and energy grid." }
+            ]
+          },
+          { "name": "Orbital Trade Ring", "key": "OrbitalTradeRing", "description": "Ring-shaped station for trade.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Stellar Observation Spire", "key": "StellarObservationSpire", "description": "First to detect the incoming megastructures.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          },
+          { "name": "Crystal Canyon Outpost", "key": "CrystalCanyonOutpost", "description": "Gem mines rumored to house alien tech.",
+            "subDestinations": [{ "name": "Return to Previous", "key": "Return" }]
+          }
         ]
       }
     }
   };
-  
+
   mainDestinations.push(...fallbackData.mainDestinations);
   Object.assign(destinationConfigs, fallbackData.destinationConfigs);
   console.log("Fallback data loaded successfully");
 }
+
+// =======================
+// Log Helper
+// =======================
 function appendLog(text) {
   const line = document.createElement('div');
-  line.textContent = text;
+  // Trim leading/trailing whitespace to avoid pre-wrap indentation artifacts
+  line.textContent = text.trim();
   logEl.appendChild(line);
   logEl.scrollTop = logEl.scrollHeight;
 }
@@ -181,7 +268,6 @@ const NovaAI = {
   }
 };
 
-// ✅ Load Nova Dialogue from external JSON
 fetch("novaDialogue.json")
   .then(res => res.json())
   .then(data => {
@@ -192,13 +278,12 @@ fetch("novaDialogue.json")
     console.error("Failed to load novaDialogue.json:", err);
   });
 
+// =======================
+// Button Helpers
+// =======================
 function clearDestinations() {
-  console.log("clearDestinations called, destList:", destList);
   if (destList) {
     destList.innerHTML = '<h2>Select Destination</h2>';
-    console.log("destList cleared, innerHTML:", destList.innerHTML);
-  } else {
-    console.error("ERROR: Cannot clear destinations - destList not found");
   }
 }
 
@@ -207,43 +292,35 @@ function enableButtons() {
 }
 
 function createButtons(destinations) {
-  console.log("createButtons called with:", destinations);
-  console.log("destList element:", destList);
-  
   if (!destList) {
-    console.error("ERROR: destList element not found! Make sure you have an element with class 'dest-list'");
+    console.error("destList element not found.");
     return;
   }
-  
   if (!destinations || destinations.length === 0) {
-    console.error("ERROR: No destinations provided to createButtons");
+    console.error("No destinations provided to createButtons.");
     return;
   }
-  
+
   clearDestinations();
-  
-  destinations.forEach((dest, index) => {
-    console.log(`Creating button ${index}:`, dest);
+
+  destinations.forEach(dest => {
     const btn = document.createElement('button');
     btn.textContent = dest.name;
     btn.dataset.dest = dest.key;
-    btn.style.margin = '5px';
-    btn.style.padding = '10px';
-    btn.style.display = 'block';
     destList.appendChild(btn);
     btn.addEventListener('click', () => handleDestinationClick(dest, btn));
-    console.log(`Button created and added:`, btn);
   });
-  
-  console.log("All buttons created. destList children count:", destList.children.length);
 }
 
-// Helper function to find a destination by key in nested structure
+// =======================
+// Navigation Helpers
+// =======================
+
+// Recursively search for a destination by key within a list
 function findDestinationByKey(key, destinations) {
+  if (!destinations) return null;
   for (const dest of destinations) {
-    if (dest.key === key) {
-      return dest;
-    }
+    if (dest.key === key) return dest;
     if (dest.subDestinations) {
       const found = findDestinationByKey(key, dest.subDestinations);
       if (found) return found;
@@ -252,19 +329,20 @@ function findDestinationByKey(key, destinations) {
   return null;
 }
 
+// =======================
+// Click Handler (router)
+// =======================
 function handleDestinationClick(dest, btn) {
   if (traveling) return;
 
-  const isReturn = dest.key === 'Return';
-  const isMainDest = mainDestinations.some(d => d.key === dest.key);
-
-  console.log(`Clicked: ${dest.name}, Key: ${dest.key}, Current Hub: ${currentHub}, Current Location: ${currentLocation}, Current Sub: ${currentSubLocation}`);
-
-  if (isReturn) {
+  if (dest.key === 'Return') {
     handleReturnClick();
     return;
   }
 
+  const isMainDest = mainDestinations.some(d => d.key === dest.key);
+
+  // Level 1 -> Level 2: traveling to a main destination from ship
   if (isMainDest && !currentHub) {
     travelToMainDestination(dest, btn);
     return;
@@ -272,176 +350,73 @@ function handleDestinationClick(dest, btn) {
 
   if (currentHub) {
     const config = destinationConfigs[currentHub];
-    
-    // Check if it's a direct sub-destination of the hub
+
+    // Level 2 -> Level 3: clicking a direct sub-destination of the hub
     const isDirectSub = config.subDestinations?.some(d => d.key === dest.key);
-    
     if (isDirectSub) {
       travelToSubDestination(dest, btn, config);
       return;
     }
 
-    // Check if it's a sub-sub-destination (third level)
-    if (currentSubLocation) {
-      const parentSub = findDestinationByKey(currentSubLocation, config.subDestinations);
-      if (parentSub?.subDestinations?.some(d => d.key === dest.key)) {
-        travelToSubSubDestination(dest, btn, parentSub);
+    // Level 3 -> Level 4: clicking a sub-destination of a level-2 location
+    if (currentLocation) {
+      const parentDest = findDestinationByKey(currentLocation, config.subDestinations);
+      if (parentDest?.subDestinations?.some(d => d.key === dest.key)) {
+        travelToSubSubDestination(dest, btn, parentDest);
         return;
       }
     }
-
-    // Check if current location has sub-destinations to show
-    const currentDest = findDestinationByKey(currentLocation, config.subDestinations);
-    if (currentDest?.subDestinations?.some(d => d.key === dest.key)) {
-      // This is navigating to a sub-destination's sub-destinations
-      showSubDestinations(dest, currentDest);
-      return;
-    }
   }
 
-  console.log("No matching handler found for destination:", dest);
+  console.warn("No matching handler for destination:", dest);
 }
 
+// =======================
+// Return Logic
+// =======================
 function handleReturnClick() {
-  if (currentSubLocation && currentSubLocation !== currentHub) {
-    // Return from sub-sub-destination to sub-destination
+  clearInterval(ambientTimer);
+  NovaAI.stopIdle();
+
+  // At level 3 (sub-sub): return to level 2 (sub-destination)
+  if (currentSubLocation) {
     const config = destinationConfigs[currentHub];
-    const parentSub = findDestinationByKey(currentSubLocation, config.subDestinations);
-    if (parentSub) {
+    const parentDest = findDestinationByKey(currentSubLocation, config.subDestinations);
+    if (parentDest?.subDestinations) {
+      appendLog(`System: Returning to ${parentDest.name}.`);
       currentLocation = currentSubLocation;
-      createButtons(parentSub.subDestinations);
-      appendLog(`System: Returning to ${parentSub.name}.`);
       currentSubLocation = null;
+      createButtons(parentDest.subDestinations);
+      startAmbientDialogue(currentLocation);
+      NovaAI.startIdle();
       return;
     }
   }
-  
+
+  // At level 2 (sub-destination): return to hub level
   if (currentLocation && currentLocation !== currentHub) {
-    // Return from sub-destination to hub
     const config = destinationConfigs[currentHub];
+    appendLog(`System: Returning to ${currentHub} sectors.`);
     currentLocation = currentHub;
     currentSubLocation = null;
     createButtons(config.subDestinations);
-    appendLog(`System: Returning to ${currentHub} sectors.`);
+    NovaAI.startIdle();
     return;
   }
-  
-  // Return to ship
+
+  // At hub level: return to ship / main destination list
+  appendLog("System: Returning to ship. Please select a destination.");
   currentLocation = null;
   currentHub = null;
   currentSubLocation = null;
-  clearInterval(ambientTimer);
   createButtons(mainDestinations);
-  appendLog("System: Returning to ship. Please select a destination.");
 }
 
-function showSubDestinations(dest, parentDest) {
-  // This handles showing the sub-destinations without "traveling"
-  currentSubLocation = currentLocation;
-  currentLocation = dest.key;
-  createButtons(dest.subDestinations);
-  appendLog(`System: Accessing ${dest.name}.`);
-  if (dest.description) {
-    appendLog(dest.description);
-  }
-}
+// =======================
+// Travel Functions
+// =======================
 
-function travelToMainDestination(dest, btn) {
-  beginTravel(btn);
-  NovaAI.speak("travel");
-  appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
-  showTravelOverlay(`Engaging transit to ${dest.name}...`);
-  setTimeout(() => {
-    appendLog(`System: Zero-point travel finished. Welcome to ${dest.name}.`);
-    NovaAI.speak("arrival");
-    endTravel(dest.key, dest.key);
-    
-    const config = destinationConfigs[dest.key];
-    console.log("config retrieved:", config);
-    console.log("config.description:", config?.description);
-    
-    // ✅ Display the planet description
-    if (config && config.description) {
-      console.log("Adding description to log:", config.description);
-      appendLog(config.description);
-    } else {
-      console.log("❌ No description found!");
-      console.log("Available configs:", Object.keys(destinationConfigs));
-    }
-    
-    createButtons(config.subDestinations);
-    
-    hideTravelOverlay();
-    NovaAI.startIdle();
-  }, 3000);
-}
-
-function travelToSubDestination(dest, btn, config) {
-  beginTravel(btn);
-  NovaAI.speak("travel");
-
-  const description = dest.description || config.sectorDescriptions?.[dest.key];
-  const travelType = dest.type || config.travelType || 'shuttle';
-  const travelLabel = {
-    drone: "Deploying drone",
-    orbit: "Initiating orbital alignment",
-    rover: "Boarding the rover",
-    shuttle: "Boarding the shuttle",
-    train: "Boarding the train"
-  }[travelType] || "Traveling";
-
-  showTravelOverlay(`${travelLabel} to ${dest.name}...`);
-  appendLog(`System: ${travelLabel} to ${dest.name}...`);
-
-  const delay = travelType === 'drone' ? 2000 : 3000;
-  setTimeout(() => {
-    appendLog(`System: Arrived at ${dest.name}.`);
-    if (description) appendLog(description);
-    NovaAI.speak("arrival");
-    currentLocation = dest.key;
-    currentSubLocation = null;
-
-    if (dest.subDestinations) {
-      createButtons(dest.subDestinations);
-    } else {
-      dest.subDestinations = generateDefaultSubDestinations(dest);
-      createButtons(dest.subDestinations);
-    }
-
-    hideTravelOverlay();
-    startAmbientDialogue(dest.key);
-    NovaAI.startIdle();
-    traveling = false;
-  }, delay);
-}
-
-function travelToSubSubDestination(dest, btn, parentSub) {
-  beginTravel(btn);
-  NovaAI.speak("travel");
-  showTravelOverlay(`Traveling deeper to ${dest.name}...`);
-  appendLog(`System: Traveling deeper to ${dest.name}...`);
-
-  setTimeout(() => {
-    appendLog(`System: Arrived at ${dest.name}.`);
-    if (dest.description) {
-      appendLog(dest.description);
-    }
-    NovaAI.speak("arrival");
-    currentLocation = dest.key;
-
-    if (dest.subDestinations) {
-      createButtons(dest.subDestinations);
-    } else {
-      dest.subDestinations = generateDefaultSubDestinations(dest);
-      createButtons(dest.subDestinations);
-    }
-
-    hideTravelOverlay();
-    NovaAI.startIdle();
-    traveling = false;
-  }, 2000);
-}
-
+// Shared travel start: disables buttons, stops idle/ambient
 function beginTravel(btn) {
   traveling = true;
   clearInterval(ambientTimer);
@@ -450,36 +425,127 @@ function beginTravel(btn) {
     b.disabled = true;
     b.classList.remove('selected');
   });
-  btn.classList.add('selected');
+  if (btn) btn.classList.add('selected');
 }
 
-function endTravel(newLocation, hubKey) {
+// Shared travel end: sets state and re-enables buttons
+// FIX: endTravel now used consistently across all travel functions
+function endTravel(newLocation, hubKey, parentSubKey = null) {
   currentLocation = newLocation;
   currentHub = hubKey;
+  currentSubLocation = parentSubKey;
   traveling = false;
   enableButtons();
 }
 
+// Level 1 -> 2: zero-point jump to a main destination
+function travelToMainDestination(dest, btn) {
+  beginTravel(btn);
+  NovaAI.speak("travel");
+  appendLog(`System: Initiating zero-point travel to ${dest.name}...`);
+  showTravelOverlay(`Engaging transit to ${dest.name}...`);
+
+  setTimeout(() => {
+    hideTravelOverlay();
+    appendLog(`System: Zero-point travel complete. Welcome to ${dest.name}.`);
+    NovaAI.speak("arrival");
+
+    const config = destinationConfigs[dest.key];
+    if (config?.description) appendLog(config.description);
+
+    endTravel(dest.key, dest.key, null);
+    createButtons(config.subDestinations);
+    NovaAI.startIdle();
+  }, 3000);
+}
+
+// Level 2 -> 3: local travel (train/shuttle/rover) to a sub-destination
+function travelToSubDestination(dest, btn, config) {
+  beginTravel(btn);
+  NovaAI.speak("travel");
+
+  const travelType = dest.travelType || config.travelType || 'shuttle';
+  const travelLabel = {
+    drone:   "Deploying drone",
+    orbit:   "Initiating orbital alignment",
+    rover:   "Boarding the rover",
+    shuttle: "Boarding the shuttle",
+    train:   "Boarding the train"
+  }[travelType] || "Traveling";
+
+  appendLog(`System: ${travelLabel} to ${dest.name}...`);
+  showTravelOverlay(`${travelLabel} to ${dest.name}...`);
+
+  const delay = travelType === 'drone' ? 2000 : 3000;
+
+  setTimeout(() => {
+    hideTravelOverlay();
+    appendLog(`System: Arrived at ${dest.name}.`);
+    if (dest.description) appendLog(dest.description);
+    NovaAI.speak("arrival");
+
+    // FIX: use endTravel consistently; currentSubLocation stays null at level 2
+    endTravel(dest.key, currentHub, null);
+
+    const subDests = dest.subDestinations || generateDefaultSubDestinations(dest);
+    if (!dest.subDestinations) dest.subDestinations = subDests;
+    createButtons(subDests);
+
+    startAmbientDialogue(dest.key);
+    NovaAI.startIdle();
+  }, delay);
+}
+
+// Level 3 -> 4: traveling deeper into a sub-sub-destination
+function travelToSubSubDestination(dest, btn, parentDest) {
+  beginTravel(btn);
+  NovaAI.speak("travel");
+  appendLog(`System: Traveling deeper to ${dest.name}...`);
+  showTravelOverlay(`Traveling deeper to ${dest.name}...`);
+
+  setTimeout(() => {
+    hideTravelOverlay();
+    appendLog(`System: Arrived at ${dest.name}.`);
+    if (dest.description) appendLog(dest.description);
+    NovaAI.speak("arrival");
+
+    // FIX: track parentDest.key as currentSubLocation so Return works correctly
+    endTravel(dest.key, currentHub, parentDest.key);
+
+    const subDests = dest.subDestinations || generateDefaultSubDestinations(dest);
+    if (!dest.subDestinations) dest.subDestinations = subDests;
+    createButtons(subDests);
+
+    // FIX: ambient dialogue now also fires at level 3
+    startAmbientDialogue(dest.key);
+    NovaAI.startIdle();
+  }, 2000);
+}
+
 // =======================
-// Travel Overlay Logic
+// Travel Overlay
 // =======================
 function showTravelOverlay(message = "Engaging transit...") {
   const overlay = document.getElementById('travelOverlay');
   if (!overlay) return;
   overlay.textContent = message;
   overlay.classList.remove('hidden');
-  overlay.classList.add('active');
+  // Small timeout lets the browser paint the element before fading in
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => overlay.classList.add('active'));
+  });
 }
 
 function hideTravelOverlay() {
   const overlay = document.getElementById('travelOverlay');
   if (!overlay) return;
   overlay.classList.remove('active');
-  setTimeout(() => {
-    overlay.classList.add('hidden');
-  }, 800);
+  setTimeout(() => overlay.classList.add('hidden'), 800);
 }
 
+// =======================
+// Default Sub-Destinations
+// =======================
 function generateDefaultSubDestinations(dest) {
   return [
     { name: "Return to Previous", key: "Return" },
@@ -489,14 +555,15 @@ function generateDefaultSubDestinations(dest) {
 }
 
 // =======================
-// Ambient Dialogue Logic
+// Ambient Dialogue
 // =======================
 function startAmbientDialogue(destKey) {
   clearInterval(ambientTimer);
   const messages = ambientDialogue[destKey];
   if (!messages?.length) return;
 
-  setTimeout(() => {
+  // First message fires after a short delay so it doesn't overlap arrival text
+  const firstTimer = setTimeout(() => {
     if (currentLocation !== destKey) return;
     const { speaker, line } = getRandomMessage(messages);
     appendLog(`${speaker}: "${line}"`);
@@ -510,6 +577,21 @@ function startAmbientDialogue(destKey) {
     const { speaker, line } = getRandomMessage(messages);
     appendLog(`${speaker}: "${line}"`);
   }, AMBIENT_INTERVAL);
+
+  // Store firstTimer reference so we can cancel it if the player leaves early
+  ambientTimer._firstTimer = firstTimer;
+}
+
+// Extend clearInterval to also cancel the first-message timeout
+const _origClearInterval = clearInterval.bind(window);
+function clearAmbientTimer() {
+  if (ambientTimer) {
+    if (ambientTimer._firstTimer !== undefined) {
+      clearTimeout(ambientTimer._firstTimer);
+    }
+    _origClearInterval(ambientTimer);
+    ambientTimer = null;
+  }
 }
 
 function getRandomMessage(messages) {
@@ -520,57 +602,35 @@ function getRandomMessage(messages) {
 // Event Handlers
 // =======================
 window.addEventListener('DOMContentLoaded', () => {
-  // Get elements again to ensure they exist
   const proceedBtn = document.getElementById('proceedBtn');
   const onBtn = document.getElementById('onBtn');
-  
-  console.log('DOM loaded, proceedBtn:', proceedBtn, 'onBtn:', onBtn); // Debug log
 
   if (proceedBtn) {
-    proceedBtn.addEventListener('click', (e) => {
+    proceedBtn.addEventListener('click', e => {
       e.preventDefault();
-      console.log('Proceed button clicked'); // Debug log
       startupScreen.classList.add('hidden');
       loginScreen.classList.remove('hidden');
     });
   }
 
   if (onBtn) {
-    onBtn.addEventListener('click', (e) => {
+    onBtn.addEventListener('click', e => {
       e.preventDefault();
-      console.log('ON button clicked'); // Debug log
       loginScreen.classList.add('hidden');
       travelScreen.classList.remove('hidden');
       appendLog("System: Welcome, Captain. Please select a destination.");
 
-      // Wait until destinations are loaded
-      console.log("Checking if destinations are loaded...", mainDestinations.length);
-      if (mainDestinations.length > 0) {
-        console.log("Creating buttons with destinations:", mainDestinations);
+      // FIX: single-path loading — no polling loop, no race condition
+      // If data is already loaded, create buttons immediately.
+      // If not, set a flag so the fetch callback creates them when ready.
+      if (destinationsLoaded) {
         createButtons(mainDestinations);
       } else {
-        console.log("Waiting for destination data to load...");
-        const waitForData = setInterval(() => {
-          console.log("Still waiting... destinations count:", mainDestinations.length);
-          if (mainDestinations.length > 0) {
-            console.log("Destinations loaded! Creating buttons...");
-            clearInterval(waitForData);
-            createButtons(mainDestinations);
-          }
-        }, 100);
-        
-        // Timeout after 5 seconds and force load fallback data
-        setTimeout(() => {
-          if (mainDestinations.length === 0) {
-            console.log("Timeout reached, forcing fallback data load");
-            clearInterval(waitForData);
-            loadFallbackDestinations();
-            createButtons(mainDestinations);
-          }
-        }, 5000);
+        pendingCreateButtons = true;
+        appendLog("System: Loading navigation data...");
       }
     });
   } else {
-    console.error('ON button not found!'); // Debug log
+    console.error("ON button not found!");
   }
 });
