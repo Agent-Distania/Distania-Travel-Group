@@ -981,6 +981,9 @@ function startTravelConsole() {
   document.getElementById('healthWidget').classList.remove('hidden');
   Health.render();
   restoreSession();
+  // Save immediately so the session exists in storage even if the
+  // player never travels anywhere before closing the tab
+  saveState();
 }
 
 function wipeSaveAndRestart() {
@@ -1041,4 +1044,11 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   runBootSequence();
+
+  // Safety-net: save whatever state we have when the tab closes
+  window.addEventListener('beforeunload', () => {
+    if (currentHub !== null || currentLocation !== null) {
+      saveState();
+    }
+  });
 });
