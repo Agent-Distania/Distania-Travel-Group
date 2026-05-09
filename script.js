@@ -606,13 +606,13 @@ function nextAmbientMessage(key) {
   return ambientQueues[key].pop();
 }
 
-function startAmbientDialogue(key) {
+function startAmbientDialogue(key, firstDelay = 8000) {
   clearAmbientTimers();
   if (!ambientDialogue[key]?.length) return;
   ambientFirstTimer = setTimeout(() => {
     if (currentLocation !== key) return;
     fireAmbientLine(key);
-  }, 8000);
+  }, firstDelay);
   ambientTimer = setInterval(() => {
     if (currentLocation !== key) { clearAmbientTimers(); return; }
     fireAmbientLine(key);
@@ -865,16 +865,22 @@ function hideOverlay() {
   setTimeout(() => travelOverlay.classList.add('hidden'), 700);
 }
 
-// All arrival side-effects — isMainPlanet controls whether Nova location line fires
-function onArrival(key, isMainPlanet = false) {
-  NovaAI.speak('arrival');
-  if (isMainPlanet) NovaAI.speakPlanetArrival(key);
+// All arrival side-effects
+// isMainPlanet = true  : full landing — generic arrival line + planet-specific line, no delay
+// isMainPlanet = false : sub-destination — no generic arrival spam, Nova speaks after a delay
+function onArrival(key, isMainPlanet = false, ambientDelay = 8000) {
+  if (isMainPlanet) {
+    // Landed on a new planet — speak immediately
+    NovaAI.speak('arrival');
+    NovaAI.speakPlanetArrival(key);
+  }
+  // Non-blocking side-effects run immediately regardless
   checkCollectible(key);
   maybeTriggerDanger(key);
   Health.applyArrivalDamage(key);
   Health.startDrain(key);
   startDwellTimer(key);
-  startAmbientDialogue(key);
+  startAmbientDialogue(key, ambientDelay);
   NovaAI.startIdle();
   updateMissionIndicator();
 }
@@ -913,7 +919,7 @@ function travelSub(dest, btn, config) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, null);
     createButtons(dest.subDestinations);
-    onArrival(dest.key, false);  // ← sub-destination: no location line
+    onArrival(dest.key, false, 18000);  // ← sub-destination: delayed ambient
   }, type === 'drone' ? 2000 : 3000);
 }
 
@@ -929,7 +935,7 @@ function travelSubSub(dest, btn, parentDest) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, parentDest.key);
     createButtons(dest.subDestinations);
-    onArrival(dest.key, false);  // ← sub-sub: no location line
+    onArrival(dest.key, false, 18000);  // ← sub-sub: delayed ambient
   }, 2000);
 }
 
