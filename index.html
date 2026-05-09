@@ -20,7 +20,7 @@
         <div class="boot-divider"></div>
       </div>
       <p id="bootText" class="boot-text"></p>
-      <p class="boot-sig" id="bootSig">– Chief Amplifier</p>
+      <p class="boot-sig" id="bootSig">-- Chief Amplifier</p>
       <button id="proceedBtn" class="btn hidden">Acknowledge</button>
     </div>
 
@@ -44,13 +44,24 @@
         <div class="panel log-panel">
           <h2>
             Navigation Log
-            <span id="missionIndicator" class="mission-indicator hidden">● MISSION ACTIVE</span>
+            <span id="missionIndicator" class="mission-indicator hidden">MISSION ACTIVE</span>
           </h2>
           <div id="log" class="log"></div>
         </div>
       </div>
     </div>
 
+  </div>
+
+  <!-- Health Widget -->
+  <div id="healthWidget" class="health-widget hidden">
+    <div class="health-label-row">
+      <span class="health-title">VITALS</span>
+      <span id="healthLabel" class="health-value">100/100</span>
+    </div>
+    <div class="health-bar-track">
+      <div id="healthBar" class="health-bar-fill"></div>
+    </div>
   </div>
 
   <!-- Travel Overlay -->
@@ -74,7 +85,6 @@
     </div>
   </div>
 
-  <!-- Journal Toggle (fixed bottom-right, visible only in travel screen) -->
   <button id="journalToggle" class="hidden">[ JOURNAL ]</button>
 
   <script src="script.js"></script>
