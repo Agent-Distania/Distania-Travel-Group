@@ -900,13 +900,15 @@ function travelMain(dest, btn) {
     if (config?.description) appendLog(config.description, 'log-system');
     endTravel(dest.key, dest.key, null);
     createButtons(config.subDestinations);
-    onArrival(dest.key, true);   // ← main planet: fires location line
+    // Delay Nova's arrival + planet line so it doesn't immediately
+    // stack on top of the system messages
+    setTimeout(() => onArrival(dest.key, true), 2500);
   }, 3000);
 }
 
 function travelSub(dest, btn, config) {
   beginTravel(btn);
-  NovaAI.speak('travel');
+  // No Nova travel/arrival speech for local transit — only system messages
   const type = dest.travelType || config.travelType || 'shuttle';
   const labels = { drone: 'Deploying drone', orbit: 'Initiating orbital alignment', rover: 'Boarding the rover', shuttle: 'Boarding the shuttle', train: 'Boarding the train' };
   const label = labels[type] || 'Traveling';
@@ -919,13 +921,13 @@ function travelSub(dest, btn, config) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, null);
     createButtons(dest.subDestinations);
-    onArrival(dest.key, false, 18000);  // ← sub-destination: delayed ambient
+    onArrival(dest.key, false, 18000);  // 18s delay before first NPC line
   }, type === 'drone' ? 2000 : 3000);
 }
 
 function travelSubSub(dest, btn, parentDest) {
   beginTravel(btn);
-  NovaAI.speak('travel');
+  // No Nova speech for local transit
   appendLog(`System: Traveling deeper to ${dest.name}...`, 'log-system');
   showOverlay(`Traveling deeper to ${dest.name}...`);
   setTimeout(() => {
@@ -935,7 +937,7 @@ function travelSubSub(dest, btn, parentDest) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, parentDest.key);
     createButtons(dest.subDestinations);
-    onArrival(dest.key, false, 18000);  // ← sub-sub: delayed ambient
+    onArrival(dest.key, false, 18000);  // 18s delay before first NPC line
   }, 2000);
 }
 
