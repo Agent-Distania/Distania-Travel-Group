@@ -261,6 +261,19 @@ button.traveling {
   min-height: 0;
 }
 
+/* Left column holds dest-list + health widget stacked */
+.console-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-height: 0;
+}
+
+.console-left .panel.dest-list {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
 .panel {
   border: 1px solid rgba(0,170,60,0.35);
   padding: 0.9rem;
@@ -327,17 +340,13 @@ button.traveling {
    Health Widget
    ========================================================= */
 .health-widget {
-  position: fixed;
-  top: 1.2rem;
-  right: 1.2rem;
-  width: 180px;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  z-index: 8500;
-  background: rgba(0,8,18,0.85);
+  background: rgba(0,6,16,0.65);
   border: 1px solid rgba(0,170,60,0.35);
   padding: 0.5rem 0.75rem;
+  flex-shrink: 0;
 }
 
 .health-widget.health-critical {
@@ -595,3 +604,31 @@ button.traveling {
   transition: all 0.15s;
 }
 #journalToggle:hover { background: rgba(15,255,15,0.07); color: #8dfd8d; border-color: #0f4; }
+
+/* =========================================================
+   Boot screen action row (Acknowledge + New Game)
+   ========================================================= */
+.boot-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+/* Secondary / destructive button variant */
+.btn-secondary {
+  background: transparent;
+  color: rgba(255, 100, 100, 0.75);
+  border: 1px solid rgba(255, 80, 80, 0.4);
+  font-size: 0.78rem;
+  letter-spacing: 0.15rem;
+  padding: 0.6rem 1.2rem;
+}
+.btn-secondary:hover {
+  background: rgba(255, 60, 60, 0.1);
+  color: #ff8888;
+  border-color: rgba(255, 80, 80, 0.8);
+  box-shadow: 0 0 12px rgba(255, 60, 60, 0.3);
+  transform: scale(1.02);
+}
