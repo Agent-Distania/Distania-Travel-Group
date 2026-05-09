@@ -285,15 +285,22 @@ function loadState() {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return false;
     const s = JSON.parse(raw);
-    if (!s.currentHub || !destinationConfigs[s.currentHub]) return false;
-    currentLocation    = s.currentLocation;
-    currentHub         = s.currentHub;
-    currentSubLocation = s.currentSubLocation;
+
+    // Always restore progress data regardless of location state
     if (s.missions)     s.missions.forEach(sv => { const m = MISSIONS.find(m => m.id === sv.id);     if (m) m.complete = sv.complete; });
     if (s.collectibles) s.collectibles.forEach(sv => { const c = COLLECTIBLES.find(c => c.id === sv.id); if (c) c.found = sv.found; });
     if (s.novaRel)      Object.assign(novaRel, s.novaRel);
     if (s.health)       Health.load(s.health);
-    return true;
+
+    // Only restore location if it's valid
+    if (s.currentHub && destinationConfigs[s.currentHub]) {
+      currentLocation    = s.currentLocation;
+      currentHub         = s.currentHub;
+      currentSubLocation = s.currentSubLocation;
+      return true; // signals restoreSession to rebuild location UI
+    }
+
+    return false; // no location to restore, but progress was loaded above
   } catch (_) { return false; }
 }
 
@@ -464,7 +471,7 @@ function runBootSequence() {
         procBtn.classList.remove('hidden');
         // Only show New Game if there's actually a save to wipe
         try {
-          if (localStorage.getItem('distania_save')) {
+          if (localStorage.getItem(SAVE_KEY)) {
             document.getElementById('wipeSaveBtn').classList.remove('hidden');
           }
         } catch(_) {}
@@ -981,9 +988,13 @@ function startTravelConsole() {
   document.getElementById('healthWidget').classList.remove('hidden');
   Health.render();
   restoreSession();
-  // Save immediately so the session exists in storage even if the
-  // player never travels anywhere before closing the tab
-  saveState();
+  // Only write an initial save if there is no existing save yet.
+  // If a save exists we must not overwrite it here — restoreSession
+  // may have left currentHub as null (player was on main screen)
+  // which would corrupt the save with null location data.
+  try {
+    if (!localStorage.getItem(SAVE_KEY)) saveState();
+  } catch(_) {}
 }
 
 function wipeSaveAndRestart() {
@@ -1032,12 +1043,16 @@ window.addEventListener('DOMContentLoaded', () => {
   // Wipe save button — shown after boot text finishes alongside Acknowledge
   document.getElementById('wipeSaveBtn')?.addEventListener('click', () => {
     wipeSaveAndRestart();
-    // Transition straight to travel screen as a fresh session
     startupScreen.classList.add('hidden');
     loginScreen.classList.add('hidden');
     travelScreen.classList.remove('hidden');
+    journalToggle.classList.remove('hidden');
+    document.getElementById('healthWidget').classList.remove('hidden');
+    Health.render();
     if (destinationsReady && dialogueReady) {
-      startTravelConsole();
+      // Go straight to restoreSession — skip startTravelConsole so we
+      // don't accidentally write a blank save over the wiped state.
+      restoreSession();
     } else {
       pendingStart = true;
     }
@@ -1045,9 +1060,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   runBootSequence();
 
-  // Safety-net: save whatever state we have when the tab closes
+  // Safety-net: flush state to storage when the tab closes,
+  // but only if the player has actually traveled somewhere this session.
   window.addEventListener('beforeunload', () => {
-    if (currentHub !== null || currentLocation !== null) {
+    if (currentHub !== null) {
       saveState();
     }
   });
