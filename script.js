@@ -16,29 +16,158 @@ const missionLogOverlay = document.getElementById('missionLogOverlay');
 // ================================================================
 let traveling         = false;
 let currentLocation   = null;
-let currentHub        = null;
-let currentSubLocation= null;
+let currentHub        = null;       // top-level planet key
+let currentSubLocation= null;       // parent key when at level-3 depth
 let ambientTimer      = null;
 let ambientFirstTimer = null;
+let dwellTimer        = null;       // mission dwell countdown
 const AMBIENT_INTERVAL = 28000;
 
-// Shuffle queues so NPCs don't repeat back-to-back
 const ambientQueues = {};
 
-// Data containers
 const mainDestinations   = [];
 const destinationConfigs = {};
 const ambientDialogue    = {};
 
-// Load flags
 let destinationsReady = false;
 let dialogueReady     = false;
 let pendingStart      = false;
 
 // ================================================================
-// Nova relationship (affects idle line pool)
+// Nova relationship
 // ================================================================
 const novaRel = { visits: 0, completions: 0 };
+
+// ================================================================
+// Health System
+// ================================================================
+const Health = {
+  max: 100,
+  current: 100,
+  shieldActive: false,   // future upgrade hook
+
+  // How much HP each location drains per tick while dwell timer runs
+  // Positive = drain, negative = heal
+  LOCATION_DRAIN: {
+    NewYork_Torta:          8,
+    AncientVault:           12,
+    ResearchBase_Tunnels:   10,
+    Ruins:                  15,
+    ExcavationPlatforms:    9,
+    Pacific_Abyssal:        11,
+    ResearchBase_Core:      13,
+    CoreRelay:              7,
+    BlackSpire:             6,
+    ForwardRecon:           5,
+    // Safe/healing locations
+    ColonyCore_Residential: -5,
+    EarthSpacePort:         -3,
+    CapitalCity:            -4
+  },
+
+  // Drain applied instantly on arrival at high-danger zones
+  ARRIVAL_DAMAGE: {
+    Ruins:                  10,
+    AncientVault:           8,
+    ResearchBase_Tunnels:   6,
+    Pacific_Abyssal:        7,
+    ExcavationPlatforms:    5
+  },
+
+  drainInterval: null,
+
+  get pct() { return Math.round((this.current / this.max) * 100); },
+
+  modify(amount) {
+    this.current = Math.max(0, Math.min(this.max, this.current + amount));
+    this.render();
+    if (this.current <= 0) this.die();
+  },
+
+  startDrain(key) {
+    this.stopDrain();
+    const rate = this.LOCATION_DRAIN[key];
+    if (!rate) return;
+    // Tick every 20s: drain harmful or heal safe locations
+    this.drainInterval = setInterval(() => {
+      if (currentLocation !== key) { this.stopDrain(); return; }
+      const delta = rate > 0 ? -rate : Math.abs(rate);
+      const wasBelow = this.current < this.max;
+      this.modify(delta);
+      if (rate < 0 && wasBelow && this.current > this.current - delta) {
+        // Healing tick — no message, just render
+      } else if (rate > 0 && this.current < 40) {
+        appendLog('Nova: Captain, your vitals are deteriorating. Consider leaving.', 'log-nova');
+      }
+    }, 20000);
+  },
+
+  stopDrain() {
+    clearInterval(this.drainInterval);
+    this.drainInterval = null;
+  },
+
+  applyArrivalDamage(key) {
+    const dmg = this.ARRIVAL_DAMAGE[key];
+    if (!dmg) return;
+    this.modify(-dmg);
+    appendLog(`System: Hazardous environment detected. Suit integrity reduced.`, 'log-system');
+  },
+
+  // Called when returning to ship — partial heal
+  shipHeal() {
+    const healed = Math.min(this.max - this.current, 30);
+    if (healed > 0) {
+      this.modify(healed);
+      appendLog(`System: Medical systems online. Vitals stabilised (+${healed}).`, 'log-system');
+    }
+  },
+
+  die() {
+    this.stopDrain();
+    clearAmbientTimers();
+    NovaAI.stopIdle();
+    appendLog('Nova: Captain! You\'ve gone critical. Initiating emergency extraction.', 'log-nova');
+    appendLog('System: EMERGENCY EXTRACTION — returning to ship.', 'log-system');
+    setTimeout(() => {
+      this.current = 40;
+      this.render();
+      currentLocation = currentHub = currentSubLocation = null;
+      clearSave();
+      createButtons(mainDestinations);
+      appendLog('System: Emergency extraction complete. Rest before your next mission.', 'log-system');
+    }, 2500);
+  },
+
+  render() {
+    const bar    = document.getElementById('healthBar');
+    const label  = document.getElementById('healthLabel');
+    const widget = document.getElementById('healthWidget');
+    if (!bar || !label || !widget) return;
+
+    bar.style.width = `${this.pct}%`;
+    label.textContent = `${this.current}/${this.max}`;
+
+    // Colour transitions: green → amber → red
+    bar.className = 'health-bar-fill';
+    if (this.pct <= 25)      bar.classList.add('critical');
+    else if (this.pct <= 50) bar.classList.add('low');
+
+    // Widget pulse when low
+    widget.classList.toggle('health-critical', this.pct <= 25);
+  },
+
+  save() {
+    return { current: this.current };
+  },
+
+  load(data) {
+    if (data?.current !== undefined) {
+      this.current = data.current;
+      this.render();
+    }
+  }
+};
 
 // ================================================================
 // Missions
@@ -51,7 +180,8 @@ const MISSIONS = [
     target: 'NewYork_Torta',
     reward: 'Access to classified excavation frequency logs.',
     rewardKey: 'TORTA_LOGS',
-    complete: false
+    complete: false,
+    dwellSecs: 35
   },
   {
     id: 'mission_02',
@@ -60,7 +190,8 @@ const MISSIONS = [
     target: 'Pacific_Abyssal',
     reward: 'Deep sea organism specimen — Specimen 7-C.',
     rewardKey: 'SPECIMEN_7C',
-    complete: false
+    complete: false,
+    dwellSecs: 40
   },
   {
     id: 'mission_03',
@@ -69,7 +200,8 @@ const MISSIONS = [
     target: 'AncientVault',
     reward: 'Pre-human inscription rubbing — Fragment Alpha.',
     rewardKey: 'VAULT_FRAGMENT',
-    complete: false
+    complete: false,
+    dwellSecs: 30
   },
   {
     id: 'mission_04',
@@ -78,7 +210,8 @@ const MISSIONS = [
     target: 'StormObservatory_Sensors',
     reward: 'Storm pattern data core — Cycle 44.',
     rewardKey: 'STORM_DATA',
-    complete: false
+    complete: false,
+    dwellSecs: 30
   },
   {
     id: 'mission_05',
@@ -87,7 +220,8 @@ const MISSIONS = [
     target: 'ResearchBase_Tunnels',
     reward: 'Ice core sample — Sector 7 deep layer.',
     rewardKey: 'ICE_CORE',
-    complete: false
+    complete: false,
+    dwellSecs: 40
   },
   {
     id: 'mission_06',
@@ -96,7 +230,8 @@ const MISSIONS = [
     target: 'XenoArchives',
     reward: 'Partial xenolinguistic index — Volume III.',
     rewardKey: 'XENO_INDEX',
-    complete: false
+    complete: false,
+    dwellSecs: 30
   },
   {
     id: 'mission_07',
@@ -105,27 +240,27 @@ const MISSIONS = [
     target: 'CrystalCanyonOutpost',
     reward: 'Resonant crystal shard — Grade A.',
     rewardKey: 'CRYSTAL_SHARD',
-    complete: false
+    complete: false,
+    dwellSecs: 25
   }
 ];
 
 // ================================================================
-// Collectibles — one hidden item per key location
+// Collectibles
 // ================================================================
 const COLLECTIBLES = [
-  { id: 'col_01', name: 'Kilko Fragment — Node 7', desc: 'Still warm to the touch. Radiation minimal.', location: 'Pacific_ArtifactLab',         found: false },
-  { id: 'col_02', name: 'Encrypted Data Core',     desc: 'Origin: unknown. Format: unreadable.',        location: 'ResearchBase_Lab',             found: false },
-  { id: 'col_03', name: 'Obsidian Statue Shard',   desc: 'Edges are too perfect. Not carved — grown.',  location: 'StatueWing',                   found: false },
-  { id: 'col_04', name: 'Void Berry Sample',        desc: 'Technically not legal yet. Smells incredible.', location: 'EarthSpacePort_FrontDesk',  found: false },
-  { id: 'col_05', name: 'Torta Wall Rubbing',       desc: 'Symbols shift between viewings.',             location: 'NewYork_Torta',                found: false },
-  { id: 'col_06', name: 'Abyssal Organism — Jar',  desc: 'Still glowing. Still moving.',                location: 'Pacific_Abyssal',              found: false },
-  { id: 'col_07', name: 'Storm Data Wafer',         desc: 'The pattern stored here repeats every 88 seconds.', location: 'StormObservatory_Sensors', found: false },
-  { id: 'col_08', name: 'Vault Inscription Photo',  desc: 'Camera corrupted on upload. Image survived.', location: 'AncientVault',                 found: false },
-  { id: 'col_09', name: 'Crystal Shard — Grade A', desc: 'Resonates at exactly 440 Hz. Concert A.',      location: 'CrystalCanyonOutpost',         found: false },
-  { id: 'col_10', name: 'Tunnel Ice Core',          desc: 'Contains organic compounds 200,000 years old.', location: 'ResearchBase_Tunnels',      found: false }
+  { id: 'col_01', name: 'Kilko Fragment — Node 7',  desc: 'Still warm to the touch. Radiation minimal.',           location: 'Pacific_ArtifactLab',        found: false },
+  { id: 'col_02', name: 'Encrypted Data Core',      desc: 'Origin: unknown. Format: unreadable.',                  location: 'ResearchBase_Lab',            found: false },
+  { id: 'col_03', name: 'Obsidian Statue Shard',    desc: 'Edges are too perfect. Not carved — grown.',            location: 'StatueWing',                  found: false },
+  { id: 'col_04', name: 'Void Berry Sample',         desc: 'Technically not legal yet. Smells incredible.',         location: 'EarthSpacePort_FrontDesk',   found: false },
+  { id: 'col_05', name: 'Torta Wall Rubbing',        desc: 'Symbols shift between viewings.',                       location: 'NewYork_Torta',               found: false },
+  { id: 'col_06', name: 'Abyssal Organism — Jar',   desc: 'Still glowing. Still moving.',                          location: 'Pacific_Abyssal',             found: false },
+  { id: 'col_07', name: 'Storm Data Wafer',          desc: 'The pattern stored here repeats every 88 seconds.',     location: 'StormObservatory_Sensors',    found: false },
+  { id: 'col_08', name: 'Vault Inscription Photo',   desc: 'Camera corrupted on upload. Image survived.',           location: 'AncientVault',                found: false },
+  { id: 'col_09', name: 'Crystal Shard — Grade A',  desc: 'Resonates at exactly 440 Hz. Concert A.',               location: 'CrystalCanyonOutpost',        found: false },
+  { id: 'col_10', name: 'Tunnel Ice Core',           desc: 'Contains organic compounds 200,000 years old.',         location: 'ResearchBase_Tunnels',        found: false }
 ];
 
-// Journal of overheard NPC lines
 const heardLog = [];
 
 // ================================================================
@@ -137,9 +272,10 @@ function saveState() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       currentLocation, currentHub, currentSubLocation,
-      missions: MISSIONS.map(m => ({ id: m.id, complete: m.complete })),
+      missions:     MISSIONS.map(m => ({ id: m.id, complete: m.complete })),
       collectibles: COLLECTIBLES.map(c => ({ id: c.id, found: c.found })),
-      novaRel
+      novaRel,
+      health: Health.save()
     }));
   } catch (_) {}
 }
@@ -153,15 +289,10 @@ function loadState() {
     currentLocation    = s.currentLocation;
     currentHub         = s.currentHub;
     currentSubLocation = s.currentSubLocation;
-    if (s.missions) s.missions.forEach(saved => {
-      const m = MISSIONS.find(m => m.id === saved.id);
-      if (m) m.complete = saved.complete;
-    });
-    if (s.collectibles) s.collectibles.forEach(saved => {
-      const c = COLLECTIBLES.find(c => c.id === saved.id);
-      if (c) c.found = saved.found;
-    });
-    if (s.novaRel) Object.assign(novaRel, s.novaRel);
+    if (s.missions)     s.missions.forEach(sv => { const m = MISSIONS.find(m => m.id === sv.id);     if (m) m.complete = sv.complete; });
+    if (s.collectibles) s.collectibles.forEach(sv => { const c = COLLECTIBLES.find(c => c.id === sv.id); if (c) c.found = sv.found; });
+    if (s.novaRel)      Object.assign(novaRel, s.novaRel);
+    if (s.health)       Health.load(s.health);
     return true;
   } catch (_) { return false; }
 }
@@ -209,7 +340,7 @@ Promise.all([
 });
 
 // ================================================================
-// Fallback Destinations (mirrors destinations.json structure)
+// Fallback Destinations
 // ================================================================
 function loadFallbackDestinations() {
   appendLog('System: Navigation data unavailable — loading emergency backup.', 'log-system');
@@ -230,15 +361,15 @@ function loadFallbackDestinations() {
         ]},
         { name: 'Earth Space Port', key: 'EarthSpacePort', description: 'Cargo and civilian port.', subDestinations: [
           { name: 'Return to Previous', key: 'Return' },
-          { name: 'Processing', key: 'EarthSpacePort_FrontDesk', description: 'Civilian and cargo inspection.' },
-          { name: 'Cargo Intake', key: 'EarthSpacePort_Cargo', description: 'Freight unloading zone.' },
+          { name: 'Processing', key: 'EarthSpacePort_FrontDesk', description: 'Inspection zone.' },
+          { name: 'Cargo Intake', key: 'EarthSpacePort_Cargo', description: 'Freight unloading.' },
           { name: 'Docking Bay', key: 'EarthSpacePort_Docking', description: 'Refueling and boarding.' }
         ]},
         { name: 'Pacific Research Facility', key: 'Pacific', description: 'Floating research base.', subDestinations: [
           { name: 'Return to Previous', key: 'Return' },
-          { name: 'Kilko Artifact Lab', key: 'Pacific_ArtifactLab', description: 'Kilko debris containment.' },
+          { name: 'Kilko Artifact Lab', key: 'Pacific_ArtifactLab', description: 'Kilko containment.' },
           { name: 'Deep Sea Observatory', key: 'Pacific_Observatory', description: 'Submersible monitoring.' },
-          { name: 'Abyssal Research Wing', key: 'Pacific_Abyssal', description: 'Pressurized deep trench labs.' }
+          { name: 'Abyssal Research Wing', key: 'Pacific_Abyssal', description: 'Deep trench labs.' }
         ]}
       ]},
       Mars: { description: 'Orbiting Mars Colony Alpha.', travelType: 'shuttle', subDestinations: [
@@ -301,7 +432,7 @@ function loadFallbackDestinations() {
 }
 
 // ================================================================
-// Log Helper — colour-coded by type
+// Log Helper
 // ================================================================
 function appendLog(text, cssClass = '') {
   const line = document.createElement('div');
@@ -320,15 +451,12 @@ function runBootSequence() {
   const bootEl  = document.getElementById('bootText');
   const sigEl   = document.getElementById('bootSig');
   const procBtn = document.getElementById('proceedBtn');
-
   bootEl.classList.add('typing');
   let i = 0;
-  const speed = 28;
-
   const type = () => {
     if (i < BOOT_TEXT.length) {
       bootEl.textContent += BOOT_TEXT[i++];
-      setTimeout(type, speed);
+      setTimeout(type, 28);
     } else {
       bootEl.classList.remove('typing');
       sigEl.classList.add('visible');
@@ -348,14 +476,20 @@ const NovaAI = {
   speak(category) {
     const pool = this.dialogue[category];
     if (!pool?.length) return;
-    // Warm pool after 5 completions — richer idle lines if they exist
-    const line = pool[Math.floor(Math.random() * pool.length)];
-    appendLog(line, 'log-nova');
+    appendLog(pool[Math.floor(Math.random() * pool.length)], 'log-nova');
   },
 
-  speakLocation(key) {
+  // Only called on main planet arrival (not sub-destinations)
+  speakPlanetArrival(key) {
     const line = this.dialogue.locationArrivals?.[key];
     if (line) appendLog(line, 'log-nova');
+  },
+
+  // Location-specific danger lines
+  speakDanger(key) {
+    const pool = this.dialogue.dangerLines?.[key] || this.dialogue.dangerLines?.default;
+    if (!pool?.length) return;
+    appendLog(pool[Math.floor(Math.random() * pool.length)], 'log-nova');
   },
 
   startIdle() {
@@ -371,34 +505,60 @@ const NovaAI = {
 // ================================================================
 // Mission System
 // ================================================================
-function getActiveMission() {
-  return MISSIONS.find(m => !m.complete) || null;
-}
+function getActiveMission() { return MISSIONS.find(m => !m.complete) || null; }
 
 function updateMissionIndicator() {
-  const active = getActiveMission();
-  missionIndicator.classList.toggle('hidden', !active);
+  missionIndicator.classList.toggle('hidden', !getActiveMission());
 }
 
-function checkMissionCompletion(locationKey) {
+function startDwellTimer(locationKey) {
+  clearTimeout(dwellTimer);
   const m = getActiveMission();
   if (!m || m.target !== locationKey) return;
+
+  const secs = m.dwellSecs || 30;
+  appendLog(`System: Mission active. Remain at ${locationKey} for ${secs}s to complete.`, 'log-mission');
+
+  dwellTimer = setTimeout(() => {
+    if (currentLocation !== locationKey) return;
+    completeMission(m);
+  }, secs * 1000);
+}
+
+function completeMission(m) {
   m.complete = true;
   novaRel.completions++;
   appendLog(`▶ MISSION COMPLETE: ${m.title}`, 'log-mission');
   appendLog(`▶ REWARD LOGGED: ${m.reward}`, 'log-mission');
   NovaAI.speak('missionComplete');
   updateMissionIndicator();
+  // Re-render buttons so the ● marker updates
+  rebuildCurrentButtons();
   saveState();
 
-  // Queue the next mission announcement after a short pause
   const next = getActiveMission();
   if (next) {
     setTimeout(() => {
       appendLog(`▶ NEW MISSION DISPATCHED: ${next.title}`, 'log-mission');
       appendLog(`  ${next.desc}`, 'log-mission');
+      rebuildCurrentButtons();
     }, 4000);
   }
+}
+
+// Rebuild whichever button list is currently showing (so ● markers update)
+function rebuildCurrentButtons() {
+  if (!currentHub) { createButtons(mainDestinations); return; }
+  const config = destinationConfigs[currentHub];
+  if (currentSubLocation) {
+    const parent = findByKey(currentSubLocation, config.subDestinations);
+    if (parent?.subDestinations) { createButtons(parent.subDestinations); return; }
+  }
+  if (currentLocation && currentLocation !== currentHub) {
+    const dest = findByKey(currentLocation, config.subDestinations);
+    if (dest?.subDestinations) { createButtons(dest.subDestinations); return; }
+  }
+  createButtons(config.subDestinations);
 }
 
 // ================================================================
@@ -406,9 +566,7 @@ function checkMissionCompletion(locationKey) {
 // ================================================================
 function checkCollectible(locationKey) {
   const col = COLLECTIBLES.find(c => c.location === locationKey && !c.found);
-  if (!col) return;
-  // 65% chance to find it on visit
-  if (Math.random() > 0.65) return;
+  if (!col || Math.random() > 0.65) return;
   col.found = true;
   appendLog(`◆ ITEM FOUND: ${col.name}`, 'log-collect');
   appendLog(`  ${col.desc}`, 'log-collect');
@@ -429,21 +587,17 @@ function shuffled(arr) {
 }
 
 function nextAmbientMessage(key) {
-  if (!ambientQueues[key]?.length) {
-    ambientQueues[key] = shuffled(ambientDialogue[key] || []);
-  }
+  if (!ambientQueues[key]?.length) ambientQueues[key] = shuffled(ambientDialogue[key] || []);
   return ambientQueues[key].pop();
 }
 
 function startAmbientDialogue(key) {
   clearAmbientTimers();
   if (!ambientDialogue[key]?.length) return;
-
   ambientFirstTimer = setTimeout(() => {
     if (currentLocation !== key) return;
     fireAmbientLine(key);
   }, 8000);
-
   ambientTimer = setInterval(() => {
     if (currentLocation !== key) { clearAmbientTimers(); return; }
     fireAmbientLine(key);
@@ -465,30 +619,28 @@ function clearAmbientTimers() {
 }
 
 // ================================================================
-// Danger Events (random chance on arrival at certain locations)
+// Danger Events
 // ================================================================
-const DANGER_LOCATIONS = ['NewYork_Torta','AncientVault','ResearchBase_Tunnels','Ruins','ExcavationPlatforms','Pacific_Abyssal'];
-const DANGER_LINES = [
-  'Nova: Captain — I\'m reading an energy spike at your location. Get clear if you can.',
-  'Nova: Structural anomaly detected. The readings lasted about four seconds. I\'m logging it.',
-  'Nova: Something just moved on the thermal scan. Too fast to identify. Stay sharp.',
-  'Nova: Brief electromagnetic pulse from deep below. Equipment should recover. Should.',
-  'Nova: I lost your vitals for two seconds. You\'re fine now. I\'m fine. Everything is fine.'
+const DANGER_LOCATIONS = [
+  'NewYork_Torta','AncientVault','ResearchBase_Tunnels',
+  'Ruins','ExcavationPlatforms','Pacific_Abyssal',
+  'ResearchBase_Core','CoreRelay','BlackSpire','ForwardRecon'
 ];
 
 function maybeTriggerDanger(key) {
   if (!DANGER_LOCATIONS.includes(key)) return;
-  if (Math.random() > 0.35) return;
+  if (Math.random() > 0.4) return;
   const delay = 12000 + Math.random() * 15000;
   setTimeout(() => {
     if (currentLocation !== key) return;
-    const line = DANGER_LINES[Math.floor(Math.random() * DANGER_LINES.length)];
-    appendLog(line, 'log-nova');
+    NovaAI.speakDanger(key);
+    // Danger events deal a small amount of damage
+    Health.modify(-8);
   }, delay);
 }
 
 // ================================================================
-// Journal Rendering
+// Journal
 // ================================================================
 function renderJournal() {
   renderMissionsTab();
@@ -507,7 +659,7 @@ function renderMissionsTab() {
       <div class="mission-title">${m.title}</div>
       <div class="mission-status-badge">${m.complete ? '✓ COMPLETE' : '● IN PROGRESS'}</div>
       <div class="mission-desc">${m.desc}</div>
-      <div class="mission-target">Target: ${m.target}</div>
+      <div class="mission-target">Target: ${m.target} — Dwell: ${m.dwellSecs}s</div>
       <div class="mission-reward">Reward: ${m.complete ? m.reward : '???'}</div>
     `;
     el.appendChild(card);
@@ -517,10 +669,7 @@ function renderMissionsTab() {
 function renderHeardTab() {
   const el = document.getElementById('heardList');
   el.innerHTML = '';
-  if (!heardLog.length) {
-    el.innerHTML = '<div class="empty-state">Nothing overheard yet. Explore and listen.</div>';
-    return;
-  }
+  if (!heardLog.length) { el.innerHTML = '<div class="empty-state">Nothing overheard yet. Explore and listen.</div>'; return; }
   heardLog.forEach(({ speaker, line, location, time }) => {
     const entry = document.createElement('div');
     entry.className = 'heard-entry';
@@ -533,10 +682,7 @@ function renderCollectedTab() {
   const el = document.getElementById('collectedList');
   el.innerHTML = '';
   const found = COLLECTIBLES.filter(c => c.found);
-  if (!found.length) {
-    el.innerHTML = '<div class="empty-state">No items collected yet.</div>';
-    return;
-  }
+  if (!found.length) { el.innerHTML = '<div class="empty-state">No items collected yet.</div>'; return; }
   found.forEach(c => {
     const entry = document.createElement('div');
     entry.className = 'collect-entry';
@@ -549,7 +695,6 @@ function renderCollectedTab() {
   });
 }
 
-// Tab switching
 function initJournalTabs() {
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -559,7 +704,6 @@ function initJournalTabs() {
       const target = document.getElementById(`tab-${btn.dataset.tab}`);
       target.classList.remove('hidden');
       target.classList.add('active');
-      // Re-render active tab
       if (btn.dataset.tab === 'missions')   renderMissionsTab();
       if (btn.dataset.tab === 'heard')      renderHeardTab();
       if (btn.dataset.tab === 'collected')  renderCollectedTab();
@@ -570,22 +714,16 @@ function initJournalTabs() {
 // ================================================================
 // Button Helpers
 // ================================================================
-function clearDestinations() {
-  destList.innerHTML = '<h2>Select Destination</h2>';
-}
-
-function enableButtons() {
-  destList.querySelectorAll('button').forEach(b => (b.disabled = false));
-}
+function clearDestinations() { destList.innerHTML = '<h2>Select Destination</h2>'; }
+function enableButtons() { destList.querySelectorAll('button').forEach(b => (b.disabled = false)); }
 
 function createButtons(destinations) {
   clearDestinations();
+  const active = getActiveMission();
   destinations.forEach(dest => {
     const btn = document.createElement('button');
     btn.textContent  = dest.name;
     btn.dataset.dest = dest.key;
-    // Mark if this is a mission target
-    const active = getActiveMission();
     if (active && active.target === dest.key) {
       btn.textContent = `${dest.name} ●`;
       btn.title = 'Mission target';
@@ -641,6 +779,8 @@ function handleDestinationClick(dest, btn) {
 // ================================================================
 function handleReturn() {
   clearAmbientTimers();
+  clearTimeout(dwellTimer);
+  Health.stopDrain();
   NovaAI.stopIdle();
 
   if (currentSubLocation) {
@@ -652,6 +792,7 @@ function handleReturn() {
       currentSubLocation = null;
       createButtons(parent.subDestinations);
       startAmbientDialogue(currentLocation);
+      Health.startDrain(currentLocation);
       NovaAI.startIdle();
       saveState();
       return;
@@ -669,7 +810,9 @@ function handleReturn() {
     return;
   }
 
+  // Back to ship — partial heal
   appendLog('System: Returning to ship. Please select a destination.', 'log-system');
+  Health.shipHeal();
   currentLocation = currentHub = currentSubLocation = null;
   clearSave();
   createButtons(mainDestinations);
@@ -681,6 +824,8 @@ function handleReturn() {
 function beginTravel(btn) {
   traveling = true;
   clearAmbientTimers();
+  clearTimeout(dwellTimer);
+  Health.stopDrain();
   NovaAI.stopIdle();
   destList.querySelectorAll('button').forEach(b => { b.disabled = true; b.classList.remove('selected'); });
   if (btn) btn.classList.add('selected');
@@ -705,13 +850,15 @@ function hideOverlay() {
   setTimeout(() => travelOverlay.classList.add('hidden'), 700);
 }
 
-// On arrival: run all arrival side-effects
-function onArrival(key) {
+// All arrival side-effects — isMainPlanet controls whether Nova location line fires
+function onArrival(key, isMainPlanet = false) {
   NovaAI.speak('arrival');
-  NovaAI.speakLocation(key);
-  checkMissionCompletion(key);
+  if (isMainPlanet) NovaAI.speakPlanetArrival(key);
   checkCollectible(key);
   maybeTriggerDanger(key);
+  Health.applyArrivalDamage(key);
+  Health.startDrain(key);
+  startDwellTimer(key);
   startAmbientDialogue(key);
   NovaAI.startIdle();
   updateMissionIndicator();
@@ -725,7 +872,6 @@ function travelMain(dest, btn) {
   NovaAI.speak('travel');
   appendLog(`System: Initiating zero-point travel to ${dest.name}...`, 'log-system');
   showOverlay(`Engaging transit to ${dest.name}...`);
-
   setTimeout(() => {
     hideOverlay();
     appendLog(`System: Zero-point travel complete. Welcome to ${dest.name}.`, 'log-system');
@@ -733,7 +879,7 @@ function travelMain(dest, btn) {
     if (config?.description) appendLog(config.description, 'log-system');
     endTravel(dest.key, dest.key, null);
     createButtons(config.subDestinations);
-    onArrival(dest.key);
+    onArrival(dest.key, true);   // ← main planet: fires location line
   }, 3000);
 }
 
@@ -743,10 +889,8 @@ function travelSub(dest, btn, config) {
   const type = dest.travelType || config.travelType || 'shuttle';
   const labels = { drone: 'Deploying drone', orbit: 'Initiating orbital alignment', rover: 'Boarding the rover', shuttle: 'Boarding the shuttle', train: 'Boarding the train' };
   const label = labels[type] || 'Traveling';
-
   appendLog(`System: ${label} to ${dest.name}...`, 'log-system');
   showOverlay(`${label} to ${dest.name}...`);
-
   setTimeout(() => {
     hideOverlay();
     appendLog(`System: Arrived at ${dest.name}.`, 'log-system');
@@ -754,7 +898,7 @@ function travelSub(dest, btn, config) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, null);
     createButtons(dest.subDestinations);
-    onArrival(dest.key);
+    onArrival(dest.key, false);  // ← sub-destination: no location line
   }, type === 'drone' ? 2000 : 3000);
 }
 
@@ -763,7 +907,6 @@ function travelSubSub(dest, btn, parentDest) {
   NovaAI.speak('travel');
   appendLog(`System: Traveling deeper to ${dest.name}...`, 'log-system');
   showOverlay(`Traveling deeper to ${dest.name}...`);
-
   setTimeout(() => {
     hideOverlay();
     appendLog(`System: Arrived at ${dest.name}.`, 'log-system');
@@ -771,12 +914,12 @@ function travelSubSub(dest, btn, parentDest) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, parentDest.key);
     createButtons(dest.subDestinations);
-    onArrival(dest.key);
+    onArrival(dest.key, false);  // ← sub-sub: no location line
   }, 2000);
 }
 
 // ================================================================
-// Restore Session
+// Session Restore
 // ================================================================
 function restoreSession() {
   if (!loadState()) {
@@ -794,19 +937,31 @@ function restoreSession() {
   }
 
   appendLog(`System: Session restored. Last known location: ${currentLocation}.`, 'log-system');
-  NovaAI.speakLocation(currentLocation);
   updateMissionIndicator();
+  Health.render();
 
   if (currentSubLocation) {
     const config = destinationConfigs[currentHub];
     const parent = findByKey(currentSubLocation, config.subDestinations);
-    if (parent?.subDestinations) { createButtons(parent.subDestinations); startAmbientDialogue(currentLocation); NovaAI.startIdle(); return; }
+    if (parent?.subDestinations) {
+      createButtons(parent.subDestinations);
+      startAmbientDialogue(currentLocation);
+      Health.startDrain(currentLocation);
+      NovaAI.startIdle();
+      return;
+    }
   }
 
   if (currentLocation && currentLocation !== currentHub) {
     const config = destinationConfigs[currentHub];
     const dest   = findByKey(currentLocation, config.subDestinations);
-    if (dest?.subDestinations) { createButtons(dest.subDestinations); startAmbientDialogue(currentLocation); NovaAI.startIdle(); return; }
+    if (dest?.subDestinations) {
+      createButtons(dest.subDestinations);
+      startAmbientDialogue(currentLocation);
+      Health.startDrain(currentLocation);
+      NovaAI.startIdle();
+      return;
+    }
   }
 
   createButtons(destinationConfigs[currentHub].subDestinations);
@@ -815,6 +970,8 @@ function restoreSession() {
 
 function startTravelConsole() {
   journalToggle.classList.remove('hidden');
+  document.getElementById('healthWidget').classList.remove('hidden');
+  Health.render();
   restoreSession();
 }
 
@@ -843,11 +1000,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   journalToggle?.addEventListener('click', renderJournal);
+  document.getElementById('closeJournal')?.addEventListener('click', () => missionLogOverlay.classList.add('hidden'));
 
-  document.getElementById('closeJournal')?.addEventListener('click', () => {
-    missionLogOverlay.classList.add('hidden');
-  });
-
-  // Start boot sequence immediately
   runBootSequence();
 });
