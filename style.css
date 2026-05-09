@@ -80,7 +80,6 @@ body::after {
   overflow: hidden;
 }
 
-/* Vignette */
 .screen::before {
   content: '';
   position: absolute;
@@ -89,7 +88,6 @@ body::after {
   pointer-events: none;
   z-index: 0;
 }
-
 .screen > * { position: relative; z-index: 1; }
 
 .hidden { display: none !important; }
@@ -120,16 +118,15 @@ body::after {
 
 @keyframes logoFlicker {
   0%,94%,100% { opacity: 1; }
-  95%         { opacity: 0.6; }
-  97%         { opacity: 1; }
-  98.5%       { opacity: 0.8; }
+  95%  { opacity: 0.6; }
+  97%  { opacity: 1; }
+  98.5%{ opacity: 0.8; }
 }
 
 .boot-subtitle {
   font-size: 0.7rem;
   letter-spacing: 0.45rem;
   color: rgba(141,253,141,0.5);
-  font-family: 'Share Tech Mono', monospace;
 }
 
 .boot-divider {
@@ -147,12 +144,10 @@ body::after {
   min-height: 8rem;
   text-align: left;
   padding: 0 1rem;
-  font-family: 'Share Tech Mono', monospace;
 }
 
-/* blinking cursor after typed text */
 .boot-text.typing::after {
-  content: '█';
+  content: 'X';
   animation: cursorBlink 0.9s step-end infinite;
   color: #0f4;
 }
@@ -226,7 +221,6 @@ body::after {
 .btn:hover  { transform: scale(1.04); box-shadow: 0 0 20px rgba(15,255,15,0.6); background: #aaffaa; }
 .btn:active { transform: scale(0.97); }
 
-/* Destination list buttons */
 .dest-list button {
   width: 100%;
   margin: 0.28rem 0;
@@ -295,7 +289,7 @@ button.traveling {
 }
 
 /* =========================================================
-   Navigation Log — colour-coded
+   Navigation Log
    ========================================================= */
 .log {
   flex: 1 1 0;
@@ -306,24 +300,18 @@ button.traveling {
   text-align: left;
   padding-left: 0.2rem;
   line-height: 1.55;
-  font-family: 'Share Tech Mono', monospace;
 }
 
 #log > div { margin-bottom: 0.7rem; }
 
-/* System — dim green */
 #log > div.log-system  { color: rgba(141,253,141,0.45); font-size: 0.77rem; }
-/* Nova — bright, glowing */
 #log > div.log-nova    { color: #d4ffd4; text-shadow: 0 0 6px rgba(15,255,15,0.35); }
-/* NPC ambient — teal */
 #log > div.log-npc     { color: #7de8e8; text-shadow: 0 0 4px rgba(0,200,200,0.25); }
-/* Mission events — amber */
 #log > div.log-mission { color: #ffd97d; text-shadow: 0 0 6px rgba(255,200,50,0.35); }
-/* Collectible — white flash */
 #log > div.log-collect { color: #ffffff; text-shadow: 0 0 10px rgba(200,255,200,0.5); }
 
 /* =========================================================
-   Mission Active Indicator
+   Mission Indicator
    ========================================================= */
 .mission-indicator {
   font-family: 'Share Tech Mono', monospace;
@@ -334,6 +322,75 @@ button.traveling {
   animation: missionPulse 1.6s ease-in-out infinite;
 }
 @keyframes missionPulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+/* =========================================================
+   Health Widget
+   ========================================================= */
+.health-widget {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.2rem;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  z-index: 8500;
+  background: rgba(0,8,18,0.85);
+  border: 1px solid rgba(0,170,60,0.35);
+  padding: 0.5rem 0.75rem;
+}
+
+.health-widget.health-critical {
+  border-color: rgba(255,60,60,0.7);
+  animation: criticalPulse 0.8s ease-in-out infinite;
+}
+@keyframes criticalPulse {
+  0%,100% { box-shadow: 0 0 4px rgba(255,60,60,0.3); }
+  50%     { box-shadow: 0 0 14px rgba(255,60,60,0.8); }
+}
+
+.health-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.health-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2rem;
+  color: rgba(141,253,141,0.55);
+}
+
+.health-value {
+  font-size: 0.72rem;
+  color: rgba(141,253,141,0.8);
+}
+
+.health-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(0,170,60,0.12);
+  border: 1px solid rgba(0,170,60,0.25);
+  overflow: hidden;
+}
+
+.health-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: #0f4;
+  transition: width 0.5s ease, background 0.5s ease;
+}
+
+.health-bar-fill.low {
+  background: #ffd97d;
+  box-shadow: 0 0 6px rgba(255,200,50,0.5);
+}
+
+.health-bar-fill.critical {
+  background: #ff4444;
+  box-shadow: 0 0 8px rgba(255,60,60,0.7);
+}
 
 /* =========================================================
    Scrollbars
@@ -388,7 +445,7 @@ button.traveling {
 }
 @keyframes scanBar {
   0%   { transform: scaleX(0.15); opacity: 0.2; }
-  50%  { transform: scaleX(1);    opacity: 1;   }
+  50%  { transform: scaleX(1);    opacity: 1; }
   100% { transform: scaleX(0.15); opacity: 0.2; }
 }
 .travel-overlay.active { opacity: 1; pointer-events: auto; }
@@ -442,7 +499,6 @@ button.traveling {
   padding: 0.3rem 0.75rem;
   cursor: pointer;
   transition: all 0.15s;
-  letter-spacing: 0.05rem;
 }
 .close-btn:hover { background: rgba(15,255,15,0.08); color: #8dfd8d; }
 
@@ -482,14 +538,8 @@ button.traveling {
 }
 .mission-card.complete { border-color: rgba(0,170,60,0.12); opacity: 0.55; }
 
-.mission-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 0.76rem;
-  letter-spacing: 0.1rem;
-  color: #ffd97d;
-}
+.mission-title  { font-family: 'Orbitron', sans-serif; font-size: 0.76rem; letter-spacing: 0.1rem; color: #ffd97d; }
 .mission-card.complete .mission-title { color: rgba(141,253,141,0.4); text-decoration: line-through; }
-
 .mission-desc   { font-size: 0.79rem; color: rgba(141,253,141,0.7); }
 .mission-target { font-size: 0.72rem; color: rgba(141,253,141,0.4); }
 .mission-reward { font-size: 0.72rem; color: #7de8e8; }
