@@ -460,7 +460,15 @@ function runBootSequence() {
     } else {
       bootEl.classList.remove('typing');
       sigEl.classList.add('visible');
-      setTimeout(() => procBtn.classList.remove('hidden'), 600);
+      setTimeout(() => {
+        procBtn.classList.remove('hidden');
+        // Only show New Game if there's actually a save to wipe
+        try {
+          if (localStorage.getItem('distania_save')) {
+            document.getElementById('wipeSaveBtn').classList.remove('hidden');
+          }
+        } catch(_) {}
+      }, 600);
     }
   };
   setTimeout(type, 400);
@@ -975,6 +983,22 @@ function startTravelConsole() {
   restoreSession();
 }
 
+function wipeSaveAndRestart() {
+  clearSave();
+  // Reset all mission/collectible state in memory too
+  MISSIONS.forEach(m => m.complete = false);
+  COLLECTIBLES.forEach(c => c.found = false);
+  novaRel.visits = 0;
+  novaRel.completions = 0;
+  Health.current = Health.max;
+  Health.render();
+  heardLog.length = 0;
+  // Clear ambient queues
+  Object.keys(ambientQueues).forEach(k => delete ambientQueues[k]);
+  currentLocation = currentHub = currentSubLocation = null;
+  appendLog('System: Save data cleared. Starting fresh.', 'log-system');
+}
+
 // ================================================================
 // Event Listeners
 // ================================================================
@@ -1001,6 +1025,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
   journalToggle?.addEventListener('click', renderJournal);
   document.getElementById('closeJournal')?.addEventListener('click', () => missionLogOverlay.classList.add('hidden'));
+
+  // Wipe save button — shown after boot text finishes alongside Acknowledge
+  document.getElementById('wipeSaveBtn')?.addEventListener('click', () => {
+    wipeSaveAndRestart();
+    // Transition straight to travel screen as a fresh session
+    startupScreen.classList.add('hidden');
+    loginScreen.classList.add('hidden');
+    travelScreen.classList.remove('hidden');
+    if (destinationsReady && dialogueReady) {
+      startTravelConsole();
+    } else {
+      pendingStart = true;
+    }
+  });
 
   runBootSequence();
 });
