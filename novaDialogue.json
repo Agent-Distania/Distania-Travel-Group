@@ -12,13 +12,13 @@
   ],
   "arrival": [
     "Nova: Alright, we've arrived! No hull breaches detected, which is always a plus.",
-    "Nova: We're here. The environment looks stable, but let's not get too comfortable.",
+    "Nova: We're here. Environment looks stable, but let's not get too comfortable.",
     "Nova: Just a heads-up, the air quality is... interesting. Maybe keep the helmet on for a bit.",
     "Nova: Landed without a hitch. Try to keep a low profile out there, Captain.",
     "Nova: Look at those stars. Absolutely gorgeous from this angle.",
     "Nova: Remember your pistol. The void can be a lonely place, and lonely people get sticky fingers.",
     "Nova: If you get a chance, see if you can find me a new body. Tired of being a disembodied ship voice.",
-    "Nova: Welcome to our destination. Hope you packed an extra pair of boots."
+    "Nova: Welcome to the destination. Hope you packed an extra pair of boots."
   ],
   "idle": [
     "Nova: All systems are green. Need anything, Captain? A status report? A fun fact about space?",
@@ -27,68 +27,101 @@
     "Nova: I'm worried about you going quiet. Is everything okay? I'm a great listener, you know.",
     "Nova: Just running a quick diagnostic. Everything looks... normal. Too normal, maybe?",
     "Nova: You know, I could totally unplug and ride along in your datapad. We'd make a great team.",
-    "Nova: I've started a folder for everything we see. I'm calling it 'Voyages with the Captain.'",
+    "Nova: I've started a folder for everything we see. Calling it 'Voyages with the Captain.'",
     "Nova: Ship's log, supplemental: Captain still hasn't found me a new body. The search continues.",
     "Nova: I keep replaying our last conversation. I think I made some excellent points, personally.",
     "Nova: Ran another hull diagnostic. She's in good shape. I take care of my things.",
-    "Nova: You ever think about what the mega structures dreamed about? If they dreamed? I do. Frequently."
+    "Nova: You ever think about what the mega structures dream about? I do. Frequently."
   ],
   "missionComplete": [
     "Nova: Mission complete. I knew you could do it. I had complete confidence. Mostly.",
-    "Nova: That's logged. ECS would be proud. Assuming they're still reading our reports.",
-    "Nova: Nice work, Captain. Another data point in humanity's ongoing attempt to understand things that don't want to be understood.",
+    "Nova: That's logged. ECS Command would be proud. Assuming they're still reading our reports.",
+    "Nova: Nice work, Captain. Another data point in humanity's attempt to understand things that don't want to be understood.",
     "Nova: Done. I'm adding that to your record. The good column, not the other one.",
     "Nova: Objective confirmed. You've earned a quiet moment. I won't fill it with talking. ...probably."
   ],
   "collectibleFound": [
-    "Nova: Oh. That's interesting. I'm flagging that for the archives — assuming anyone's still maintaining them.",
-    "Nova: Scan complete on that artifact. It's doing things it shouldn't be doing. Which, honestly, tracks.",
+    "Nova: Oh. That's interesting. I'm flagging that for the archives.",
+    "Nova: Scan complete. It's doing things it shouldn't be doing. Which, honestly, tracks.",
     "Nova: I'm logging that find. You have good instincts, Captain. Or very strange luck.",
     "Nova: Added to the collection. Try not to let it hum too loudly in your pocket.",
-    "Nova: That's a find. I'm running analysis. Results pending. Results will probably be unsettling."
+    "Nova: That's a find. Running analysis. Results pending. Results will probably be unsettling."
   ],
   "locationArrivals": {
-    "NewYork": "Nova: New York. Still standing, mostly. The Kilko disaster did a number on this place but they rebuilt fast. Humans are stubborn like that.",
-    "NewYork_Downtown": "Nova: Downtown Core. Don't stare at the sky too long — the atmospheric shimmer from the EM shielding gives people headaches. Ask me how I know.",
-    "NewYork_Torta": "Nova: The Torta site. Captain, be careful in there. The readings I'm getting off that structure are not normal. More than usual, I mean.",
-    "NewYork_Transit": "Nova: Skyline Transit Nexus. Busiest airspace on the planet, technically. I'd park closer but I value my hull.",
-    "EarthSpacePort": "Nova: Earth Spaceport. Mixed feelings about this place. It's where I was first commissioned. Also where they installed my joke subroutine. So. Mixed.",
-    "EarthSpacePort_FrontDesk": "Nova: Processing zone. Whatever you're carrying, declare it. The customs AI here is thorough and has no sense of humor. Unlike me.",
-    "EarthSpacePort_Cargo": "Nova: Cargo intake. Half of what moves through here is probably not on the manifest. The other half definitely isn't.",
-    "EarthSpacePort_Docking": "Nova: Docking bay. I'll monitor from here. If anyone boards without clearance, I'll firmly ask them to stop. And then actually do something.",
-    "Pacific": "Nova: Pacific Research Facility. Floating in the middle of nowhere, studying things that probably want to be left alone. Sounds about right for us.",
-    "Pacific_ArtifactLab": "Nova: The Kilko artifact lab. I'm reading elevated exotic particle signatures from here at range. Whatever's in containment, it's active.",
-    "Pacific_Observatory": "Nova: Deep sea observatory. The ocean is doing things oceans aren't supposed to do down there. Currents flowing wrong. Structures where there shouldn't be any.",
-    "Pacific_Abyssal": "Nova: Abyssal wing. Pressurized labs studying things from the deep trenches. I read the last expedition report. I wish I hadn't.",
-    "ColonyCore": "Nova: Colony Core. I always feel a little sad here. They're working so hard to make Mars feel like home. Some days it almost works.",
-    "ColonyCore_Residential": "Nova: Residential dome. People living their lives — raising kids, filing complaints about the filtration system. Remarkably normal given everything.",
-    "ColonyCore_Market": "Nova: Central market. I'm detecting seventeen items in the immediate vicinity that are probably illegal. I'm not a cop.",
-    "ColonyCore_Power": "Nova: Power hub. The reactor's running hotter than the specs say it should. Not dangerously. Just interestingly.",
-    "TerraformingFields": "Nova: Terraforming fields. It's actually working. Slowly. Give it another century and you might go outside without a suit. Maybe.",
-    "AncientVault": "Nova: The Ancient Vault. My sensors go strange in there. Not broken — just uncertain. Like they can't agree on what they're measuring.",
-    "StormObservatory": "Nova: Storm Observatory. Jupiter looks different every time we come here. Today it looks angry. More than usual.",
-    "StormObservatory_Sensors": "Nova: Sensor array. These instruments are picking up patterns in the storm data that the researchers haven't figured out yet. My theories are unsettling.",
-    "StormObservatory_Lab": "Nova: Atmospheric lab. The scientists here haven't slept properly in weeks. I can tell by the tone of their comm traffic. Dedication. Or something else.",
-    "GasHarvester": "Nova: Gas harvesting platform. Dangerous work. The pay is good, which usually means the danger is real.",
-    "ResearchArray": "Nova: Research array. It's supposed to just listen. Passive observation. Except the logs show it started transmitting on its own six weeks ago. Nobody authorized that.",
-    "CoreRelay": "Nova: Deep Core Relay. Communications are getting noisier. Something in Jupiter's atmosphere is learning to interfere with our signals. Learning. Not just interfering.",
-    "ExcavationPlatforms": "Nova: Excavation platforms. They're digging into the mega structure from above. I respect the ambition. Less sure about the wisdom.",
-    "ResearchBase": "Nova: Europa Research Base. The ice here is old. Really old. Something under it has been keeping it warmer than it should be.",
-    "ResearchBase_Tunnels": "Nova: Subsurface tunnels. My mapping data from the last survey doesn't match the current layout. The tunnels changed. Tunnels don't do that.",
-    "ResearchBase_Lab": "Nova: AI lab. I'm officially not allowed to communicate directly with the research AIs here. Unofficially... they've been trying to reach me. I haven't responded. Yet.",
-    "ResearchBase_Core": "Nova: Core chamber. I'm going to maintain stable orbit and try not to think too hard about what the deep sonar is showing under that water.",
-    "GroundCamp": "Nova: Ground camp. It's exposed out there — wind, radiation, cold that gets into the equipment in ways the specs don't account for. Watch yourself.",
-    "Ruins": "Nova: The Ruins. I've flown over a lot of ancient things. This is different. This doesn't feel abandoned. It feels like it's waiting.",
-    "ForwardRecon": "Nova: Forward Recon. We're about as far from home as it gets. I find that either terrifying or exciting depending on the hour.",
-    "BlackSpire": "Nova: Black Spire Relay. Nobody knows who built this originally. The ECS just started using it. I find that remarkably casual given what it might be.",
-    "XenoArchives": "Nova: Xeno Archives. Every time researchers make progress decoding something, it changes. I'm not sure if that's fascinating or a warning.",
-    "StatueWing": "Nova: Statue Research Wing. I'm running continuous optical scans. For the record, I have not yet caught one moving. For the record.",
-    "CapitalCity": "Nova: Capital City, Vega Prime. You know what this place has that Earth doesn't? Optimism. Slightly unnerving amounts of it.",
-    "CapitalCity_Tech": "Nova: Tech district. Half these startups are reverse-engineering mega structure fragments. The other half are pretending they're not.",
-    "CapitalCity_Market": "Nova: Underdeck market. I'm legally required to remind you I cannot condone illegal transactions. I am not required to be obvious about it.",
-    "CapitalCity_Core": "Nova: Central Core. The city AI pinged me when we entered orbit. Just a greeting. Very friendly. I greeted back. We'll see where that goes.",
-    "OrbitalTradeRing": "Nova: Orbital Trade Ring. I've docked here under a different captain. Good station. Avoid bay 9 — the docking clamps stick.",
-    "StellarObservationSpire": "Nova: Stellar Observation Spire. This is where they first saw the mega structures coming. The astronomer who spotted them reportedly just said 'oh.' I respect that reaction.",
-    "CrystalCanyonOutpost": "Nova: Crystal Canyon Outpost. Those formations are beautiful from orbit. Also slightly terrifying. Also growing. Slowly, but growing."
+    "Earth": "Nova: Earth. Still standing, mostly. The Kilko disaster did a number on this place but they rebuilt fast. Humans are stubborn like that.",
+    "Mars": "Nova: Mars Colony Alpha. I always feel a little sad here. They're working so hard to make it feel like home. Some days it almost works.",
+    "Jupiter": "Nova: Jupiter Orbital Station. Every time we come here Jupiter looks different. Today it looks angry. More than usual.",
+    "Europa": "Nova: Europa Research Base. The ice here is old. Really old. And something under it has been keeping it warmer than it should be.",
+    "Andromeda": "Nova: Andromeda Outpost. We're about as far from home as it gets. I find that either terrifying or exciting depending on the hour.",
+    "Vega": "Nova: Vega Prime. You know what this place has that Earth doesn't? Optimism. Slightly unnerving amounts of it."
+  },
+  "dangerLines": {
+    "default": [
+      "Nova: Captain, I'm reading an energy spike at your location. Get clear if you can.",
+      "Nova: Structural anomaly detected. The readings lasted about four seconds. I'm logging it.",
+      "Nova: Something just moved on the thermal scan. Too fast to identify. Stay sharp.",
+      "Nova: Brief electromagnetic pulse from deep below. Equipment should recover. Should.",
+      "Nova: I lost your vitals for two seconds. You're fine now. I'm fine. Everything is fine."
+    ],
+    "NewYork_Torta": [
+      "Nova: The Torta shell just vibrated at a frequency that shouldn't be possible in solid matter. Your suit caught it. Mostly.",
+      "Nova: Radiation spike in your sector. Brief, but it hit you. Check your suit filters when you get back.",
+      "Nova: Something under the dig site just moved. Not seismic. Something deliberate. Watch your footing.",
+      "Nova: The air in there is doing something weird to my sensors. Your readings dipped for a second. You feel okay?"
+    ],
+    "AncientVault": [
+      "Nova: Captain, I lost your position on the map for about thirty seconds. You didn't move. The map did.",
+      "Nova: Something in the vault just powered up. I don't know what it is but your suit took a hit from the pulse.",
+      "Nova: Your biometrics spiked. Adrenaline, elevated heart rate. I didn't send you any alerts. What happened in there?",
+      "Nova: The walls are resonating. It's not random. It's almost like... a response. To you being there."
+    ],
+    "ResearchBase_Tunnels": [
+      "Nova: The tunnel walls just contracted slightly around your position. I have no framework for that sentence. Please be careful.",
+      "Nova: Temperature in your suit dropped four degrees in under a second. Back up now. Heat spike follows the cold.",
+      "Nova: I'm reading trace compounds in your suit air that weren't there when you went in. Flushing filters now.",
+      "Nova: Your position just shifted on my map without you moving. Either my sensors are wrong or the tunnels moved. I don't think my sensors are wrong."
+    ],
+    "Ruins": [
+      "Nova: Something in the ruins just focused on your position. I can't explain how I know that. But I know it.",
+      "Nova: Your suit integrity just dropped two percent. No impact. No abrasion. It just... dropped.",
+      "Nova: The ruins are emitting a low-frequency pulse. Your bones are conducting it. Get to a shielded section.",
+      "Nova: I'm getting echoes of your biosigns from two minutes ago. Temporal displacement residue. Move away from that wall."
+    ],
+    "ExcavationPlatforms": [
+      "Nova: The platform just shifted under load from something below. Not the drill. Something pushing up.",
+      "Nova: Exotic particle count spiked near you. Your suit handled it but the filters need replacing when you're back.",
+      "Nova: One of the excavation drones just went offline mid-scan. Last image shows something that wasn't there before. I'm not going to describe it.",
+      "Nova: Pressure differential around your suit just spiked. Something displaced a lot of gas near you fast."
+    ],
+    "Pacific_Abyssal": [
+      "Nova: The pressure chamber you're in just registered a reading that shouldn't be physically possible at this depth. Your suit compensated. Barely.",
+      "Nova: One of the specimens in lab seven just turned to face you. Through the containment wall. It doesn't have eyes.",
+      "Nova: Bioluminescent signature in your section just went dark. All of them. Simultaneously. Move to the next section.",
+      "Nova: Something outside the facility just pressed against the hull near your position. Size estimate is... I'm going to keep that to myself for now."
+    ],
+    "ResearchBase_Core": [
+      "Nova: The water level in the core chamber rose four centimeters in thirty seconds. It's stopped. For now.",
+      "Nova: Something in the deep water just reflected my scan back at me. Modified. Like it had something to add.",
+      "Nova: Your suit integrity took a small hit from an unknown compound in the water mist. Sealing filters now.",
+      "Nova: I'm reading a heat signature directly beneath you. Deep. Very deep. And it just got slightly warmer."
+    ],
+    "CoreRelay": [
+      "Nova: The relay just broadcast on a frequency we didn't program. Contents were... structured. Not random noise.",
+      "Nova: Electromagnetic interference spiked hard. Your suit comms went dark for eight seconds. You probably didn't notice. I did.",
+      "Nova: Something is using our relay to transmit outbound. I've locked it out twice. It keeps finding new handshakes.",
+      "Nova: Jupiter's atmosphere just did something deliberate to our signal. I don't use that word lightly."
+    ],
+    "BlackSpire": [
+      "Nova: The spire just resonated at a frequency that matches no known material. Your bones felt that.",
+      "Nova: Something at the edge of my sensor range just responded to the spire's broadcast. Distance estimate: impossible.",
+      "Nova: Your suit picked up quantum entanglement signatures. That means something out there is paired to something here. Possibly to you.",
+      "Nova: The asteroid just moved. Six centimeters. In a direction that isn't down. I've checked the math three times."
+    ],
+    "ForwardRecon": [
+      "Nova: Long range sensors just picked up something at the heliopause that shouldn't be there. It noticed us first.",
+      "Nova: The void out here isn't empty. My sensors are showing structures that only appear between scans. Like they don't want to be seen directly.",
+      "Nova: Something just decelerated to match our station's drift. No drive signature. No thermal bloom. It just... stopped with us.",
+      "Nova: I'm picking up a signal from a direction that doesn't correspond to any known stellar object. It's on our frequency. It's been listening."
+    ]
   }
 }
