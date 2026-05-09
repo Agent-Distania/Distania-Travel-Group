@@ -21,7 +21,10 @@
       </div>
       <p id="bootText" class="boot-text"></p>
       <p class="boot-sig" id="bootSig">-- Chief Amplifier</p>
-      <button id="proceedBtn" class="btn hidden">Acknowledge</button>
+      <div class="boot-actions">
+        <button id="proceedBtn" class="btn hidden">Acknowledge</button>
+        <button id="wipeSaveBtn" class="btn btn-secondary hidden">New Game</button>
+      </div>
     </div>
 
     <!-- Login Screen -->
@@ -38,9 +41,25 @@
     <!-- Travel Console Screen -->
     <div id="travelScreen" class="screen hidden">
       <div class="console">
-        <div class="panel dest-list">
-          <h2>Select Destination</h2>
+
+        <!-- Left column: destinations + vitals -->
+        <div class="console-left">
+          <div class="panel dest-list">
+            <h2>Select Destination</h2>
+          </div>
+          <!-- Health widget lives here, inside the layout -->
+          <div id="healthWidget" class="health-widget hidden">
+            <div class="health-label-row">
+              <span class="health-title">VITALS</span>
+              <span id="healthLabel" class="health-value">100/100</span>
+            </div>
+            <div class="health-bar-track">
+              <div id="healthBar" class="health-bar-fill"></div>
+            </div>
+          </div>
         </div>
+
+        <!-- Right column: navigation log -->
         <div class="panel log-panel">
           <h2>
             Navigation Log
@@ -48,20 +67,10 @@
           </h2>
           <div id="log" class="log"></div>
         </div>
+
       </div>
     </div>
 
-  </div>
-
-  <!-- Health Widget -->
-  <div id="healthWidget" class="health-widget hidden">
-    <div class="health-label-row">
-      <span class="health-title">VITALS</span>
-      <span id="healthLabel" class="health-value">100/100</span>
-    </div>
-    <div class="health-bar-track">
-      <div id="healthBar" class="health-bar-fill"></div>
-    </div>
   </div>
 
   <!-- Travel Overlay -->
