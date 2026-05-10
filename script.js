@@ -88,15 +88,17 @@ const Health = {
     this.stopDrain();
     const rate = this.LOCATION_DRAIN[key];
     if (!rate) return;
-    // Tick every 20s: drain harmful or heal safe locations
+    // Only drain/heal for a fixed number of ticks (representing initial exposure).
+    // After that the suit stabilises and no further passive damage occurs.
+    const MAX_TICKS = rate > 0 ? 2 : 3; // hazard: 2 ticks max; healing: 3 ticks
+    let ticks = 0;
     this.drainInterval = setInterval(() => {
       if (currentLocation !== key) { this.stopDrain(); return; }
+      if (ticks >= MAX_TICKS) { this.stopDrain(); return; }
+      ticks++;
       const delta = rate > 0 ? -rate : Math.abs(rate);
-      const wasBelow = this.current < this.max;
       this.modify(delta);
-      if (rate < 0 && wasBelow && this.current > this.current - delta) {
-        // Healing tick — no message, just render
-      } else if (rate > 0 && this.current < 40) {
+      if (rate > 0 && this.current < 40) {
         appendLog('Nova: Captain, your vitals are deteriorating. Consider leaving.', 'log-nova');
       }
     }, 20000);
@@ -649,8 +651,8 @@ function maybeTriggerDanger(key) {
   setTimeout(() => {
     if (currentLocation !== key) return;
     NovaAI.speakDanger(key);
-    // Danger events deal a small amount of damage
-    Health.modify(-8);
+    // Danger events are warnings only — no additional damage on top of
+    // arrival damage and drain ticks
   }, delay);
 }
 
