@@ -93,115 +93,293 @@ body::after {
 .hidden { display: none !important; }
 
 /* =========================================================
-   Boot Screen
+   Startup — Paper document
    ========================================================= */
-.boot-header {
-  margin-bottom: 1.5rem;
+
+/* Full-page wrapper that sits outside panel-frame */
+.paper-wrap {
+  position: fixed;
+  inset: 0;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 0.3rem;
+  background: #2a2318;
+  background-image:
+    radial-gradient(ellipse at center, #3a3020 0%, #1a1510 100%);
+  z-index: 20000;
 }
 
-.boot-logo {
+.paper {
+  background: #f5f0e0;
+  color: #1a1510;
+  width: min(680px, 90vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 3rem 3.5rem;
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.4),
+    0 12px 40px rgba(0,0,0,0.6),
+    inset 0 0 80px rgba(200,185,140,0.15);
+  font-family: 'Special Elite', 'Courier New', monospace;
+  position: relative;
+  /* Subtle paper texture via pseudo-element */
+}
+
+/* Paper grain texture */
+.paper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.paper > * { position: relative; z-index: 1; }
+
+/* Letterhead */
+.paper-letterhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+}
+
+.paper-ecs-logo {
   font-family: 'Orbitron', sans-serif;
-  font-size: 3.5rem;
+  font-size: 2.2rem;
   font-weight: 900;
-  letter-spacing: 0.6rem;
-  color: #0f4;
-  text-shadow:
-    0 0 10px rgba(15,255,15,0.9),
-    0 0 30px rgba(15,255,15,0.5),
-    0 0 60px rgba(15,255,15,0.2);
-  animation: logoFlicker 5s ease-in-out infinite;
+  letter-spacing: 0.4rem;
+  color: #1a1510;
 }
 
-@keyframes logoFlicker {
-  0%,94%,100% { opacity: 1; }
-  95%  { opacity: 0.6; }
-  97%  { opacity: 1; }
-  98.5%{ opacity: 0.8; }
+.paper-ecs-sub {
+  font-size: 0.6rem;
+  letter-spacing: 0.3rem;
+  color: #5a4e3a;
+  margin-top: 0.2rem;
 }
 
-.boot-subtitle {
-  font-size: 0.7rem;
-  letter-spacing: 0.45rem;
-  color: rgba(141,253,141,0.5);
+.paper-letterhead-right {
+  text-align: right;
 }
 
-.boot-divider {
-  width: 320px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #0f4, transparent);
-  margin-top: 1rem;
+.paper-meta {
+  font-size: 0.62rem;
+  letter-spacing: 0.08rem;
+  color: #5a4e3a;
+  line-height: 1.7;
+  font-family: 'Share Tech Mono', monospace;
 }
 
-.boot-text {
-  font-size: 0.85rem;
-  line-height: 1.9;
-  color: rgba(141,253,141,0.85);
-  max-width: 520px;
-  min-height: 8rem;
-  text-align: left;
-  padding: 0 1rem;
+.paper-rule {
+  border: none;
+  border-top: 1.5px solid #8a7a5a;
+  margin: 1rem 0;
 }
 
-.boot-text.typing::after {
-  content: 'X';
-  animation: cursorBlink 0.9s step-end infinite;
-  color: #0f4;
-}
-@keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-.boot-sig {
-  font-style: italic;
+/* Subject line */
+.paper-subject {
   font-size: 0.78rem;
-  color: rgba(141,253,141,0.4);
-  margin-top: 0.25rem;
-  opacity: 0;
-  transition: opacity 0.6s ease;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 0.05rem;
+  color: #2a2010;
+  margin-bottom: 1.2rem;
+  font-weight: bold;
 }
-.boot-sig.visible { opacity: 1; }
+
+.paper-subject-label {
+  color: #5a4e3a;
+  margin-right: 0.4rem;
+}
+
+/* Body */
+.paper-body {
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: #1e1a10;
+}
+
+.paper-body p {
+  margin: 0 0 0.9rem 0;
+}
+
+/* Signature block */
+.paper-sig-block {
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+.paper-sig-name {
+  font-family: 'Special Elite', monospace;
+  font-size: 1.1rem;
+  color: #1a1510;
+  margin-bottom: 0.2rem;
+}
+
+.paper-sig-title {
+  font-size: 0.65rem;
+  font-family: 'Share Tech Mono', monospace;
+  color: #5a4e3a;
+  letter-spacing: 0.06rem;
+}
+
+.paper-sig-stamp {
+  margin-top: 0.8rem;
+  display: inline-block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2rem;
+  color: #8a4a2a;
+  border: 1.5px solid #8a4a2a;
+  padding: 0.25rem 0.6rem;
+  opacity: 0.8;
+  transform: rotate(-2deg);
+}
+
+/* Action buttons on paper */
+.paper-actions {
+  margin-top: 1.8rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.paper-btn {
+  padding: 0.6rem 1.4rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  background: #1a1510;
+  color: #f0e8cc;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.paper-btn:hover  { background: #2e2518; transform: scale(1.02); }
+.paper-btn:active { transform: scale(0.98); }
+
+.paper-btn-secondary {
+  background: transparent;
+  color: #8a4a2a;
+  border: 1.5px solid #8a4a2a;
+}
+.paper-btn-secondary:hover { background: rgba(138,74,42,0.08); }
 
 /* =========================================================
-   Login Screen
+   Login — Dark monitor / power screen
    ========================================================= */
-.login-logo {
+.monitor-wrap {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 19000;
+}
+
+.monitor-off {
+  width: min(820px, 92vw);
+  height: min(72vh, 600px);
+  background: #030608;
+  border: 2px solid #0a1a10;
+  box-shadow:
+    0 0 0 8px #060c08,
+    0 0 0 10px #0a1008,
+    0 0 60px rgba(0,0,0,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Very faint scanlines on the off monitor */
+.monitor-off::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,20,10,0.15) 3px,
+    rgba(0,20,10,0.15) 4px
+  );
+  pointer-events: none;
+}
+
+.monitor-center {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 2rem;
+  gap: 0.75rem;
+  z-index: 1;
 }
 
-.login-title {
+.monitor-label {
   font-family: 'Orbitron', sans-serif;
-  font-size: 1.9rem;
-  font-weight: 700;
-  letter-spacing: 0.08rem;
-  text-shadow: 0 0 10px rgba(15,255,15,0.5);
+  font-size: 0.7rem;
+  letter-spacing: 0.4rem;
+  color: rgba(141,253,141,0.08);
 }
 
-.login-tagline {
-  font-size: 0.75rem;
-  color: rgba(141,253,141,0.5);
+.monitor-sublabel {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.6rem;
   letter-spacing: 0.2rem;
+  color: rgba(141,253,141,0.04);
+  margin-bottom: 1.5rem;
 }
 
-.login-divider {
-  width: 220px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #0f4, transparent);
-  margin: 0.5rem 0;
+/* Power button */
+.power-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #0a1208;
+  border: 2px solid rgba(0,120,40,0.3);
+  color: rgba(0,180,60,0.5);
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow:
+    0 0 8px rgba(0,180,60,0.1),
+    inset 0 0 12px rgba(0,0,0,0.8);
 }
 
-.login-status {
-  font-size: 0.68rem;
-  letter-spacing: 0.35rem;
-  color: #0f4;
-  animation: statusPulse 2.2s ease-in-out infinite;
+.power-btn:hover {
+  border-color: rgba(15,255,80,0.7);
+  color: rgba(15,255,80,0.9);
+  box-shadow:
+    0 0 20px rgba(15,255,60,0.4),
+    0 0 40px rgba(15,255,60,0.15),
+    inset 0 0 12px rgba(0,0,0,0.6);
+  background: #0e1a10;
 }
-@keyframes statusPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.power-btn:active {
+  transform: scale(0.94);
+}
+
+.power-icon {
+  line-height: 1;
+  position: relative;
+  top: -1px;
+}
+
+.monitor-hint {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.25rem;
+  color: rgba(0,180,60,0.2);
+  margin-top: 0.5rem;
+  animation: hintPulse 3s ease-in-out infinite;
+}
+@keyframes hintPulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
 
 /* =========================================================
    Buttons
@@ -631,30 +809,4 @@ button.traveling {
 }
 #journalToggle:hover { background: rgba(15,255,15,0.07); color: #8dfd8d; border-color: #0f4; }
 
-/* =========================================================
-   Boot screen action row (Acknowledge + New Game)
-   ========================================================= */
-.boot-actions {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  margin-top: 0.5rem;
-}
-
-/* Secondary / destructive button variant */
-.btn-secondary {
-  background: transparent;
-  color: rgba(255, 100, 100, 0.75);
-  border: 1px solid rgba(255, 80, 80, 0.4);
-  font-size: 0.78rem;
-  letter-spacing: 0.15rem;
-  padding: 0.6rem 1.2rem;
-}
-.btn-secondary:hover {
-  background: rgba(255, 60, 60, 0.1);
-  color: #ff8888;
-  border-color: rgba(255, 80, 80, 0.8);
-  box-shadow: 0 0 12px rgba(255, 60, 60, 0.3);
-  transform: scale(1.02);
-}
+/* boot-actions removed — replaced by paper-actions */
