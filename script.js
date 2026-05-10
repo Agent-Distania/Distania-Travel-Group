@@ -1,9 +1,9 @@
 // ================================================================
 // DOM
 // ================================================================
-const startupScreen     = document.getElementById('startupScreen');
-const loginScreen       = document.getElementById('loginScreen');
-const travelScreen      = document.getElementById('travelScreen');
+const startupScreen     = document.getElementById('startupScreen');   // paper-wrap
+const loginScreen       = document.getElementById('loginScreen');     // monitor-wrap
+const travelScreen      = document.getElementById('travelScreen');    // panel-frame
 const destList          = document.querySelector('.dest-list');
 const logEl             = document.getElementById('log');
 const travelOverlay     = document.getElementById('travelOverlay');
@@ -459,35 +459,14 @@ function appendLog(text, cssClass = '') {
 }
 
 // ================================================================
-// Boot Typewriter
+// Startup — show save-wipe button if a save exists (no typewriter)
 // ================================================================
-const BOOT_TEXT = `Welcome recruit to the Exodus Civil Service — the ECS. We work for the unified governments to explore the mega structures that arrived during the Kilko disaster. We must discover who built them, their purpose, how old they are, and most importantly, why they are here. Good luck explorer. Your ship is waiting.`;
-
-function runBootSequence() {
-  const bootEl  = document.getElementById('bootText');
-  const sigEl   = document.getElementById('bootSig');
-  const procBtn = document.getElementById('proceedBtn');
-  bootEl.classList.add('typing');
-  let i = 0;
-  const type = () => {
-    if (i < BOOT_TEXT.length) {
-      bootEl.textContent += BOOT_TEXT[i++];
-      setTimeout(type, 28);
-    } else {
-      bootEl.classList.remove('typing');
-      sigEl.classList.add('visible');
-      setTimeout(() => {
-        procBtn.classList.remove('hidden');
-        // Only show New Game if there's actually a save to wipe
-        try {
-          if (localStorage.getItem(SAVE_KEY)) {
-            document.getElementById('wipeSaveBtn').classList.remove('hidden');
-          }
-        } catch(_) {}
-      }, 600);
+function initStartupScreen() {
+  try {
+    if (localStorage.getItem(SAVE_KEY)) {
+      document.getElementById('wipeSaveBtn').classList.remove('hidden');
     }
-  };
-  setTimeout(type, 400);
+  } catch(_) {}
 }
 
 // ================================================================
@@ -1093,12 +1072,14 @@ function wipeSaveAndRestart() {
 window.addEventListener('DOMContentLoaded', () => {
   initJournalTabs();
 
+  // Acknowledge — paper doc to dark monitor screen
   document.getElementById('proceedBtn')?.addEventListener('click', e => {
     e.preventDefault();
     startupScreen.classList.add('hidden');
     loginScreen.classList.remove('hidden');
   });
 
+  // Power On — dark monitor to travel console
   document.getElementById('onBtn')?.addEventListener('click', e => {
     e.preventDefault();
     loginScreen.classList.add('hidden');
@@ -1114,31 +1095,20 @@ window.addEventListener('DOMContentLoaded', () => {
   journalToggle?.addEventListener('click', renderJournal);
   document.getElementById('closeJournal')?.addEventListener('click', () => missionLogOverlay.classList.add('hidden'));
 
-  // Wipe save button — shown after boot text finishes alongside Acknowledge
+  // New Game — wipe save then go straight to monitor screen (let player press power)
   document.getElementById('wipeSaveBtn')?.addEventListener('click', () => {
     wipeSaveAndRestart();
     startupScreen.classList.add('hidden');
-    loginScreen.classList.add('hidden');
-    travelScreen.classList.remove('hidden');
-    journalToggle.classList.remove('hidden');
-    document.getElementById('healthWidget').classList.remove('hidden');
-    Health.render();
-    if (destinationsReady && dialogueReady) {
-      // Go straight to restoreSession — skip startTravelConsole so we
-      // don't accidentally write a blank save over the wiped state.
-      restoreSession();
-    } else {
-      pendingStart = true;
-    }
+    loginScreen.classList.remove('hidden');
   });
 
-  runBootSequence();
+  // Show save-wipe button if a save exists — no typewriter, doc is already visible
+  initStartupScreen();
 
-  // Safety-net: flush state to storage when the tab closes,
-  // but only if the player has actually traveled somewhere this session.
+  // Safety-net: flush state on tab close
   window.addEventListener('beforeunload', () => {
-    if (currentHub !== null) {
-      saveState();
-    }
+    if (currentHub !== null) saveState();
   });
+
+
 });
