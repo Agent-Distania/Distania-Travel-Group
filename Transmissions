@@ -1,0 +1,83 @@
+{
+  "ECS": [
+    { "from": "ECS Command — Internal Memo", "body": "Excavation quotas for Q3 have been revised upward by 40%. All site leads are expected to meet new targets. Incident reports from the previous quarter are under review and will not affect performance assessments at this time." },
+    { "from": "ECS Command — Personnel Notice", "body": "Dr. Yael Orin has been reassigned from the Europa Core Chamber project to administrative duties pending review. Her research files have been transferred to the classified archive. No further inquiries regarding her work should be directed to this office." },
+    { "from": "ECS Command — Field Directive 7-C", "body": "All teams operating within 500 metres of an active resonance node are reminded that the elevated readings are within acceptable parameters. The definition of acceptable parameters is classified at clearance level 4 and above." },
+    { "from": "ECS Command — Budget Authorisation", "body": "Funding approved for Project STILL WATER, cycle 12. Allocation: 4.2 billion credits. Purpose: classified. Duration: open-ended. Oversight committee has been briefed. Further questions should be directed to Chief Amplifier's office." },
+    { "from": "ECS Command — Welfare Check 441", "body": "This is a routine welfare check for all field personnel stationed at deep-site locations. Please confirm: have you observed any phenomena you have not yet reported? This is not a disciplinary inquiry. Honesty is encouraged." },
+    { "from": "ECS Command — Site Safety Notice", "body": "Following the events of last Tuesday at Site 7-Gamma, all personnel are reminded that personal recording devices are prohibited inside the structure perimeter. This policy has always been in place. It is simply being re-emphasised." },
+    { "from": "ECS Command — Internal Memo", "body": "The term 'hostile' is not to be used in any official documentation when describing megastructure behaviour. Approved terminology: reactive, responsive, ambient-interactive. Please update your field reports accordingly." },
+    { "from": "ECS Command — Transfer Notice", "body": "The following personnel have been transferred to the Quiet Programme effective immediately: Haddad, T. Voss, M. Reyes, C. Their previous assignments are now classified. Please do not attempt to contact them through standard channels." },
+    { "from": "ECS Command — Excavation Update", "body": "Depth records at the New York Torta site have been broken for the third consecutive month. Teams are advised that the sounds reported below level 9 are being investigated and are not a cause for concern. Work continues as scheduled." },
+    { "from": "ECS Command — Internal Memo", "body": "Reminder: all anomalous readings are to be reported to your direct supervisor before being entered into the shared database. The 48-hour review window is mandatory. This is for data integrity purposes only." },
+    { "from": "ECS Command — Field Directive 12-A", "body": "Effective immediately, solo entry into any megastructure interior is prohibited. This policy applies regardless of rank or clearance level. The reasons for this update will be communicated in the next all-hands briefing, date TBD." },
+    { "from": "ECS Command — Research Update", "body": "Phase 3 analysis of the recovered Kilko core samples has been completed. Results have been forwarded to the Chief Amplifier directly. The research team has been stood down pending further instruction. Their findings are considered preliminary." },
+    { "from": "ECS Command — Internal Memo", "body": "Several field reports have referenced a recurring symbol found across multiple unconnected megastructure sites. Researchers are reminded that pattern recognition is a known cognitive bias under stress conditions. Document but do not speculate." },
+    { "from": "ECS Command — Personnel Notice", "body": "Dr. Farouk Nasser's recent publication on megastructure temporal anomalies has been retracted pending peer review. Dr. Nasser is currently on extended leave. His position at the Europa Research Base will be filled on a temporary basis." },
+    { "from": "ECS Command — Operational Update", "body": "The deep signal array at Forward Recon Station has been logging transmissions on an unregistered frequency for eleven days. Analysis is ongoing. Teams are advised to log but not respond to any unusual signals until further notice." },
+    { "from": "ECS Command — Internal Memo", "body": "It has come to our attention that certain field personnel have been sharing unverified theories about megastructure origins via personal comms. This is discouraged. All hypotheses should be submitted through official research channels only." },
+    { "from": "ECS Command — Site Closure Notice", "body": "Sub-level 14 of the Ancient Vault has been sealed indefinitely following the survey team's last report. The area is classified as restricted pending structural review. The survey team is currently undergoing debriefing." }
+  ],
+  "Government": [
+    { "from": "Unified Government — Press Office", "body": "Approved public statement re: Pacific anomalies: 'Researchers continue to make exciting progress in understanding the geological features of our ocean floors. Public safety remains the highest priority. No further comment at this time.'" },
+    { "from": "Unified Government — Oversight Committee", "body": "ECS expenditure for the fiscal year has exceeded projections by 340%. The committee has requested a detailed breakdown. ECS Command has responded that the relevant documentation is classified. The committee is reviewing its options." },
+    { "from": "Unified Government — Internal Briefing", "body": "Public awareness of the megastructure programme continues to be managed at acceptable levels. Recommended messaging: scientific curiosity, human progress, controlled optimism. Avoid: scale references, age estimates, the word 'infinite.'" },
+    { "from": "Unified Government — Security Directive", "body": "All media organisations broadcasting within the Jupiter orbital zone are reminded of the Restricted Reporting Act. Coverage of research station activities requires prior approval. Violations will be handled under emergency communications law." },
+    { "from": "Unified Government — Internal Memo", "body": "The Kilko disaster memorial commission has requested access to pre-disaster government communications. The request has been denied on grounds of national security. The commission's chair has been invited to a private briefing instead." },
+    { "from": "Unified Government — Policy Update", "body": "The public classification of the Kilko event remains: large-scale geological incident of natural origin. Internal classification remains: eyes only. Personnel with access to internal classification are reminded of their non-disclosure obligations." },
+    { "from": "Unified Government — Press Office", "body": "In response to questions from independent journalists: the government confirms that megastructure research is proceeding safely, within budget, and in the interests of all humanity. The journalists' follow-up questions are under review." },
+    { "from": "Unified Government — Internal Briefing", "body": "Polling indicates 34% of the population believes the government is not being fully transparent about the megastructures. Recommended response: increased positive press coverage, new public education initiatives, no substantive disclosures." },
+    { "from": "Unified Government — Oversight Committee", "body": "Three committee members have submitted requests to personally visit an active megastructure excavation site. All three requests have been denied citing security protocols. One member has since withdrawn from the committee. The other two have not commented." },
+    { "from": "Unified Government — Emergency Legislation", "body": "The Megastructure Sovereignty Act has passed its second reading. Key provisions: all megastructure materials are the property of the unified government, private possession without permit is a criminal offence, enforcement to begin immediately." },
+    { "from": "Unified Government — Internal Memo", "body": "The term 'pre-human civilisation' is not to be used in any government communication. Approved language: 'ancient geological formations of unknown origin.' The distinction is important for public stability reasons." },
+    { "from": "Unified Government — Security Directive", "body": "Independent researchers attempting to access megastructure sites without ECS authorisation have increased by 600% this year. Security budgets at all sites have been revised upward. Trespassers are to be detained and referred to federal authorities." },
+    { "from": "Unified Government — Internal Briefing", "body": "The question of whether to formally acknowledge non-terrestrial origin of the megastructures has been deferred for the fourth consecutive quarter. The committee notes that deferral is itself becoming a public relations challenge." },
+    { "from": "Unified Government — Press Office", "body": "Statement re: worker injury reports at excavation sites: 'All ECS worksites operate under strict safety protocols. Reported incidents are within statistically normal parameters for large-scale industrial operations. Worker welfare is our priority.'" },
+    { "from": "Unified Government — Classified Annex 9", "body": "Should the contents of Research File DEPTH ZERO become public, the following response protocol is to be activated immediately. Step one: denial. Step two: contextualisation. Step three: [REMAINDER OF DOCUMENT REDACTED]" }
+  ],
+  "Corporate": [
+    { "from": "Halcyon Extraction Corp — Internal Memo", "body": "The ECS exclusivity window on Pacific site materials closes in 18 months. Legal is preparing our extraction permit applications now. If we move fast we can have rigs in the water before the government realises what we're filing for." },
+    { "from": "Solis Industries — Executive Briefing", "body": "Q4 projections for megastructure-derived materials are up 800%. The board is pleased. Risk assessment flagged several worker safety concerns which have been noted. We are proceeding with the accelerated extraction timeline." },
+    { "from": "Halcyon Extraction Corp — R&D Division", "body": "The material we pulled from the Torta site last month is still outperforming every alloy in our catalogue by a factor of twelve. We don't know why. We don't know how. We're filing the patent anyway. Ignorance is not a legal barrier." },
+    { "from": "NovaTech Biosciences — Internal Memo", "body": "Three of our researchers have requested reassignment away from the abyssal organism project. Their concerns have been noted and their requests denied. Signing bonuses have been increased. Project continues on schedule." },
+    { "from": "Solis Industries — Corporate Intelligence", "body": "ECS field agent activity in the Vega system has increased significantly. Either they've found something in the Crystal Canyon or they're watching us. Possibly both. Recommend increasing our own surveillance of ECS comms." },
+    { "from": "Meridian Group — Investor Update", "body": "Our megastructure technology portfolio continues to outperform all projections. Investors are reminded that some of our holdings involve materials with classified properties. Due diligence disclosures are available upon request, subject to NDA." },
+    { "from": "Halcyon Extraction Corp — Site Manager Report", "body": "Lost two more drill heads at depth today. At this rate we'll blow the equipment budget by end of month. Also the crew is asking about the humming again. Told them it's vibration from the drill. They know it's not the drill." },
+    { "from": "NovaTech Biosciences — Legal Division", "body": "The liability waiver for megastructure exposure has been updated to include temporal displacement, unexplained memory loss, and cognitive restructuring. All field personnel must sign before commencing work. Non-signatories will be reassigned." },
+    { "from": "Solis Industries — Executive Briefing", "body": "Competitor analysis indicates Halcyon has found something significant at their Jupiter platform. Their stock is up 40% with no public announcement. We need people on the inside. Authorise the recruitment budget." },
+    { "from": "Meridian Group — R&D Update", "body": "The AI systems we've been running on megastructure-adjacent hardware are showing unexpected capability jumps. Legal wants a full review before we deploy. Revenue wants to deploy now. Revenue has more votes on the board. Deploying now." },
+    { "from": "Halcyon Extraction Corp — Internal Memo", "body": "Following last week's incident at Platform 3, all workers have been offered counselling. Counselling attendance is mandatory. The specific nature of the incident is not to be discussed outside the counselling sessions. Or inside them." },
+    { "from": "NovaTech Biosciences — Research Director", "body": "The organisms from the abyssal lab are demonstrating learning behaviours that exceed our containment protocols. We've upgraded containment twice this month. I'm requesting a third upgrade and an emergency ethics review. Please respond quickly." },
+    { "from": "Solis Industries — Communications Division", "body": "Several of our researchers have been approached by independent journalists. Standard response: no comment, refer to PR. If journalists are persistent, refer to legal. If legal cannot resolve, refer to the executive team. Do not improvise." },
+    { "from": "Meridian Group — Internal Memo", "body": "The megastructure fragment in Lab 7 has been growing. Not metaphorically. It is physically larger than when we acquired it. By approximately 3%. This has not been reported to the ECS or the government. It will not be." },
+    { "from": "Halcyon Extraction Corp — CEO Address", "body": "I want to be clear: we are not in the business of understanding the megastructures. We are in the business of extracting value from them. Leave the philosophy to the ECS. We are here to make money. Stay focused." },
+    { "from": "NovaTech Biosciences — Acquisitions", "body": "We've identified six ECS researchers whose contracts expire in the next quarter. Offer packages are prepared. We want their data more than we want them, but hiring them is cheaper than litigating for it. Make the offers." },
+    { "from": "Solis Industries — Safety Division", "body": "Worker compensation claims related to megastructure exposure are up 200%. The claims cite symptoms including memory gaps, joint pain, and what several workers describe as 'hearing things that aren't there.' Claims are being reviewed case by case." }
+  ],
+  "novaReactions": {
+    "ECS": [
+      "Nova: ECS memo. They're getting better at making nothing sound like something.",
+      "Nova: Another personnel transfer to somewhere unspecified. That list is getting long.",
+      "Nova: 'Within acceptable parameters.' I wonder who decided what the parameters were.",
+      "Nova: Project STILL WATER. That's a new one. I'll add it to the list of things nobody will explain.",
+      "Nova: The Quiet Programme again. I don't like that name. I've never liked that name.",
+      "Nova: Someone got their report retracted. In my experience that usually means they were right."
+    ],
+    "Government": [
+      "Nova: Government press release. I'll summarise: everything is fine, please stop asking questions.",
+      "Nova: They deferred the question again. Fourth time. At some point deferral is an answer.",
+      "Nova: 'Within statistically normal parameters.' I keep hearing that phrase. It's doing a lot of work.",
+      "Nova: The oversight committee is being stonewalled. I almost feel sorry for them. Almost.",
+      "Nova: They redacted the rest. Somehow that's more unsettling than if they'd just said it.",
+      "Nova: Approved language: 'ancient geological formations of unknown origin.' Easier to say than the truth, I suppose."
+    ],
+    "Corporate": [
+      "Nova: Corporate memo. The gap between what they know and what they care about is impressive.",
+      "Nova: They're filing patents on things they don't understand. Bold strategy.",
+      "Nova: 'Revenue has more votes than legal.' I'm going to think about that for a while.",
+      "Nova: The fragment is growing and they're not telling anyone. Of course they're not.",
+      "Nova: Mandatory counselling where you can't discuss what happened. Very helpful. Very normal.",
+      "Nova: They want the data more than the researchers. At least they're honest about it internally."
+    ]
+  }
+}
