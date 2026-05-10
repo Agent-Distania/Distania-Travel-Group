@@ -316,7 +316,7 @@ function onDataReady() {
   if (pendingStart) { pendingStart = false; startTravelConsole(); }
 }
 
-fetch('destinations.json')
+fetch(`destinations.json?v=${Date.now()}`)
   .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
   .then(data => {
     mainDestinations.push(...data.mainDestinations);
@@ -332,8 +332,8 @@ fetch('destinations.json')
   });
 
 Promise.all([
-  fetch('novaDialogue.json').then(r => r.json()),
-  fetch('ambientDialogue.json').then(r => r.json())
+  fetch(`novaDialogue.json?v=${Date.now()}`).then(r => r.json()),
+  fetch(`ambientDialogue.json?v=${Date.now()}`).then(r => r.json())
 ]).then(([nova, ambient]) => {
   NovaAI.dialogue = nova;
   Object.assign(ambientDialogue, ambient);
