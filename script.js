@@ -28,6 +28,11 @@ const ambientQueues = {};
 const mainDestinations   = [];
 const destinationConfigs = {};
 const ambientDialogue    = {};
+const transmissions      = {};  // loaded from transmissions.json
+
+let transmissionTimer   = null;
+const TRANSMISSION_INTERVAL_MIN = 180000; // 3 minutes
+const TRANSMISSION_INTERVAL_MAX = 240000; // 4 minutes
 
 let destinationsReady = false;
 let dialogueReady     = false;
@@ -335,10 +340,12 @@ fetch(`destinations.json?v=${Date.now()}`)
 
 Promise.all([
   fetch(`novaDialogue.json?v=${Date.now()}`).then(r => r.json()),
-  fetch(`ambientDialogue.json?v=${Date.now()}`).then(r => r.json())
-]).then(([nova, ambient]) => {
+  fetch(`ambientDialogue.json?v=${Date.now()}`).then(r => r.json()),
+  fetch(`transmissions.json?v=${Date.now()}`).then(r => r.json())
+]).then(([nova, ambient, trans]) => {
   NovaAI.dialogue = nova;
   Object.assign(ambientDialogue, ambient);
+  Object.assign(transmissions, trans);
   dialogueReady = true;
   onDataReady();
 }).catch(err => {
@@ -633,6 +640,64 @@ function clearAmbientTimers() {
   clearTimeout(ambientFirstTimer);
   clearInterval(ambientTimer);
   ambientFirstTimer = ambientTimer = null;
+}
+
+// ================================================================
+// Transmission System
+// ================================================================
+
+// Pick a random item from an array
+function randomFrom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function fireTransmission() {
+  // Only fire when the player is in the travel screen and not mid-travel
+  if (traveling || !currentHub) return;
+
+  const sources = ['ECS', 'Government', 'Corporate'];
+  const source  = randomFrom(sources);
+  const pool    = transmissions[source];
+  if (!pool?.length) return;
+
+  const msg = randomFrom(pool);
+
+  // Log with dedicated transmission CSS classes for distinct visual grouping
+  appendLog(`[ INCOMING TRANSMISSION — ${source.toUpperCase()} ]`, 'log-transmission-header');
+  appendLog(`FROM: ${msg.from}`, 'log-transmission-from');
+  appendLog(msg.body, 'log-transmission-body');
+
+  // Save to heard log so it appears in the journal
+  heardLog.unshift({
+    speaker: msg.from,
+    line: msg.body,
+    location: 'Ship Receiver',
+    time: new Date().toLocaleTimeString()
+  });
+  if (heardLog.length > 80) heardLog.pop();
+
+  // Nova reacts roughly 1 in 3 times, after a short pause
+  if (Math.random() < 0.33) {
+    const reactions = transmissions.novaReactions?.[source];
+    if (reactions?.length) {
+      setTimeout(() => appendLog(randomFrom(reactions), 'log-nova'), 3500);
+    }
+  }
+}
+
+function scheduleNextTransmission() {
+  clearTimeout(transmissionTimer);
+  const delay = TRANSMISSION_INTERVAL_MIN +
+    Math.random() * (TRANSMISSION_INTERVAL_MAX - TRANSMISSION_INTERVAL_MIN);
+  transmissionTimer = setTimeout(() => {
+    fireTransmission();
+    scheduleNextTransmission(); // reschedule after each fire
+  }, delay);
+}
+
+function stopTransmissions() {
+  clearTimeout(transmissionTimer);
+  transmissionTimer = null;
 }
 
 // ================================================================
@@ -998,10 +1063,9 @@ function startTravelConsole() {
   document.getElementById('healthWidget').classList.remove('hidden');
   Health.render();
   restoreSession();
+  // Start the transmission ticker — first one fires after a random 3-4 min delay
+  scheduleNextTransmission();
   // Only write an initial save if there is no existing save yet.
-  // If a save exists we must not overwrite it here — restoreSession
-  // may have left currentHub as null (player was on main screen)
-  // which would corrupt the save with null location data.
   try {
     if (!localStorage.getItem(SAVE_KEY)) saveState();
   } catch(_) {}
