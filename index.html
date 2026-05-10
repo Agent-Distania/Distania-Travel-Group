@@ -9,41 +9,86 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div class="panel-frame">
+  <!-- =====================================================
+       STARTUP — Paper document from Chief Amplifier
+       ===================================================== -->
+  <div id="startupScreen" class="paper-wrap">
+    <div class="paper">
 
-    <!-- Startup / Boot Screen -->
-    <div id="startupScreen" class="screen">
-      <div class="boot-header">
-        <div class="boot-logo">ECS</div>
-        <div class="boot-subtitle">EXODUS CIVIL SERVICE</div>
-        <div class="boot-divider"></div>
+      <!-- Letterhead -->
+      <div class="paper-letterhead">
+        <div class="paper-letterhead-left">
+          <div class="paper-ecs-logo">ECS</div>
+          <div class="paper-ecs-sub">EXODUS CIVIL SERVICE</div>
+        </div>
+        <div class="paper-letterhead-right">
+          <div class="paper-meta">CLASSIFICATION: FIELD PERSONNEL</div>
+          <div class="paper-meta">DOCUMENT REF: ECS-RECRUIT-001</div>
+          <div class="paper-meta">CLEARANCE: LEVEL 1</div>
+        </div>
       </div>
-      <p id="bootText" class="boot-text"></p>
-      <p class="boot-sig" id="bootSig">-- Chief Amplifier</p>
-      <div class="boot-actions">
-        <button id="proceedBtn" class="btn hidden">Acknowledge</button>
-        <button id="wipeSaveBtn" class="btn btn-secondary hidden">New Game</button>
+
+      <div class="paper-rule"></div>
+
+      <!-- Subject line -->
+      <div class="paper-subject">
+        <span class="paper-subject-label">RE:</span>
+        Assignment to Active Field Duty — Immediate Effect
+      </div>
+
+      <!-- Body -->
+      <div class="paper-body">
+        <p>Welcome to the Exodus Civil Service.</p>
+        <p>You have been selected for active field assignment effective immediately. Your vessel has been provisioned, your navigation system is online, and your credentials have been registered with the Distania Travel Group network.</p>
+        <p>Your mandate is straightforward: investigate the megastructures. We need to know who built them, what they were built for, how old they are, and why they are here. You are authorised to travel to all listed destinations, gather field data, and report your findings through standard ECS channels.</p>
+        <p>A word of advice from someone who has been doing this longer than most: the structures do not behave the way the briefings suggest. Trust your instruments. Trust your ship AI. Be careful what you touch. Come back.</p>
+        <p>Your ship is waiting. When you are ready, press the power button on your console.</p>
+      </div>
+
+      <div class="paper-rule"></div>
+
+      <!-- Signature block -->
+      <div class="paper-sig-block">
+        <div class="paper-sig-name">Chief Amplifier</div>
+        <div class="paper-sig-title">Director of Field Operations — Exodus Civil Service</div>
+        <div class="paper-sig-stamp">AUTHORISED ✦ ECS COMMAND</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="paper-actions">
+        <button id="proceedBtn" class="paper-btn">Acknowledge &amp; Continue</button>
+        <button id="wipeSaveBtn" class="paper-btn paper-btn-secondary hidden">New Game</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================
+       LOGIN — Dark monitor screen, power button
+       ===================================================== -->
+  <div id="loginScreen" class="monitor-wrap hidden">
+    <div class="monitor-off">
+      <div class="monitor-center">
+        <div class="monitor-label">DISTANIA TRAVEL GROUP</div>
+        <div class="monitor-sublabel">Navigation Console — Mark IV</div>
+        <button id="onBtn" class="power-btn" title="Power On">
+          <span class="power-icon">⏻</span>
+        </button>
+        <div class="monitor-hint">PRESS TO POWER ON</div>
       </div>
     </div>
+  </div>
 
-    <!-- Login Screen -->
-    <div id="loginScreen" class="screen hidden">
-      <div class="login-logo">
-        <div class="login-title">Distania Travel Group</div>
-        <div class="login-tagline">Your journey is our guarantee</div>
-        <div class="login-divider"></div>
-        <div class="login-status">SYSTEM READY</div>
-      </div>
-      <button id="onBtn" class="btn">Power On</button>
-    </div>
-
-    <!-- Travel Console Screen -->
-    <div id="travelScreen" class="screen hidden">
+  <!-- =====================================================
+       TRAVEL CONSOLE
+       ===================================================== -->
+  <div id="travelScreen" class="panel-frame hidden">
+    <div class="screen">
       <div class="console">
 
         <!-- Left column: destinations + vitals -->
@@ -51,7 +96,6 @@
           <div class="panel dest-list">
             <h2>Select Destination</h2>
           </div>
-          <!-- Health widget lives here, inside the layout -->
           <div id="healthWidget" class="health-widget hidden">
             <div class="health-label-row">
               <span class="health-title">VITALS</span>
@@ -74,7 +118,6 @@
 
       </div>
     </div>
-
   </div>
 
   <!-- Travel Overlay -->
