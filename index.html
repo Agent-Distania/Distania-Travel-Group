@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Distania Travel Group</title>
+  <!-- Prevent browser caching during development -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -13,8 +14,13 @@
 </head>
 <body>
 
+  <!-- =====================================================
+       STARTUP — Paper document from Chief Amplifier
+       ===================================================== -->
   <div id="startupScreen" class="paper-wrap">
     <div class="paper">
+
+      <!-- Letterhead -->
       <div class="paper-letterhead">
         <div class="paper-letterhead-left">
           <div class="paper-ecs-logo">ECS</div>
@@ -26,11 +32,16 @@
           <div class="paper-meta">CLEARANCE: LEVEL 1</div>
         </div>
       </div>
+
       <div class="paper-rule"></div>
+
+      <!-- Subject line -->
       <div class="paper-subject">
         <span class="paper-subject-label">RE:</span>
         Assignment to Active Field Duty — Immediate Effect
       </div>
+
+      <!-- Body -->
       <div class="paper-body">
         <p>Welcome to the Exodus Civil Service.</p>
         <p>You have been selected for active field assignment effective immediately. Your vessel has been provisioned, your navigation system is online, and your credentials have been registered with the Distania Travel Group network.</p>
@@ -38,51 +49,49 @@
         <p>A word of advice from someone who has been doing this longer than most: the structures do not behave the way the briefings suggest. Trust your instruments. Trust your ship AI. Be careful what you touch. Come back.</p>
         <p>Your ship is waiting. When you are ready, press the power button on your console.</p>
       </div>
+
       <div class="paper-rule"></div>
+
+      <!-- Signature block -->
       <div class="paper-sig-block">
         <div class="paper-sig-name">Chief Amplifier</div>
         <div class="paper-sig-title">Director of Field Operations — Exodus Civil Service</div>
         <div class="paper-sig-stamp">AUTHORISED ✦ ECS COMMAND</div>
       </div>
+
+      <!-- Actions -->
       <div class="paper-actions">
         <button id="proceedBtn" class="paper-btn">Acknowledge &amp; Continue</button>
         <button id="wipeSaveBtn" class="paper-btn paper-btn-secondary hidden">New Game</button>
       </div>
+
     </div>
   </div>
 
+  <!-- =====================================================
+       LOGIN — Dark monitor screen, power button
+       ===================================================== -->
   <div id="loginScreen" class="monitor-wrap hidden">
-    <div class="monitor-off" id="monitorOff">
-      <div class="monitor-center" id="monitorIdle">
+    <div class="monitor-off">
+      <div class="monitor-center">
         <div class="monitor-label">DISTANIA TRAVEL GROUP</div>
         <div class="monitor-sublabel">Navigation Console — Mark IV</div>
         <button id="onBtn" class="power-btn" title="Power On">
-          <span class="power-icon">&#x23FB;</span>
+          <span class="power-icon">⏻</span>
         </button>
         <div class="monitor-hint">PRESS TO POWER ON</div>
-      </div>
-      <div class="boot-flicker hidden" id="bootFlicker"></div>
-      <div class="boot-post hidden" id="bootPost">
-        <div class="post-lines" id="postLines"></div>
-      </div>
-      <div class="boot-wall hidden" id="bootWall">
-        <div class="wall-text" id="wallText"></div>
-      </div>
-      <div class="boot-terminal hidden" id="bootTerminal">
-        <div class="terminal-logo">DISTANIA TRAVEL GROUP</div>
-        <div class="terminal-sub">Navigation Console — Mark IV</div>
-        <div class="terminal-divider"></div>
-        <div class="terminal-status" id="terminalStatus"></div>
-        <div class="terminal-proceed" id="terminalProceed">
-          <span class="terminal-cursor">&#x2588;</span> SYSTEM READY — PRESS ANY KEY TO CONTINUE
-        </div>
       </div>
     </div>
   </div>
 
+  <!-- =====================================================
+       TRAVEL CONSOLE
+       ===================================================== -->
   <div id="travelScreen" class="panel-frame hidden">
     <div class="screen">
       <div class="console">
+
+        <!-- Left column: destinations + vitals -->
         <div class="console-left">
           <div class="panel dest-list">
             <h2>Select Destination</h2>
@@ -97,6 +106,8 @@
             </div>
           </div>
         </div>
+
+        <!-- Right column: navigation log -->
         <div class="panel log-panel">
           <h2>
             Navigation Log
@@ -104,12 +115,15 @@
           </h2>
           <div id="log" class="log"></div>
         </div>
+
       </div>
     </div>
   </div>
 
+  <!-- Travel Overlay -->
   <div id="travelOverlay" class="travel-overlay hidden">Engaging transit...</div>
 
+  <!-- Journal Overlay -->
   <div id="missionLogOverlay" class="mission-log-overlay hidden">
     <div class="mission-log-inner">
       <div class="mission-log-header">
