@@ -1,15 +1,15 @@
 // ================================================================
-// DOM — declared as lets so they can be assigned inside DOMContentLoaded
+// DOM
 // ================================================================
-let startupScreen;
-let loginScreen;
-let travelScreen;
-let destList;
-let logEl;
-let travelOverlay;
-let missionIndicator;
-let journalToggle;
-let missionLogOverlay;
+const startupScreen    = document.getElementById('startupScreen');
+const loginScreen      = document.getElementById('loginScreen');
+const travelScreen     = document.getElementById('travelScreen');
+const destList         = document.querySelector('.dest-list');
+const logEl            = document.getElementById('log');
+const travelOverlay    = document.getElementById('travelOverlay');
+const missionIndicator = document.getElementById('missionIndicator');
+const journalToggle    = document.getElementById('journalToggle');
+const missionLogOverlay= document.getElementById('missionLogOverlay');
 
 // ================================================================
 // State
@@ -1255,17 +1255,6 @@ function wipeSaveAndRestart() {
 // Event Listeners
 // ================================================================
 window.addEventListener('DOMContentLoaded', () => {
-  // Assign all DOM references now that the document is fully parsed
-  startupScreen    = document.getElementById('startupScreen');
-  loginScreen      = document.getElementById('loginScreen');
-  travelScreen     = document.getElementById('travelScreen');
-  destList         = document.querySelector('.dest-list');
-  logEl            = document.getElementById('log');
-  travelOverlay    = document.getElementById('travelOverlay');
-  missionIndicator = document.getElementById('missionIndicator');
-  journalToggle    = document.getElementById('journalToggle');
-  missionLogOverlay= document.getElementById('missionLogOverlay');
-
   initJournalTabs();
 
   // Acknowledge — paper doc to dark monitor screen
