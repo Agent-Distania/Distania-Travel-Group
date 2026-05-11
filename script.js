@@ -1,15 +1,15 @@
 // ================================================================
 // DOM
 // ================================================================
-const startupScreen     = document.getElementById('startupScreen');   // paper-wrap
-const loginScreen       = document.getElementById('loginScreen');     // monitor-wrap
-const travelScreen      = document.getElementById('travelScreen');    // panel-frame
-const destList          = document.querySelector('.dest-list');
-const logEl             = document.getElementById('log');
-const travelOverlay     = document.getElementById('travelOverlay');
-const missionIndicator  = document.getElementById('missionIndicator');
-const journalToggle     = document.getElementById('journalToggle');
-const missionLogOverlay = document.getElementById('missionLogOverlay');
+const startupScreen    = document.getElementById('startupScreen');
+const loginScreen      = document.getElementById('loginScreen');
+const travelScreen     = document.getElementById('travelScreen');
+const destList         = document.querySelector('.dest-list');
+const logEl            = document.getElementById('log');
+const travelOverlay    = document.getElementById('travelOverlay');
+const missionIndicator = document.getElementById('missionIndicator');
+const journalToggle    = document.getElementById('journalToggle');
+const missionLogOverlay= document.getElementById('missionLogOverlay');
 
 // ================================================================
 // State
@@ -468,6 +468,246 @@ function initStartupScreen() {
     }
   } catch(_) {}
 }
+
+// ================================================================
+// Monitor Boot Sequence
+// ================================================================
+const POST_CHECKS = [
+  { label: 'BIOS VERSION 4.7.2 — EXODUS CIVIL SERVICE',       result: '',     type: '' },
+  { label: 'CPU CHECK — QUANTUM CORE X9 (8 CORES)',           result: 'OK',   type: 'ok' },
+  { label: 'MEMORY — 128TB ALLOCATED / 128TB CLEAR',          result: 'OK',   type: 'ok' },
+  { label: 'ZERO-POINT DRIVE — NOMINAL',                      result: 'OK',   type: 'ok' },
+  { label: 'HULL INTEGRITY SENSORS — ONLINE',                 result: 'OK',   type: 'ok' },
+  { label: 'NAVIGATION ARRAY — CALIBRATING',                  result: 'OK',   type: 'ok' },
+  { label: 'DISTANIA TRAVEL GROUP NETWORK — CONNECTING',      result: 'OK',   type: 'ok' },
+  { label: 'ECS CREDENTIALS — VERIFIED',                      result: 'OK',   type: 'ok' },
+  { label: 'LIFE SUPPORT — NOMINAL',                          result: 'OK',   type: 'ok' },
+  { label: 'COMMUNICATIONS ARRAY — ACTIVE',                   result: 'OK',   type: 'ok' },
+  { label: 'NOVA AI CORE — INITIALISING',                     result: 'OK',   type: 'ok' },
+  { label: 'WEAPONS SYSTEMS — LOCKED (CIVILIAN MODE)',        result: 'WARN', type: 'warn' },
+  { label: 'DEEP SCAN ARRAY — SIGNAL INTERFERENCE DETECTED', result: 'WARN', type: 'warn' },
+  { label: 'ANOMALY LOG — 14 UNRESOLVED ENTRIES',             result: 'WARN', type: 'warn' },
+  { label: 'MEGASTRUCTURE PROXIMITY WARNING — SUPPRESSED',    result: 'WARN', type: 'warn' },
+  { label: 'LOADING DISTANIA NAVIGATION TERMINAL...',         result: '',     type: '' },
+];
+
+const WALL_LINES = [
+  'INIT KERNEL 7.4.1-ECS // LOADING MODULES //',
+  'drv_load: quantum_nav.sys................OK',
+  'drv_load: hull_integrity.sys.............OK',
+  'drv_load: nova_ai_core.sys...............OK',
+  'drv_load: comms_array.sys................OK',
+  'drv_load: zeropoint_engine.sys...........OK',
+  'drv_load: life_support.sys...............OK',
+  'drv_load: sensor_grid.sys................OK',
+  'drv_load: anomaly_logger.sys.............OK',
+  'drv_load: medical_systems.sys............OK',
+  'net_init: distania_travel_group_v4.......',
+  'net_auth: ECS_FIELD_CREDENTIALS..........',
+  'net_sync: destination_registry...........',
+  'net_sync: ambient_dialogue_cache.........',
+  'net_sync: nova_personality_matrix.......',
+  'mem_alloc: 0x00000000 -> 0x7FFFFFFF.....OK',
+  'mem_alloc: 0x80000000 -> 0xFFFFFFFF.....OK',
+  'INTEGRITY_CHECK: SECTOR_A...............PASS',
+  'INTEGRITY_CHECK: SECTOR_B...............PASS',
+  'INTEGRITY_CHECK: SECTOR_C...............PASS',
+  'INTEGRITY_CHECK: SECTOR_D...............PASS',
+  '0x4EF2: LOADING ROUTE_TABLES............',
+  '0x4EF3: LOADING NAV_CONSTANTS...........',
+  '0x4EF4: LOADING JUMP_COORDS.............',
+  '0x4EF5: SYNCING COLONY_DATA.............',
+  'SIGNAL_DETECT: FREQ_447.2 // UNVERIFIED //',
+  'SIGNAL_DETECT: FREQ_881.9 // CLASSIFIED //',
+  'ANOMALY_LOG: 14 ENTRIES // SUPPRESSED //',
+  'NOVA_AI: PERSONALITY MATRIX STABLE......',
+  'NOVA_AI: IDLE ROUTINES LOADED...........',
+  'NOVA_AI: HUMOUR SUBROUTINE............OK',
+  'BOOT SEQUENCE COMPLETE // STANDBY //',
+];
+
+const TERMINAL_STATUS_LINES = [
+  'NOVA AI CORE — ONLINE',
+  'ZERO-POINT NAVIGATION — CALIBRATED',
+  'DISTANIA TRAVEL NETWORK — CONNECTED',
+  'ECS FIELD CREDENTIALS — ACTIVE',
+];
+
+function runMonitorBoot() {
+  var idle      = document.getElementById('monitorIdle');
+  var flicker   = document.getElementById('bootFlicker');
+  var post      = document.getElementById('bootPost');
+  var postLines = document.getElementById('postLines');
+  var wall      = document.getElementById('bootWall');
+  var wallText  = document.getElementById('wallText');
+  var terminal  = document.getElementById('bootTerminal');
+  var termStat  = document.getElementById('terminalStatus');
+  var termProc  = document.getElementById('terminalProceed');
+
+  if (!idle || !flicker || !post || !wall || !terminal) {
+    console.error('Boot: missing DOM elements, skipping to game');
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('travelScreen').classList.remove('hidden');
+    if (destinationsReady && dialogueReady) startTravelConsole();
+    else pendingStart = true;
+    return;
+  }
+
+  // Stage 1: hide power button, flicker on
+  idle.classList.add('hidden');
+  flicker.classList.remove('hidden');
+
+  setTimeout(function() {
+    flicker.classList.add('hidden');
+    startPost();
+  }, 400);
+
+  function startPost() {
+    post.classList.remove('hidden');
+    postLines.innerHTML = '';
+    var lineIndex = 0;
+
+    function addLine() {
+      if (lineIndex >= POST_CHECKS.length) {
+        setTimeout(function() {
+          post.classList.add('hidden');
+          startWall();
+        }, 350);
+        return;
+      }
+      var check = POST_CHECKS[lineIndex++];
+      var row = document.createElement('div');
+      row.className = 'post-line';
+
+      var label = document.createElement('span');
+      label.textContent = check.label;
+      row.appendChild(label);
+
+      if (check.result) {
+        var result = document.createElement('span');
+        result.textContent = '[ ' + check.result + ' ]';
+        result.className = 'post-' + check.type;
+        row.appendChild(result);
+      }
+
+      postLines.appendChild(row);
+      postLines.scrollTop = postLines.scrollHeight;
+
+      var delay = lineIndex < 8 ? 110 : lineIndex < 12 ? 80 : 55;
+      setTimeout(addLine, delay);
+    }
+    addLine();
+  }
+
+  function startWall() {
+    wall.classList.remove('hidden');
+    wallText.textContent = WALL_LINES.join('\n');
+    setTimeout(function() {
+      wall.classList.add('hidden');
+      startTerminal();
+    }, 2400);
+  }
+
+  function startTerminal() {
+    termStat.innerHTML = '';
+    termProc.classList.remove('visible');
+    terminal.classList.remove('hidden');
+    terminal.style.opacity = '0';
+    terminal.style.transition = 'opacity 0.8s ease';
+    void terminal.offsetHeight;
+    terminal.style.opacity = '1';
+
+    var si = 0;
+    function addStatusLine() {
+      if (si >= TERMINAL_STATUS_LINES.length) {
+        setTimeout(function() { termProc.classList.add('visible'); }, 400);
+        setTimeout(function() {
+          function advance() {
+            document.removeEventListener('keydown', advance);
+            terminal.removeEventListener('click', advance);
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('travelScreen').classList.remove('hidden');
+            if (destinationsReady && dialogueReady) {
+              startTravelConsole();
+            } else {
+              pendingStart = true;
+            }
+          }
+          document.addEventListener('keydown', advance);
+          terminal.addEventListener('click', advance);
+        }, 500);
+        return;
+      }
+      termStat.innerHTML += (si > 0 ? '<br>' : '') + TERMINAL_STATUS_LINES[si++];
+      setTimeout(addStatusLine, 350);
+    }
+    setTimeout(addStatusLine, 600);
+  }
+}
+
+// ================================================================
+// Monitor Boot Sequence Data
+// ================================================================
+var POST_CHECKS = [
+  { label: 'BIOS VERSION 4.7.2 — EXODUS CIVIL SERVICE',       result: '',     type: '' },
+  { label: 'CPU CHECK — QUANTUM CORE X9 (8 CORES)',           result: 'OK',   type: 'ok' },
+  { label: 'MEMORY — 128TB ALLOCATED / 128TB CLEAR',          result: 'OK',   type: 'ok' },
+  { label: 'ZERO-POINT DRIVE — NOMINAL',                      result: 'OK',   type: 'ok' },
+  { label: 'HULL INTEGRITY SENSORS — ONLINE',                 result: 'OK',   type: 'ok' },
+  { label: 'NAVIGATION ARRAY — CALIBRATING',                  result: 'OK',   type: 'ok' },
+  { label: 'DISTANIA TRAVEL GROUP NETWORK — CONNECTING',      result: 'OK',   type: 'ok' },
+  { label: 'ECS CREDENTIALS — VERIFIED',                      result: 'OK',   type: 'ok' },
+  { label: 'LIFE SUPPORT — NOMINAL',                          result: 'OK',   type: 'ok' },
+  { label: 'COMMUNICATIONS ARRAY — ACTIVE',                   result: 'OK',   type: 'ok' },
+  { label: 'NOVA AI CORE — INITIALISING',                     result: 'OK',   type: 'ok' },
+  { label: 'WEAPONS SYSTEMS — LOCKED (CIVILIAN MODE)',        result: 'WARN', type: 'warn' },
+  { label: 'DEEP SCAN ARRAY — SIGNAL INTERFERENCE DETECTED', result: 'WARN', type: 'warn' },
+  { label: 'ANOMALY LOG — 14 UNRESOLVED ENTRIES',             result: 'WARN', type: 'warn' },
+  { label: 'MEGASTRUCTURE PROXIMITY WARNING — SUPPRESSED',    result: 'WARN', type: 'warn' },
+  { label: 'LOADING DISTANIA NAVIGATION TERMINAL...',         result: '',     type: '' }
+];
+
+var WALL_LINES = [
+  'INIT KERNEL 7.4.1-ECS // LOADING MODULES //',
+  'drv_load: quantum_nav.sys................OK',
+  'drv_load: hull_integrity.sys.............OK',
+  'drv_load: nova_ai_core.sys...............OK',
+  'drv_load: comms_array.sys................OK',
+  'drv_load: zeropoint_engine.sys...........OK',
+  'drv_load: life_support.sys...............OK',
+  'drv_load: sensor_grid.sys................OK',
+  'drv_load: anomaly_logger.sys.............OK',
+  'drv_load: medical_systems.sys............OK',
+  'net_init: distania_travel_group_v4.......',
+  'net_auth: ECS_FIELD_CREDENTIALS..........',
+  'net_sync: destination_registry...........',
+  'net_sync: ambient_dialogue_cache.........',
+  'net_sync: nova_personality_matrix.......',
+  'mem_alloc: 0x00000000 -> 0x7FFFFFFF.....OK',
+  'mem_alloc: 0x80000000 -> 0xFFFFFFFF.....OK',
+  'INTEGRITY_CHECK: SECTOR_A...............PASS',
+  'INTEGRITY_CHECK: SECTOR_B...............PASS',
+  'INTEGRITY_CHECK: SECTOR_C...............PASS',
+  'INTEGRITY_CHECK: SECTOR_D...............PASS',
+  '0x4EF2: LOADING ROUTE_TABLES............',
+  '0x4EF3: LOADING NAV_CONSTANTS...........',
+  '0x4EF4: LOADING JUMP_COORDS.............',
+  '0x4EF5: SYNCING COLONY_DATA.............',
+  'SIGNAL_DETECT: FREQ_447.2 // UNVERIFIED //',
+  'SIGNAL_DETECT: FREQ_881.9 // CLASSIFIED //',
+  'ANOMALY_LOG: 14 ENTRIES // SUPPRESSED //',
+  'NOVA_AI: PERSONALITY MATRIX STABLE......',
+  'NOVA_AI: IDLE ROUTINES LOADED...........',
+  'NOVA_AI: HUMOUR SUBROUTINE............OK',
+  'BOOT SEQUENCE COMPLETE // STANDBY //'
+];
+
+var TERMINAL_STATUS_LINES = [
+  'NOVA AI CORE — ONLINE',
+  'ZERO-POINT NAVIGATION — CALIBRATED',
+  'DISTANIA TRAVEL NETWORK — CONNECTED',
+  'ECS FIELD CREDENTIALS — ACTIVE'
+];
 
 // ================================================================
 // Nova AI
@@ -1075,21 +1315,14 @@ window.addEventListener('DOMContentLoaded', () => {
   // Acknowledge — paper doc to dark monitor screen
   document.getElementById('proceedBtn')?.addEventListener('click', e => {
     e.preventDefault();
-    startupScreen.classList.add('hidden');
-    loginScreen.classList.remove('hidden');
+    document.getElementById('startupScreen').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
   });
 
-  // Power On — dark monitor to travel console
+  // Power On — run monitor boot sequence
   document.getElementById('onBtn')?.addEventListener('click', e => {
     e.preventDefault();
-    loginScreen.classList.add('hidden');
-    travelScreen.classList.remove('hidden');
-    if (destinationsReady && dialogueReady) {
-      startTravelConsole();
-    } else {
-      appendLog('System: Loading navigation data...', 'log-system');
-      pendingStart = true;
-    }
+    runMonitorBoot();
   });
 
   journalToggle?.addEventListener('click', renderJournal);
@@ -1098,8 +1331,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // New Game — wipe save then go straight to monitor screen (let player press power)
   document.getElementById('wipeSaveBtn')?.addEventListener('click', () => {
     wipeSaveAndRestart();
-    startupScreen.classList.add('hidden');
-    loginScreen.classList.remove('hidden');
+    document.getElementById('startupScreen').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
   });
 
   // Show save-wipe button if a save exists — no typewriter, doc is already visible
