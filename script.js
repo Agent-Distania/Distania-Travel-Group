@@ -1,15 +1,15 @@
 // ================================================================
 // DOM
 // ================================================================
-const startupScreen     = document.getElementById('startupScreen');   // paper-wrap
-const loginScreen       = document.getElementById('loginScreen');     // monitor-wrap
-const travelScreen      = document.getElementById('travelScreen');    // panel-frame
-const destList          = document.querySelector('.dest-list');
-const logEl             = document.getElementById('log');
-const travelOverlay     = document.getElementById('travelOverlay');
-const missionIndicator  = document.getElementById('missionIndicator');
-const journalToggle     = document.getElementById('journalToggle');
-const missionLogOverlay = document.getElementById('missionLogOverlay');
+const startupScreen    = document.getElementById('startupScreen');
+const loginScreen      = document.getElementById('loginScreen');
+const travelScreen     = document.getElementById('travelScreen');
+const destList         = document.querySelector('.dest-list');
+const logEl            = document.getElementById('log');
+const travelOverlay    = document.getElementById('travelOverlay');
+const missionIndicator = document.getElementById('missionIndicator');
+const journalToggle    = document.getElementById('journalToggle');
+const missionLogOverlay= document.getElementById('missionLogOverlay');
 
 // ================================================================
 // State
@@ -534,114 +534,114 @@ const TERMINAL_STATUS_LINES = [
 ];
 
 function runMonitorBoot() {
-  const idle     = document.getElementById('monitorIdle');
-  const flicker  = document.getElementById('bootFlicker');
-  const post     = document.getElementById('bootPost');
-  const postLines= document.getElementById('postLines');
-  const wall     = document.getElementById('bootWall');
-  const wallText = document.getElementById('wallText');
-  const terminal = document.getElementById('bootTerminal');
-  const termStat = document.getElementById('terminalStatus');
-  const termProc = document.getElementById('terminalProceed');
+  var idle      = document.getElementById('monitorIdle');
+  var flicker   = document.getElementById('bootFlicker');
+  var post      = document.getElementById('bootPost');
+  var postLines = document.getElementById('postLines');
+  var wall      = document.getElementById('bootWall');
+  var wallText  = document.getElementById('wallText');
+  var terminal  = document.getElementById('bootTerminal');
+  var termStat  = document.getElementById('terminalStatus');
+  var termProc  = document.getElementById('terminalProceed');
 
-  // Hide idle power button
+  if (!idle || !flicker || !post || !wall || !terminal) {
+    console.error('Boot: missing DOM elements, skipping to game');
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('travelScreen').classList.remove('hidden');
+    if (destinationsReady && dialogueReady) startTravelConsole();
+    else pendingStart = true;
+    return;
+  }
+
+  // Stage 1: hide power button, flicker on
   idle.classList.add('hidden');
-
-  // --- Stage 1: Flicker ---
   flicker.classList.remove('hidden');
-  setTimeout(() => {
+
+  setTimeout(function() {
     flicker.classList.add('hidden');
+    startPost();
+  }, 400);
 
-    // --- Stage 2: POST lines ---
+  function startPost() {
     post.classList.remove('hidden');
-    let lineIndex = 0;
+    postLines.innerHTML = '';
+    var lineIndex = 0;
 
-    function addPostLine() {
+    function addLine() {
       if (lineIndex >= POST_CHECKS.length) {
-        // POST done — move to wall of text
-        setTimeout(() => {
+        setTimeout(function() {
           post.classList.add('hidden');
-          postLines.innerHTML = '';
-          runWallOfText();
-        }, 300);
+          startWall();
+        }, 350);
         return;
       }
-      const check = POST_CHECKS[lineIndex++];
-      const row = document.createElement('div');
+      var check = POST_CHECKS[lineIndex++];
+      var row = document.createElement('div');
       row.className = 'post-line';
-      row.style.animationDelay = '0s';
 
-      const labelSpan = document.createElement('span');
-      labelSpan.textContent = check.label;
+      var label = document.createElement('span');
+      label.textContent = check.label;
+      row.appendChild(label);
 
-      const resultSpan = document.createElement('span');
       if (check.result) {
-        resultSpan.textContent = `[ ${check.result} ]`;
-        resultSpan.className = `post-${check.type}`;
+        var result = document.createElement('span');
+        result.textContent = '[ ' + check.result + ' ]';
+        result.className = 'post-' + check.type;
+        row.appendChild(result);
       }
 
-      row.appendChild(labelSpan);
-      row.appendChild(resultSpan);
       postLines.appendChild(row);
       postLines.scrollTop = postLines.scrollHeight;
 
-      // Each line appears quickly — faster toward the end
-      const delay = lineIndex < 8 ? 110 : lineIndex < 12 ? 80 : 55;
-      setTimeout(addPostLine, delay);
+      var delay = lineIndex < 8 ? 110 : lineIndex < 12 ? 80 : 55;
+      setTimeout(addLine, delay);
     }
+    addLine();
+  }
 
-    addPostLine();
-  }, 400);
-
-  // --- Stage 3: Wall of text ---
-  function runWallOfText() {
+  function startWall() {
     wall.classList.remove('hidden');
-    wallText.textContent = WALL_LINES.join('
-');
-    setTimeout(() => {
+    wallText.textContent = WALL_LINES.join('\n');
+    setTimeout(function() {
       wall.classList.add('hidden');
-      wallText.textContent = '';
-      runTerminal();
+      startTerminal();
     }, 2400);
   }
 
-  // --- Stage 4: Terminal ready ---
-  function runTerminal() {
+  function startTerminal() {
+    termStat.innerHTML = '';
+    termProc.classList.remove('visible');
     terminal.classList.remove('hidden');
-    // Slight delay then fade in
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      terminal.classList.add('visible');
-    }));
+    terminal.style.opacity = '0';
+    terminal.style.transition = 'opacity 0.8s ease';
+    void terminal.offsetHeight;
+    terminal.style.opacity = '1';
 
-    // Type the status lines one by one
-    let si = 0;
+    var si = 0;
     function addStatusLine() {
       if (si >= TERMINAL_STATUS_LINES.length) {
-        // All status lines shown — show the proceed prompt
-        setTimeout(() => termProc.classList.add('visible'), 400);
-        // Any keypress or click advances to game
-        const advance = () => {
-          document.removeEventListener('keydown', advance);
-          terminal.removeEventListener('click', advance);
-          loginScreen.classList.add('hidden');
-          travelScreen.classList.remove('hidden');
-          if (destinationsReady && dialogueReady) {
-            startTravelConsole();
-          } else {
-            appendLog('System: Loading navigation data...', 'log-system');
-            pendingStart = true;
+        setTimeout(function() { termProc.classList.add('visible'); }, 400);
+        setTimeout(function() {
+          function advance() {
+            document.removeEventListener('keydown', advance);
+            terminal.removeEventListener('click', advance);
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('travelScreen').classList.remove('hidden');
+            if (destinationsReady && dialogueReady) {
+              startTravelConsole();
+            } else {
+              pendingStart = true;
+            }
           }
-        };
-        setTimeout(() => {
           document.addEventListener('keydown', advance);
           terminal.addEventListener('click', advance);
-        }, 300);
+        }, 500);
         return;
       }
       termStat.innerHTML += (si > 0 ? '<br>' : '') + TERMINAL_STATUS_LINES[si++];
       setTimeout(addStatusLine, 350);
     }
-    setTimeout(addStatusLine, 500);
+    setTimeout(addStatusLine, 600);
   }
 }
 
@@ -1251,8 +1251,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // Acknowledge — paper doc to dark monitor screen
   document.getElementById('proceedBtn')?.addEventListener('click', e => {
     e.preventDefault();
-    startupScreen.classList.add('hidden');
-    loginScreen.classList.remove('hidden');
+    document.getElementById('startupScreen').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
   });
 
   // Power On — trigger monitor boot sequence
@@ -1267,8 +1267,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // New Game — wipe save then go straight to monitor screen (let player press power)
   document.getElementById('wipeSaveBtn')?.addEventListener('click', () => {
     wipeSaveAndRestart();
-    startupScreen.classList.add('hidden');
-    loginScreen.classList.remove('hidden');
+    document.getElementById('startupScreen').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
   });
 
   // Show save-wipe button if a save exists — no typewriter, doc is already visible
