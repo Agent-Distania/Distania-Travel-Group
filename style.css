@@ -471,10 +471,8 @@ body::after {
   justify-content: center;
   gap: 0.6rem;
   z-index: 7;
-  opacity: 0;
-  transition: opacity 0.8s ease;
+  /* opacity controlled by JS inline style for reliable transition */
 }
-.boot-terminal.visible { opacity: 1; }
 
 .terminal-logo {
   font-family: 'Orbitron', sans-serif;
