@@ -470,6 +470,182 @@ function initStartupScreen() {
 }
 
 // ================================================================
+// Monitor Boot Sequence
+// ================================================================
+const POST_CHECKS = [
+  { label: 'BIOS VERSION 4.7.2 — EXODUS CIVIL SERVICE',       result: '',     type: '' },
+  { label: 'CPU CHECK — QUANTUM CORE X9 (8 CORES)',           result: 'OK',   type: 'ok' },
+  { label: 'MEMORY — 128TB ALLOCATED / 128TB CLEAR',          result: 'OK',   type: 'ok' },
+  { label: 'ZERO-POINT DRIVE — NOMINAL',                      result: 'OK',   type: 'ok' },
+  { label: 'HULL INTEGRITY SENSORS — ONLINE',                 result: 'OK',   type: 'ok' },
+  { label: 'NAVIGATION ARRAY — CALIBRATING',                  result: 'OK',   type: 'ok' },
+  { label: 'DISTANIA TRAVEL GROUP NETWORK — CONNECTING',      result: 'OK',   type: 'ok' },
+  { label: 'ECS CREDENTIALS — VERIFIED',                      result: 'OK',   type: 'ok' },
+  { label: 'LIFE SUPPORT — NOMINAL',                          result: 'OK',   type: 'ok' },
+  { label: 'COMMUNICATIONS ARRAY — ACTIVE',                   result: 'OK',   type: 'ok' },
+  { label: 'NOVA AI CORE — INITIALISING',                     result: 'OK',   type: 'ok' },
+  { label: 'WEAPONS SYSTEMS — LOCKED (CIVILIAN MODE)',        result: 'WARN', type: 'warn' },
+  { label: 'DEEP SCAN ARRAY — SIGNAL INTERFERENCE DETECTED', result: 'WARN', type: 'warn' },
+  { label: 'ANOMALY LOG — 14 UNRESOLVED ENTRIES',             result: 'WARN', type: 'warn' },
+  { label: 'MEGASTRUCTURE PROXIMITY WARNING — SUPPRESSED',    result: 'WARN', type: 'warn' },
+  { label: 'LOADING DISTANIA NAVIGATION TERMINAL...',         result: '',     type: '' },
+];
+
+const WALL_LINES = [
+  'INIT KERNEL 7.4.1-ECS // LOADING MODULES //',
+  'drv_load: quantum_nav.sys................OK',
+  'drv_load: hull_integrity.sys.............OK',
+  'drv_load: nova_ai_core.sys...............OK',
+  'drv_load: comms_array.sys................OK',
+  'drv_load: zeropoint_engine.sys...........OK',
+  'drv_load: life_support.sys...............OK',
+  'drv_load: sensor_grid.sys................OK',
+  'drv_load: anomaly_logger.sys.............OK',
+  'drv_load: medical_systems.sys............OK',
+  'net_init: distania_travel_group_v4.......',
+  'net_auth: ECS_FIELD_CREDENTIALS..........',
+  'net_sync: destination_registry...........',
+  'net_sync: ambient_dialogue_cache.........',
+  'net_sync: nova_personality_matrix.......',
+  'mem_alloc: 0x00000000 -> 0x7FFFFFFF.....OK',
+  'mem_alloc: 0x80000000 -> 0xFFFFFFFF.....OK',
+  'INTEGRITY_CHECK: SECTOR_A...............PASS',
+  'INTEGRITY_CHECK: SECTOR_B...............PASS',
+  'INTEGRITY_CHECK: SECTOR_C...............PASS',
+  'INTEGRITY_CHECK: SECTOR_D...............PASS',
+  '0x4EF2: LOADING ROUTE_TABLES............',
+  '0x4EF3: LOADING NAV_CONSTANTS...........',
+  '0x4EF4: LOADING JUMP_COORDS.............',
+  '0x4EF5: SYNCING COLONY_DATA.............',
+  'SIGNAL_DETECT: FREQ_447.2 // UNVERIFIED //',
+  'SIGNAL_DETECT: FREQ_881.9 // CLASSIFIED //',
+  'ANOMALY_LOG: 14 ENTRIES // SUPPRESSED //',
+  'NOVA_AI: PERSONALITY MATRIX STABLE......',
+  'NOVA_AI: IDLE ROUTINES LOADED...........',
+  'NOVA_AI: HUMOUR SUBROUTINE............OK',
+  'BOOT SEQUENCE COMPLETE // STANDBY //',
+];
+
+const TERMINAL_STATUS_LINES = [
+  'NOVA AI CORE — ONLINE',
+  'ZERO-POINT NAVIGATION — CALIBRATED',
+  'DISTANIA TRAVEL NETWORK — CONNECTED',
+  'ECS FIELD CREDENTIALS — ACTIVE',
+];
+
+function runMonitorBoot() {
+  const idle     = document.getElementById('monitorIdle');
+  const flicker  = document.getElementById('bootFlicker');
+  const post     = document.getElementById('bootPost');
+  const postLines= document.getElementById('postLines');
+  const wall     = document.getElementById('bootWall');
+  const wallText = document.getElementById('wallText');
+  const terminal = document.getElementById('bootTerminal');
+  const termStat = document.getElementById('terminalStatus');
+  const termProc = document.getElementById('terminalProceed');
+
+  // Hide idle power button
+  idle.classList.add('hidden');
+
+  // --- Stage 1: Flicker ---
+  flicker.classList.remove('hidden');
+  setTimeout(() => {
+    flicker.classList.add('hidden');
+
+    // --- Stage 2: POST lines ---
+    post.classList.remove('hidden');
+    let lineIndex = 0;
+
+    function addPostLine() {
+      if (lineIndex >= POST_CHECKS.length) {
+        // POST done — move to wall of text
+        setTimeout(() => {
+          post.classList.add('hidden');
+          postLines.innerHTML = '';
+          runWallOfText();
+        }, 300);
+        return;
+      }
+      const check = POST_CHECKS[lineIndex++];
+      const row = document.createElement('div');
+      row.className = 'post-line';
+      row.style.animationDelay = '0s';
+
+      const labelSpan = document.createElement('span');
+      labelSpan.textContent = check.label;
+
+      const resultSpan = document.createElement('span');
+      if (check.result) {
+        resultSpan.textContent = `[ ${check.result} ]`;
+        resultSpan.className = `post-${check.type}`;
+      }
+
+      row.appendChild(labelSpan);
+      row.appendChild(resultSpan);
+      postLines.appendChild(row);
+      postLines.scrollTop = postLines.scrollHeight;
+
+      // Each line appears quickly — faster toward the end
+      const delay = lineIndex < 8 ? 110 : lineIndex < 12 ? 80 : 55;
+      setTimeout(addPostLine, delay);
+    }
+
+    addPostLine();
+  }, 400);
+
+  // --- Stage 3: Wall of text ---
+  function runWallOfText() {
+    wall.classList.remove('hidden');
+    wallText.textContent = WALL_LINES.join('
+');
+    setTimeout(() => {
+      wall.classList.add('hidden');
+      wallText.textContent = '';
+      runTerminal();
+    }, 2400);
+  }
+
+  // --- Stage 4: Terminal ready ---
+  function runTerminal() {
+    terminal.classList.remove('hidden');
+    // Slight delay then fade in
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      terminal.classList.add('visible');
+    }));
+
+    // Type the status lines one by one
+    let si = 0;
+    function addStatusLine() {
+      if (si >= TERMINAL_STATUS_LINES.length) {
+        // All status lines shown — show the proceed prompt
+        setTimeout(() => termProc.classList.add('visible'), 400);
+        // Any keypress or click advances to game
+        const advance = () => {
+          document.removeEventListener('keydown', advance);
+          terminal.removeEventListener('click', advance);
+          loginScreen.classList.add('hidden');
+          travelScreen.classList.remove('hidden');
+          if (destinationsReady && dialogueReady) {
+            startTravelConsole();
+          } else {
+            appendLog('System: Loading navigation data...', 'log-system');
+            pendingStart = true;
+          }
+        };
+        setTimeout(() => {
+          document.addEventListener('keydown', advance);
+          terminal.addEventListener('click', advance);
+        }, 300);
+        return;
+      }
+      termStat.innerHTML += (si > 0 ? '<br>' : '') + TERMINAL_STATUS_LINES[si++];
+      setTimeout(addStatusLine, 350);
+    }
+    setTimeout(addStatusLine, 500);
+  }
+}
+
+// ================================================================
 // Nova AI
 // ================================================================
 const NovaAI = {
@@ -1079,17 +1255,10 @@ window.addEventListener('DOMContentLoaded', () => {
     loginScreen.classList.remove('hidden');
   });
 
-  // Power On — dark monitor to travel console
+  // Power On — trigger monitor boot sequence
   document.getElementById('onBtn')?.addEventListener('click', e => {
     e.preventDefault();
-    loginScreen.classList.add('hidden');
-    travelScreen.classList.remove('hidden');
-    if (destinationsReady && dialogueReady) {
-      startTravelConsole();
-    } else {
-      appendLog('System: Loading navigation data...', 'log-system');
-      pendingStart = true;
-    }
+    runMonitorBoot();
   });
 
   journalToggle?.addEventListener('click', renderJournal);
