@@ -534,93 +534,101 @@ const TERMINAL_STATUS_LINES = [
 ];
 
 function runMonitorBoot() {
-  const idle     = document.getElementById('monitorIdle');
-  const flicker  = document.getElementById('bootFlicker');
-  const post     = document.getElementById('bootPost');
-  const postLines= document.getElementById('postLines');
-  const wall     = document.getElementById('bootWall');
-  const wallText = document.getElementById('wallText');
-  const terminal = document.getElementById('bootTerminal');
-  const termStat = document.getElementById('terminalStatus');
-  const termProc = document.getElementById('terminalProceed');
+  // Grab all stage elements — bail clearly if any are missing
+  const idle      = document.getElementById('monitorIdle');
+  const flicker   = document.getElementById('bootFlicker');
+  const post      = document.getElementById('bootPost');
+  const postLines = document.getElementById('postLines');
+  const wall      = document.getElementById('bootWall');
+  const wallText  = document.getElementById('wallText');
+  const terminal  = document.getElementById('bootTerminal');
+  const termStat  = document.getElementById('terminalStatus');
+  const termProc  = document.getElementById('terminalProceed');
 
-  // Hide idle power button
+  if (!idle || !flicker || !post || !wall || !terminal) {
+    console.error('runMonitorBoot: missing DOM elements — skipping to game');
+    loginScreen.classList.add('hidden');
+    travelScreen.classList.remove('hidden');
+    if (destinationsReady && dialogueReady) startTravelConsole();
+    else pendingStart = true;
+    return;
+  }
+
+  // ---- Stage 1: hide power button, flash the screen ----
   idle.classList.add('hidden');
-
-  // --- Stage 1: Flicker ---
   flicker.classList.remove('hidden');
+
   setTimeout(() => {
     flicker.classList.add('hidden');
 
-    // --- Stage 2: POST lines ---
+    // ---- Stage 2: POST check lines ----
     post.classList.remove('hidden');
+    postLines.innerHTML = '';
     let lineIndex = 0;
 
     function addPostLine() {
       if (lineIndex >= POST_CHECKS.length) {
-        // POST done — move to wall of text
         setTimeout(() => {
           post.classList.add('hidden');
-          postLines.innerHTML = '';
           runWallOfText();
-        }, 300);
+        }, 350);
         return;
       }
       const check = POST_CHECKS[lineIndex++];
       const row = document.createElement('div');
       row.className = 'post-line';
-      row.style.animationDelay = '0s';
 
-      const labelSpan = document.createElement('span');
-      labelSpan.textContent = check.label;
+      const label = document.createElement('span');
+      label.textContent = check.label;
+      row.appendChild(label);
 
-      const resultSpan = document.createElement('span');
       if (check.result) {
-        resultSpan.textContent = `[ ${check.result} ]`;
-        resultSpan.className = `post-${check.type}`;
+        const result = document.createElement('span');
+        result.textContent = '[ ' + check.result + ' ]';
+        result.className = 'post-' + check.type;
+        row.appendChild(result);
       }
 
-      row.appendChild(labelSpan);
-      row.appendChild(resultSpan);
       postLines.appendChild(row);
       postLines.scrollTop = postLines.scrollHeight;
 
-      // Each line appears quickly — faster toward the end
       const delay = lineIndex < 8 ? 110 : lineIndex < 12 ? 80 : 55;
       setTimeout(addPostLine, delay);
     }
 
     addPostLine();
+
   }, 400);
 
-  // --- Stage 3: Wall of text ---
+  // ---- Stage 3: wall of scrolling text ----
   function runWallOfText() {
     wall.classList.remove('hidden');
     wallText.textContent = WALL_LINES.join('
 ');
     setTimeout(() => {
       wall.classList.add('hidden');
-      wallText.textContent = '';
       runTerminal();
     }, 2400);
   }
 
-  // --- Stage 4: Terminal ready ---
+  // ---- Stage 4: terminal fades in, then waits for input ----
   function runTerminal() {
+    termStat.innerHTML = '';
+    termProc.classList.remove('visible');
     terminal.classList.remove('hidden');
-    // Slight delay then fade in
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      terminal.classList.add('visible');
-    }));
+    terminal.style.opacity = '0';
+    terminal.style.transition = 'opacity 0.8s ease';
 
-    // Type the status lines one by one
+    // Force reflow then fade in
+    void terminal.offsetHeight;
+    terminal.style.opacity = '1';
+
     let si = 0;
     function addStatusLine() {
       if (si >= TERMINAL_STATUS_LINES.length) {
-        // All status lines shown — show the proceed prompt
         setTimeout(() => termProc.classList.add('visible'), 400);
-        // Any keypress or click advances to game
-        const advance = () => {
+
+        function advance() {
           document.removeEventListener('keydown', advance);
           terminal.removeEventListener('click', advance);
           loginScreen.classList.add('hidden');
@@ -631,17 +639,18 @@ function runMonitorBoot() {
             appendLog('System: Loading navigation data...', 'log-system');
             pendingStart = true;
           }
-        };
+        }
+
         setTimeout(() => {
           document.addEventListener('keydown', advance);
           terminal.addEventListener('click', advance);
-        }, 300);
+        }, 400);
         return;
       }
       termStat.innerHTML += (si > 0 ? '<br>' : '') + TERMINAL_STATUS_LINES[si++];
       setTimeout(addStatusLine, 350);
     }
-    setTimeout(addStatusLine, 500);
+    setTimeout(addStatusLine, 600);
   }
 }
 
