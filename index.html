@@ -10,14 +10,7 @@
   <meta http-equiv="Expires" content="0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap&family=Special+Elite&display=swap" rel="stylesheet">
-  <link id="maincss" rel="stylesheet" href="style.css" />
-  <script>
-    (function() {
-      var v = new Date();
-      var key = v.getFullYear() + '' + v.getMonth() + '' + v.getDate() + '' + v.getHours();
-      document.getElementById('maincss').href = 'style.css?v=' + key;
-    })();
-  </script>
+  <link id="maincss" rel="stylesheet" href="style.css?v=1778469913" />
 </head>
 <body>
 
@@ -176,17 +169,6 @@
   </div>
 
   <button id="journalToggle" class="hidden">[ JOURNAL ]</button>
-
-  <script>
-    // Dynamic cache-bust: generate a version key from today's date + hour
-    // so it refreshes at most once per hour without needing manual version bumps
-    (function() {
-      var v = new Date();
-      var key = v.getFullYear() + '' + v.getMonth() + '' + v.getDate() + '' + v.getHours();
-      var s = document.createElement('script');
-      s.src = 'script.js?v=' + key;
-      document.head.appendChild(s);
-    })();
-  </script>
+  <script src="script.js?v=1778469913"></script>
 </body>
 </html>
