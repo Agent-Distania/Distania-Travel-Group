@@ -69,45 +69,18 @@
   </div>
 
   <!-- =====================================================
-       LOGIN — Dark monitor screen with boot sequence
+       LOGIN — Dark monitor screen, power button
        ===================================================== -->
   <div id="loginScreen" class="monitor-wrap hidden">
-    <div class="monitor-off" id="monitorOff">
-
-      <!-- Stage 0: idle power button -->
-      <div class="monitor-center" id="monitorIdle">
+    <div class="monitor-off">
+      <div class="monitor-center">
         <div class="monitor-label">DISTANIA TRAVEL GROUP</div>
         <div class="monitor-sublabel">Navigation Console — Mark IV</div>
         <button id="onBtn" class="power-btn" title="Power On">
-          <span class="power-icon">&#x23FB;</span>
+          <span class="power-icon">⏻</span>
         </button>
         <div class="monitor-hint">PRESS TO POWER ON</div>
       </div>
-
-      <!-- Stage 1: flicker flash -->
-      <div class="boot-flicker hidden" id="bootFlicker"></div>
-
-      <!-- Stage 2: POST system check lines -->
-      <div class="boot-post hidden" id="bootPost">
-        <div class="post-lines" id="postLines"></div>
-      </div>
-
-      <!-- Stage 3: wall of text -->
-      <div class="boot-wall hidden" id="bootWall">
-        <div class="wall-text" id="wallText"></div>
-      </div>
-
-      <!-- Stage 4: terminal ready -->
-      <div class="boot-terminal hidden" id="bootTerminal">
-        <div class="terminal-logo">DISTANIA TRAVEL GROUP</div>
-        <div class="terminal-sub">Navigation Console — Mark IV</div>
-        <div class="terminal-divider"></div>
-        <div class="terminal-status" id="terminalStatus"></div>
-        <div class="terminal-proceed hidden" id="terminalProceed">
-          <span class="terminal-cursor">&#x2588;</span> SYSTEM READY — PRESS ANY KEY TO CONTINUE
-        </div>
-      </div>
-
     </div>
   </div>
 
