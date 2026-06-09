@@ -1,9 +1,9 @@
 // ================================================================
 // DOM
 // ================================================================
-const startupScreen     = document.getElementById('startupScreen');   // paper-wrap
-const loginScreen       = document.getElementById('loginScreen');     // monitor-wrap
-const travelScreen      = document.getElementById('travelScreen');    // panel-frame
+const startupScreen     = document.getElementById('startupScreen');
+const loginScreen       = document.getElementById('loginScreen');
+const travelScreen      = document.getElementById('travelScreen');
 const destList          = document.querySelector('.dest-list');
 const logEl             = document.getElementById('log');
 const travelOverlay     = document.getElementById('travelOverlay');
@@ -14,34 +14,56 @@ const missionLogOverlay = document.getElementById('missionLogOverlay');
 // ================================================================
 // State
 // ================================================================
-let traveling         = false;
-let currentLocation   = null;
-let currentHub        = null;       // top-level planet key
-let currentSubLocation= null;       // parent key when at level-3 depth
-let ambientTimer      = null;
-let ambientFirstTimer = null;
-let dwellTimer        = null;       // mission dwell countdown
+let traveling          = false;
+let currentLocation    = null;
+let currentHub         = null;
+let currentSubLocation = null;
+let ambientTimer       = null;
+let ambientFirstTimer  = null;
+let dwellTimer         = null;
 const AMBIENT_INTERVAL = 28000;
 
-const ambientQueues = {};
-
+const ambientQueues      = {};
 const mainDestinations   = [];
 const destinationConfigs = {};
 const ambientDialogue    = {};
-const transmissions      = {};  // loaded from transmissions.json
+const transmissions      = {};
 
 let transmissionTimer   = null;
-const TRANSMISSION_INTERVAL_MIN = 180000; // 3 minutes
-const TRANSMISSION_INTERVAL_MAX = 240000; // 4 minutes
+const TRANSMISSION_INTERVAL_MIN = 180000;
+const TRANSMISSION_INTERVAL_MAX = 240000;
 
 let destinationsReady = false;
 let dialogueReady     = false;
 let pendingStart      = false;
 
 // ================================================================
-// Nova relationship
+// Nova Relationship
 // ================================================================
 const novaRel = { visits: 0, completions: 0 };
+
+function getRelTier() {
+  const tiers = NovaAI.dialogue.relationship?.tiers;
+  if (!tiers) return 'Stranger';
+  let tier = tiers[0];
+  for (const t of tiers) {
+    if (novaRel.completions >= t.minCompletions) tier = t;
+  }
+  return tier.label;
+}
+
+function checkTierUnlock(previousCompletions) {
+  const tiers    = NovaAI.dialogue.relationship?.tiers;
+  const unlocks  = NovaAI.dialogue.relationship?.tierUnlock;
+  if (!tiers || !unlocks) return;
+  for (const t of tiers) {
+    if (t.label === 'Stranger') continue;
+    if (previousCompletions < t.minCompletions &&
+        novaRel.completions >= t.minCompletions) {
+      setTimeout(() => appendLog(unlocks[t.label], 'log-nova log-nova-tier'), 2000);
+    }
+  }
+}
 
 // ================================================================
 // Health System
@@ -49,10 +71,8 @@ const novaRel = { visits: 0, completions: 0 };
 const Health = {
   max: 100,
   current: 100,
-  shieldActive: false,   // future upgrade hook
+  shieldActive: false,
 
-  // How much HP each location drains per tick while dwell timer runs
-  // Positive = drain, negative = heal
   LOCATION_DRAIN: {
     NewYork_Torta:          8,
     AncientVault:           12,
@@ -64,13 +84,11 @@ const Health = {
     CoreRelay:              7,
     BlackSpire:             6,
     ForwardRecon:           5,
-    // Safe/healing locations
     ColonyCore_Residential: -5,
     EarthSpacePort:         -3,
     CapitalCity:            -4
   },
 
-  // Drain applied instantly on arrival at high-danger zones
   ARRIVAL_DAMAGE: {
     Ruins:                  10,
     AncientVault:           8,
@@ -93,9 +111,7 @@ const Health = {
     this.stopDrain();
     const rate = this.LOCATION_DRAIN[key];
     if (!rate) return;
-    // Only drain/heal for a fixed number of ticks (representing initial exposure).
-    // After that the suit stabilises and no further passive damage occurs.
-    const MAX_TICKS = rate > 0 ? 2 : 3; // hazard: 2 ticks max; healing: 3 ticks
+    const MAX_TICKS = rate > 0 ? 2 : 3;
     let ticks = 0;
     this.drainInterval = setInterval(() => {
       if (currentLocation !== key) { this.stopDrain(); return; }
@@ -118,10 +134,9 @@ const Health = {
     const dmg = this.ARRIVAL_DAMAGE[key];
     if (!dmg) return;
     this.modify(-dmg);
-    appendLog(`System: Hazardous environment detected. Suit integrity reduced.`, 'log-system');
+    appendLog('System: Hazardous environment detected. Suit integrity reduced.', 'log-system');
   },
 
-  // Called when returning to ship — partial heal
   shipHeal() {
     const healed = Math.min(this.max - this.current, 30);
     if (healed > 0) {
@@ -151,29 +166,16 @@ const Health = {
     const label  = document.getElementById('healthLabel');
     const widget = document.getElementById('healthWidget');
     if (!bar || !label || !widget) return;
-
-    bar.style.width = `${this.pct}%`;
-    label.textContent = `${this.current}/${this.max}`;
-
-    // Colour transitions: green → amber → red
-    bar.className = 'health-bar-fill';
+    bar.style.width    = `${this.pct}%`;
+    label.textContent  = `${this.current}/${this.max}`;
+    bar.className      = 'health-bar-fill';
     if (this.pct <= 25)      bar.classList.add('critical');
     else if (this.pct <= 50) bar.classList.add('low');
-
-    // Widget pulse when low
     widget.classList.toggle('health-critical', this.pct <= 25);
   },
 
-  save() {
-    return { current: this.current };
-  },
-
-  load(data) {
-    if (data?.current !== undefined) {
-      this.current = data.current;
-      this.render();
-    }
-  }
+  save()       { return { current: this.current }; },
+  load(data)   { if (data?.current !== undefined) { this.current = data.current; this.render(); } }
 };
 
 // ================================================================
@@ -253,19 +255,138 @@ const MISSIONS = [
 ];
 
 // ================================================================
+// Classified Files
+// ================================================================
+const CLASSIFIED_FILES = [
+  {
+    id: 'file_01',
+    unlockedBy: 'TORTA_LOGS',
+    title: 'ECS INTERNAL — EXCAVATION FREQUENCY ANALYSIS',
+    clearance: 'LEVEL 2',
+    lines: [
+      'The resonance signature recorded at depth 9 of the New York Torta site does not correspond to any known geological process.',
+      'Cross-referencing with the Kilko pre-event data shows a 94% waveform match.',
+      'This information has not been shared with the site crew.',
+      'Recommendation: continue excavation. Do not increase crew clearance at this time.',
+      '[SIGNED] — Office of the Chief Amplifier'
+    ]
+  },
+  {
+    id: 'file_02',
+    unlockedBy: 'SPECIMEN_7C',
+    title: 'PACIFIC RESEARCH — ABYSSAL ORGANISM ASSESSMENT',
+    clearance: 'LEVEL 3',
+    lines: [
+      'Specimen 7-C exhibits learning behaviour inconsistent with its neurological structure.',
+      'It has solved containment protocols that were designed after its capture.',
+      'DNA sequencing confirms no terrestrial ancestry.',
+      'Three researchers have requested transfer. Requests denied.',
+      'The organism appears to be waiting. For what, we cannot determine.',
+      '[CLASSIFICATION: EYES ONLY]'
+    ]
+  },
+  {
+    id: 'file_03',
+    unlockedBy: 'VAULT_FRAGMENT',
+    title: 'MARS VAULT — SURVEY TEAM FINAL TRANSMISSION',
+    clearance: 'LEVEL 3',
+    lines: [
+      'This is Dr. Alinta Marsh, lead surveyor, Ancient Vault sub-level 11.',
+      'We found something below the sealed section. The official maps are wrong.',
+      'There are more levels. Many more. The structure goes down further than the planet should allow.',
+      'The symbols here are different. They\'re not decorative. They\'re instructions.',
+      'We are — [SIGNAL INTERRUPTED]',
+      '[NOTE: Dr. Marsh transferred to Quiet Programme. Survey team currently in debrief. Duration: indefinite.]'
+    ]
+  },
+  {
+    id: 'file_04',
+    unlockedBy: 'STORM_DATA',
+    title: 'JUPITER OBSERVATORY — CYCLE 44 PATTERN ANALYSIS',
+    clearance: 'LEVEL 2',
+    lines: [
+      'The storm cycle data from Cycle 44 contains a signal embedded within the atmospheric interference.',
+      'The signal repeats on a 17-minute loop. It is not random.',
+      'When mapped against known mathematical constants, it produces a coordinate set.',
+      'The coordinates point to a location inside Jupiter.',
+      'We have not transmitted this finding to ECS Command.',
+      'We are not sure we should.'
+    ]
+  },
+  {
+    id: 'file_05',
+    unlockedBy: 'ICE_CORE',
+    title: 'EUROPA TUNNELS — ICE CORE ANALYSIS, SECTOR 7',
+    clearance: 'LEVEL 3',
+    lines: [
+      'Organic compounds found in the Sector 7 ice core predate the formation of Europa by approximately 200,000 years.',
+      'This is not a measurement error. The equipment has been recalibrated four times.',
+      'The compounds are not terrestrial. They are not from any catalogued source in the solar system.',
+      'Trace analysis suggests they were placed there intentionally.',
+      'The ice around them has been shaped. Carefully. Around them.',
+      '[NOTE: This file is flagged for Chief Amplifier review. Do not distribute.]'
+    ]
+  },
+  {
+    id: 'file_06',
+    unlockedBy: 'XENO_INDEX',
+    title: 'ANDROMEDA ARCHIVES — XENOLINGUISTIC INDEX VOL. III [PARTIAL]',
+    clearance: 'LEVEL 4',
+    lines: [
+      'The archive language does not function as communication between parties.',
+      'It functions as communication across time.',
+      'The symbols are not words. They are states. Conditions. Instructions written for a reader who does not yet exist.',
+      'Volume III contains what appears to be a warning.',
+      'The translation team has been stood down. Their notes have been archived.',
+      'We have not published a translation because we do not agree on what it says.',
+      'We do agree on what it implies.',
+      '[REMAINDER OF INDEX: CLASSIFIED LEVEL 5 — CHIEF AMPLIFIER ACCESS ONLY]'
+    ]
+  },
+  {
+    id: 'file_07',
+    unlockedBy: 'CRYSTAL_SHARD',
+    title: 'VEGA — CRYSTAL CANYON SIGNAL AMPLIFICATION REPORT',
+    clearance: 'LEVEL 2',
+    lines: [
+      'The crystal formations at Canyon Outpost are not amplifying our signals.',
+      'They are amplifying a signal that was already present.',
+      'Our transmissions are riding on top of something older.',
+      'The underlying signal has been broadcasting continuously for longer than we can measure.',
+      'When we filter our own transmissions out, what remains is structured.',
+      'It sounds like a question.',
+      'We do not know what it is asking.',
+      'We do not know if it has received an answer.'
+    ]
+  }
+];
+
+// Track which files have been unlocked
+const unlockedFiles = new Set();
+
+function unlockClassifiedFile(rewardKey) {
+  const file = CLASSIFIED_FILES.find(f => f.unlockedBy === rewardKey);
+  if (!file || unlockedFiles.has(file.id)) return;
+  unlockedFiles.add(file.id);
+  setTimeout(() => {
+    appendLog('▶ CLASSIFIED FILE UNLOCKED — check your journal.', 'log-classified-alert');
+  }, 3000);
+}
+
+// ================================================================
 // Collectibles
 // ================================================================
 const COLLECTIBLES = [
-  { id: 'col_01', name: 'Kilko Fragment — Node 7',  desc: 'Still warm to the touch. Radiation minimal.',           location: 'Pacific_ArtifactLab',        found: false },
-  { id: 'col_02', name: 'Encrypted Data Core',      desc: 'Origin: unknown. Format: unreadable.',                  location: 'ResearchBase_Lab',            found: false },
-  { id: 'col_03', name: 'Obsidian Statue Shard',    desc: 'Edges are too perfect. Not carved — grown.',            location: 'StatueWing',                  found: false },
-  { id: 'col_04', name: 'Void Berry Sample',         desc: 'Technically not legal yet. Smells incredible.',         location: 'EarthSpacePort_FrontDesk',   found: false },
-  { id: 'col_05', name: 'Torta Wall Rubbing',        desc: 'Symbols shift between viewings.',                       location: 'NewYork_Torta',               found: false },
-  { id: 'col_06', name: 'Abyssal Organism — Jar',   desc: 'Still glowing. Still moving.',                          location: 'Pacific_Abyssal',             found: false },
-  { id: 'col_07', name: 'Storm Data Wafer',          desc: 'The pattern stored here repeats every 88 seconds.',     location: 'StormObservatory_Sensors',    found: false },
-  { id: 'col_08', name: 'Vault Inscription Photo',   desc: 'Camera corrupted on upload. Image survived.',           location: 'AncientVault',                found: false },
-  { id: 'col_09', name: 'Crystal Shard — Grade A',  desc: 'Resonates at exactly 440 Hz. Concert A.',               location: 'CrystalCanyonOutpost',        found: false },
-  { id: 'col_10', name: 'Tunnel Ice Core',           desc: 'Contains organic compounds 200,000 years old.',         location: 'ResearchBase_Tunnels',        found: false }
+  { id: 'col_01', name: 'Kilko Fragment — Node 7',  desc: 'Still warm to the touch. Radiation minimal.',           location: 'Pacific_ArtifactLab',      found: false },
+  { id: 'col_02', name: 'Encrypted Data Core',      desc: 'Origin: unknown. Format: unreadable.',                  location: 'ResearchBase_Lab',          found: false },
+  { id: 'col_03', name: 'Obsidian Statue Shard',    desc: 'Edges are too perfect. Not carved — grown.',            location: 'StatueWing',                found: false },
+  { id: 'col_04', name: 'Void Berry Sample',         desc: 'Technically not legal yet. Smells incredible.',         location: 'EarthSpacePort_FrontDesk',  found: false },
+  { id: 'col_05', name: 'Torta Wall Rubbing',        desc: 'Symbols shift between viewings.',                       location: 'NewYork_Torta',             found: false },
+  { id: 'col_06', name: 'Abyssal Organism — Jar',   desc: 'Still glowing. Still moving.',                          location: 'Pacific_Abyssal',           found: false },
+  { id: 'col_07', name: 'Storm Data Wafer',          desc: 'The pattern stored here repeats every 88 seconds.',     location: 'StormObservatory_Sensors',  found: false },
+  { id: 'col_08', name: 'Vault Inscription Photo',   desc: 'Camera corrupted on upload. Image survived.',           location: 'AncientVault',              found: false },
+  { id: 'col_09', name: 'Crystal Shard — Grade A',  desc: 'Resonates at exactly 440 Hz. Concert A.',               location: 'CrystalCanyonOutpost',      found: false },
+  { id: 'col_10', name: 'Tunnel Ice Core',           desc: 'Contains organic compounds 200,000 years old.',         location: 'ResearchBase_Tunnels',      found: false }
 ];
 
 const heardLog = [];
@@ -279,10 +400,11 @@ function saveState() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       currentLocation, currentHub, currentSubLocation,
-      missions:     MISSIONS.map(m => ({ id: m.id, complete: m.complete })),
-      collectibles: COLLECTIBLES.map(c => ({ id: c.id, found: c.found })),
+      missions:      MISSIONS.map(m => ({ id: m.id, complete: m.complete })),
+      collectibles:  COLLECTIBLES.map(c => ({ id: c.id, found: c.found })),
       novaRel,
-      health: Health.save()
+      health:        Health.save(),
+      unlockedFiles: [...unlockedFiles]
     }));
   } catch (_) {}
 }
@@ -293,21 +415,19 @@ function loadState() {
     if (!raw) return false;
     const s = JSON.parse(raw);
 
-    // Always restore progress data regardless of location state
-    if (s.missions)     s.missions.forEach(sv => { const m = MISSIONS.find(m => m.id === sv.id);     if (m) m.complete = sv.complete; });
-    if (s.collectibles) s.collectibles.forEach(sv => { const c = COLLECTIBLES.find(c => c.id === sv.id); if (c) c.found = sv.found; });
-    if (s.novaRel)      Object.assign(novaRel, s.novaRel);
-    if (s.health)       Health.load(s.health);
+    if (s.missions)      s.missions.forEach(sv => { const m = MISSIONS.find(m => m.id === sv.id);     if (m) m.complete = sv.complete; });
+    if (s.collectibles)  s.collectibles.forEach(sv => { const c = COLLECTIBLES.find(c => c.id === sv.id); if (c) c.found = sv.found; });
+    if (s.novaRel)       Object.assign(novaRel, s.novaRel);
+    if (s.health)        Health.load(s.health);
+    if (s.unlockedFiles) s.unlockedFiles.forEach(id => unlockedFiles.add(id));
 
-    // Only restore location if it's valid
     if (s.currentHub && destinationConfigs[s.currentHub]) {
       currentLocation    = s.currentLocation;
       currentHub         = s.currentHub;
       currentSubLocation = s.currentSubLocation;
-      return true; // signals restoreSession to rebuild location UI
+      return true;
     }
-
-    return false; // no location to restore, but progress was loaded above
+    return false;
   } catch (_) { return false; }
 }
 
@@ -453,13 +573,15 @@ function loadFallbackDestinations() {
 function appendLog(text, cssClass = '') {
   const line = document.createElement('div');
   line.textContent = text.trim();
-  if (cssClass) line.classList.add(cssClass);
+  if (cssClass) {
+    cssClass.split(' ').forEach(c => { if (c) line.classList.add(c); });
+  }
   logEl.appendChild(line);
   logEl.scrollTop = logEl.scrollHeight;
 }
 
 // ================================================================
-// Startup — show save-wipe button if a save exists (no typewriter)
+// Startup
 // ================================================================
 function initStartupScreen() {
   try {
@@ -467,6 +589,127 @@ function initStartupScreen() {
       document.getElementById('wipeSaveBtn').classList.remove('hidden');
     }
   } catch(_) {}
+}
+
+// ================================================================
+// Boot Sequence
+// ================================================================
+const BOOT_LINES = [
+  { text: 'DISTANIA TRAVEL GROUP — MARK IV NAVIGATION CONSOLE', delay: 0,    cls: 'boot-header' },
+  { text: 'BIOS v4.1.7 — EXODUS CIVIL SERVICE CERTIFIED',       delay: 120,  cls: 'boot-dim' },
+  { text: '',                                                    delay: 220 },
+  { text: '[ POWER-ON SELF TEST ]',                             delay: 320,  cls: 'boot-section' },
+  { text: '  Initialising memory banks .......... ',            delay: 480,  cls: 'boot-line', inline: 'OK',         inlineCls: 'boot-ok' },
+  { text: '  Checking nav array ................. ',            delay: 700,  cls: 'boot-line', inline: 'OK',         inlineCls: 'boot-ok' },
+  { text: '  Verifying hull sensor matrix ....... ',            delay: 960,  cls: 'boot-line', inline: 'OK',         inlineCls: 'boot-ok' },
+  { text: '  Scanning drive cores ............... ',            delay: 1240, cls: 'boot-line', inline: 'OK',         inlineCls: 'boot-ok' },
+  { text: '  Zero-point coil integrity .......... ',            delay: 1560, cls: 'boot-line', inline: 'OK',         inlineCls: 'boot-ok' },
+  { text: '  Life support reserves .............. ',            delay: 1840, cls: 'boot-line', inline: 'OK',         inlineCls: 'boot-ok' },
+  { text: '  Quantum comms handshake ............ ',            delay: 2160, cls: 'boot-line', inline: 'DEGRADED',   inlineCls: 'boot-warn' },
+  { text: '  >> Signal loss on channel 7-C. Rerouting via relay.', delay: 2340, cls: 'boot-note' },
+  { text: '',                                                    delay: 2600 },
+  { text: '[ LOADING ECS FIELD AGENT PROFILE ]',               delay: 2700, cls: 'boot-section' },
+  { text: '  Agent credentials .................. ',            delay: 2900, cls: 'boot-line', inline: 'VERIFIED',   inlineCls: 'boot-ok' },
+  { text: '  Clearance level .................... ',            delay: 3150, cls: 'boot-line', inline: 'LEVEL 1',    inlineCls: 'boot-ok' },
+  { text: '  Accessing mission database ......... ',            delay: 3400, cls: 'boot-line', inline: 'OK',         inlineCls: 'boot-ok' },
+  { text: '  Loading destination manifests ...... ',            delay: 3700, cls: 'boot-line', inline: 'OK',         inlineCls: 'boot-ok' },
+  { text: '  Syncing field AI (NOVA) ............ ',            delay: 4000, cls: 'boot-line', inline: 'ONLINE',     inlineCls: 'boot-ok' },
+  { text: '',                                                    delay: 4300 },
+  { text: '[ ANOMALY LOG — LAST SESSION ]',                    delay: 4400, cls: 'boot-section' },
+  { text: '  Previous session records ........... ',            delay: 4600, cls: 'boot-line', inline: 'NOT FOUND',  inlineCls: 'boot-dim' },
+  { text: '  >> This is your first recorded departure. Good luck, Captain.', delay: 4850, cls: 'boot-note' },
+  { text: '',                                                    delay: 5200 },
+  { text: '[ DISTANIA TRAVEL GROUP NETWORK ]',                 delay: 5300, cls: 'boot-section' },
+  { text: '  Uplink to orbital relay ............ ',            delay: 5500, cls: 'boot-line', inline: 'OK',         inlineCls: 'boot-ok' },
+  { text: '  Destination index loaded ........... ',            delay: 5750, cls: 'boot-line', inline: '6 SYSTEMS',  inlineCls: 'boot-ok' },
+  { text: '  ECS broadcast frequency active ..... ',            delay: 6000, cls: 'boot-line', inline: 'LISTENING',  inlineCls: 'boot-ok' },
+  { text: '  Megastructure research uplink ....... ',           delay: 6250, cls: 'boot-line', inline: 'RESTRICTED', inlineCls: 'boot-warn' },
+  { text: '  >> Access requires clearance 4+. Flagged for future unlock.', delay: 6430, cls: 'boot-note' },
+  { text: '',                                                    delay: 6700 },
+  { text: 'ALL SYSTEMS NOMINAL.',                               delay: 6800, cls: 'boot-header' },
+  { text: 'LAUNCHING NAVIGATION INTERFACE...',                  delay: 7100, cls: 'boot-dim' }
+];
+
+const BOOT_CSS = `
+  #bootScreen {
+    position: fixed; inset: 0; background: #000; z-index: 18500;
+    display: flex; justify-content: center; align-items: center;
+    font-family: 'Share Tech Mono', monospace; font-size: 0.82rem;
+    color: #8dfd8d; overflow: hidden;
+  }
+  #bootInner {
+    width: min(820px, 92vw); height: min(72vh, 600px);
+    background: #030608; border: 2px solid #0a1a10;
+    box-shadow: 0 0 0 8px #060c08, 0 0 0 10px #0a1008, 0 0 60px rgba(0,0,0,0.9);
+    padding: 2rem 2.5rem; overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+  }
+  #bootInner::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,20,10,0.13) 3px, rgba(0,20,10,0.13) 4px);
+  }
+  #bootLines { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 0; }
+  .boot-header  { color: #8dfd8d; letter-spacing: 0.12rem; font-size: 0.85rem; margin-bottom: 0.1rem; }
+  .boot-section { color: rgba(141,253,141,0.55); letter-spacing: 0.1rem; font-size: 0.78rem; margin: 0.6rem 0 0.1rem; }
+  .boot-line    { color: rgba(141,253,141,0.75); }
+  .boot-dim     { color: rgba(141,253,141,0.35); }
+  .boot-note    { color: rgba(141,253,141,0.42); font-size: 0.76rem; padding-left: 0.5rem; }
+  .boot-ok      { color: #8dfd8d; }
+  .boot-warn    { color: #ffd97d; text-shadow: 0 0 6px rgba(255,200,50,0.4); }
+  #bootCursor   { display: inline-block; width: 8px; height: 0.85em; background: #8dfd8d; vertical-align: middle; animation: bootBlink 0.65s step-end infinite; margin-left: 2px; }
+  @keyframes bootBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+  #bootScreen.boot-fade { animation: bootFadeOut 0.6s ease forwards; }
+  @keyframes bootFadeOut { 0%{opacity:1} 40%{opacity:1;background:#fff} 55%{opacity:0;background:#fff} 100%{opacity:0} }
+`;
+
+function runBootSequence(onComplete) {
+  const style = document.createElement('style');
+  style.textContent = BOOT_CSS;
+  document.head.appendChild(style);
+
+  const bootScreen = document.createElement('div');
+  bootScreen.id = 'bootScreen';
+  bootScreen.innerHTML = `<div id="bootInner"><div id="bootLines"></div><span id="bootCursor"></span></div>`;
+  document.body.appendChild(bootScreen);
+
+  const linesEl = document.getElementById('bootLines');
+
+  function addLine(entry) {
+    const row = document.createElement('div');
+    if (entry.cls) row.className = entry.cls;
+    if (entry.text === '') {
+      row.style.height = '0.5rem';
+      row.innerHTML = '&nbsp;';
+      linesEl.appendChild(row);
+      return;
+    }
+    if (entry.inline) {
+      row.textContent = entry.text;
+      linesEl.appendChild(row);
+      setTimeout(() => {
+        const badge = document.createElement('span');
+        badge.className = entry.inlineCls || '';
+        badge.textContent = entry.inline;
+        row.appendChild(badge);
+      }, 180);
+    } else {
+      row.textContent = entry.text;
+      linesEl.appendChild(row);
+    }
+    linesEl.scrollTop = linesEl.scrollHeight;
+  }
+
+  BOOT_LINES.forEach(entry => setTimeout(() => addLine(entry), entry.delay));
+
+  const totalDuration = BOOT_LINES[BOOT_LINES.length - 1].delay + 1200;
+  setTimeout(() => {
+    bootScreen.classList.add('boot-fade');
+    setTimeout(() => {
+      bootScreen.remove();
+      style.remove();
+      onComplete();
+    }, 600);
+  }, totalDuration);
 }
 
 // ================================================================
@@ -482,13 +725,22 @@ const NovaAI = {
     appendLog(pool[Math.floor(Math.random() * pool.length)], 'log-nova');
   },
 
-  // Only called on main planet arrival (not sub-destinations)
+  speakTiered(baseCategory) {
+    const tier = getRelTier();
+    const tieredKey = `${baseCategory}_${tier}`;
+    const tieredPool = this.dialogue.relationship?.[tieredKey];
+    if (tieredPool?.length) {
+      appendLog(tieredPool[Math.floor(Math.random() * tieredPool.length)], 'log-nova');
+      return;
+    }
+    this.speak(baseCategory);
+  },
+
   speakPlanetArrival(key) {
     const line = this.dialogue.locationArrivals?.[key];
     if (line) appendLog(line, 'log-nova');
   },
 
-  // Location-specific danger lines
   speakDanger(key) {
     const pool = this.dialogue.dangerLines?.[key] || this.dialogue.dangerLines?.default;
     if (!pool?.length) return;
@@ -498,7 +750,7 @@ const NovaAI = {
   startIdle() {
     clearInterval(this.idleTimer);
     this.idleTimer = setInterval(() => {
-      if (!traveling && Math.random() < 0.6) this.speak('idle');
+      if (!traveling && Math.random() < 0.6) this.speakTiered('idle');
     }, 45000);
   },
 
@@ -518,10 +770,8 @@ function startDwellTimer(locationKey) {
   clearTimeout(dwellTimer);
   const m = getActiveMission();
   if (!m || m.target !== locationKey) return;
-
   const secs = m.dwellSecs || 30;
   appendLog(`System: Mission active. Remain at ${locationKey} for ${secs}s to complete.`, 'log-mission');
-
   dwellTimer = setTimeout(() => {
     if (currentLocation !== locationKey) return;
     completeMission(m);
@@ -529,13 +779,23 @@ function startDwellTimer(locationKey) {
 }
 
 function completeMission(m) {
+  const prevCompletions = novaRel.completions;
   m.complete = true;
   novaRel.completions++;
+
   appendLog(`▶ MISSION COMPLETE: ${m.title}`, 'log-mission');
   appendLog(`▶ REWARD LOGGED: ${m.reward}`, 'log-mission');
-  NovaAI.speak('missionComplete');
+
+  // Tier-aware mission complete line
+  NovaAI.speakTiered('missionComplete');
+
+  // Check for tier unlock — fires its own delayed message if triggered
+  checkTierUnlock(prevCompletions);
+
+  // Unlock classified file
+  unlockClassifiedFile(m.rewardKey);
+
   updateMissionIndicator();
-  // Re-render buttons so the ● marker updates
   rebuildCurrentButtons();
   saveState();
 
@@ -549,7 +809,6 @@ function completeMission(m) {
   }
 }
 
-// Rebuild whichever button list is currently showing (so ● markers update)
 function rebuildCurrentButtons() {
   if (!currentHub) { createButtons(mainDestinations); return; }
   const config = destinationConfigs[currentHub];
@@ -578,7 +837,7 @@ function checkCollectible(locationKey) {
 }
 
 // ================================================================
-// Ambient Dialogue (shuffle queue)
+// Ambient Dialogue
 // ================================================================
 function shuffled(arr) {
   const a = [...arr];
@@ -624,38 +883,20 @@ function clearAmbientTimers() {
 // ================================================================
 // Transmission System
 // ================================================================
-
-// Pick a random item from an array
-function randomFrom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function fireTransmission() {
-  // Only fire when the player is in the travel screen and not mid-travel
   if (traveling || !currentHub) return;
-
   const sources = ['ECS', 'Government', 'Corporate'];
   const source  = randomFrom(sources);
   const pool    = transmissions[source];
   if (!pool?.length) return;
-
   const msg = randomFrom(pool);
-
-  // Log with dedicated transmission CSS classes for distinct visual grouping
   appendLog(`[ INCOMING TRANSMISSION — ${source.toUpperCase()} ]`, 'log-transmission-header');
   appendLog(`FROM: ${msg.from}`, 'log-transmission-from');
   appendLog(msg.body, 'log-transmission-body');
-
-  // Save to heard log so it appears in the journal
-  heardLog.unshift({
-    speaker: msg.from,
-    line: msg.body,
-    location: 'Ship Receiver',
-    time: new Date().toLocaleTimeString()
-  });
+  heardLog.unshift({ speaker: msg.from, line: msg.body, location: 'Ship Receiver', time: new Date().toLocaleTimeString() });
   if (heardLog.length > 80) heardLog.pop();
-
-  // Nova reacts roughly 1 in 3 times, after a short pause
   if (Math.random() < 0.33) {
     const reactions = transmissions.novaReactions?.[source];
     if (reactions?.length) {
@@ -666,11 +907,10 @@ function fireTransmission() {
 
 function scheduleNextTransmission() {
   clearTimeout(transmissionTimer);
-  const delay = TRANSMISSION_INTERVAL_MIN +
-    Math.random() * (TRANSMISSION_INTERVAL_MAX - TRANSMISSION_INTERVAL_MIN);
+  const delay = TRANSMISSION_INTERVAL_MIN + Math.random() * (TRANSMISSION_INTERVAL_MAX - TRANSMISSION_INTERVAL_MIN);
   transmissionTimer = setTimeout(() => {
     fireTransmission();
-    scheduleNextTransmission(); // reschedule after each fire
+    scheduleNextTransmission();
   }, delay);
 }
 
@@ -695,8 +935,6 @@ function maybeTriggerDanger(key) {
   setTimeout(() => {
     if (currentLocation !== key) return;
     NovaAI.speakDanger(key);
-    // Danger events are warnings only — no additional damage on top of
-    // arrival damage and drain ticks
   }, delay);
 }
 
@@ -707,12 +945,19 @@ function renderJournal() {
   renderMissionsTab();
   renderHeardTab();
   renderCollectedTab();
+  renderClassifiedTab();
   missionLogOverlay.classList.remove('hidden');
 }
 
 function renderMissionsTab() {
   const el = document.getElementById('missionsList');
   el.innerHTML = '';
+  // Show current Nova relationship tier at the top
+  const tierBadge = document.createElement('div');
+  tierBadge.className = 'tier-badge';
+  tierBadge.innerHTML = `NOVA STATUS &nbsp;—&nbsp; <span class="tier-label">${getRelTier()}</span>`;
+  el.appendChild(tierBadge);
+
   MISSIONS.forEach(m => {
     const card = document.createElement('div');
     card.className = `mission-card${m.complete ? ' complete' : ''}`;
@@ -756,6 +1001,28 @@ function renderCollectedTab() {
   });
 }
 
+function renderClassifiedTab() {
+  const el = document.getElementById('classifiedList');
+  if (!el) return;
+  el.innerHTML = '';
+  const unlocked = CLASSIFIED_FILES.filter(f => unlockedFiles.has(f.id));
+  if (!unlocked.length) {
+    el.innerHTML = '<div class="empty-state">No classified files unlocked. Complete missions to access restricted data.</div>';
+    return;
+  }
+  unlocked.forEach(f => {
+    const entry = document.createElement('div');
+    entry.className = 'classified-entry';
+    const linesHtml = f.lines.map(l => `<div class="classified-line">${l}</div>`).join('');
+    entry.innerHTML = `
+      <div class="classified-title">${f.title}</div>
+      <div class="classified-clearance">CLEARANCE: ${f.clearance}</div>
+      <div class="classified-body">${linesHtml}</div>
+    `;
+    el.appendChild(entry);
+  });
+}
+
 function initJournalTabs() {
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -765,9 +1032,10 @@ function initJournalTabs() {
       const target = document.getElementById(`tab-${btn.dataset.tab}`);
       target.classList.remove('hidden');
       target.classList.add('active');
-      if (btn.dataset.tab === 'missions')   renderMissionsTab();
-      if (btn.dataset.tab === 'heard')      renderHeardTab();
-      if (btn.dataset.tab === 'collected')  renderCollectedTab();
+      if (btn.dataset.tab === 'missions')    renderMissionsTab();
+      if (btn.dataset.tab === 'heard')       renderHeardTab();
+      if (btn.dataset.tab === 'collected')   renderCollectedTab();
+      if (btn.dataset.tab === 'classified')  renderClassifiedTab();
     });
   });
 }
@@ -810,7 +1078,7 @@ function findByKey(key, list) {
 function defaultSubs(dest) {
   return [
     { name: 'Return to Previous', key: 'Return' },
-    { name: `${dest.name} Core Zone`, key: `${dest.key}_1` },
+    { name: `${dest.name} Core Zone`,    key: `${dest.key}_1` },
     { name: `${dest.name} Outer Sector`, key: `${dest.key}_2` }
   ];
 }
@@ -871,7 +1139,6 @@ function handleReturn() {
     return;
   }
 
-  // Back to ship — partial heal
   appendLog('System: Returning to ship. Please select a destination.', 'log-system');
   Health.shipHeal();
   currentLocation = currentHub = currentSubLocation = null;
@@ -911,16 +1178,11 @@ function hideOverlay() {
   setTimeout(() => travelOverlay.classList.add('hidden'), 700);
 }
 
-// All arrival side-effects
-// isMainPlanet = true  : full landing — generic arrival line + planet-specific line, no delay
-// isMainPlanet = false : sub-destination — no generic arrival spam, Nova speaks after a delay
 function onArrival(key, isMainPlanet = false, ambientDelay = 8000) {
   if (isMainPlanet) {
-    // Landed on a new planet — speak immediately
     NovaAI.speak('arrival');
     NovaAI.speakPlanetArrival(key);
   }
-  // Non-blocking side-effects run immediately regardless
   checkCollectible(key);
   maybeTriggerDanger(key);
   Health.applyArrivalDamage(key);
@@ -946,18 +1208,15 @@ function travelMain(dest, btn) {
     if (config?.description) appendLog(config.description, 'log-system');
     endTravel(dest.key, dest.key, null);
     createButtons(config.subDestinations);
-    // Delay Nova's arrival + planet line so it doesn't immediately
-    // stack on top of the system messages
     setTimeout(() => onArrival(dest.key, true), 2500);
   }, 3000);
 }
 
 function travelSub(dest, btn, config) {
   beginTravel(btn);
-  // No Nova travel/arrival speech for local transit — only system messages
   const type = dest.travelType || config.travelType || 'shuttle';
   const labels = { drone: 'Deploying drone', orbit: 'Initiating orbital alignment', rover: 'Boarding the rover', shuttle: 'Boarding the shuttle', train: 'Boarding the train' };
-  const label = labels[type] || 'Traveling';
+  const label  = labels[type] || 'Traveling';
   appendLog(`System: ${label} to ${dest.name}...`, 'log-system');
   showOverlay(`${label} to ${dest.name}...`);
   setTimeout(() => {
@@ -967,13 +1226,12 @@ function travelSub(dest, btn, config) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, null);
     createButtons(dest.subDestinations);
-    onArrival(dest.key, false, 18000);  // 18s delay before first NPC line
+    onArrival(dest.key, false, 18000);
   }, type === 'drone' ? 2000 : 3000);
 }
 
 function travelSubSub(dest, btn, parentDest) {
   beginTravel(btn);
-  // No Nova speech for local transit
   appendLog(`System: Traveling deeper to ${dest.name}...`, 'log-system');
   showOverlay(`Traveling deeper to ${dest.name}...`);
   setTimeout(() => {
@@ -983,7 +1241,7 @@ function travelSubSub(dest, btn, parentDest) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, parentDest.key);
     createButtons(dest.subDestinations);
-    onArrival(dest.key, false, 18000);  // 18s delay before first NPC line
+    onArrival(dest.key, false, 18000);
   }, 2000);
 }
 
@@ -1042,25 +1300,20 @@ function startTravelConsole() {
   document.getElementById('healthWidget').classList.remove('hidden');
   Health.render();
   restoreSession();
-  // Start the transmission ticker — first one fires after a random 3-4 min delay
   scheduleNextTransmission();
-  // Only write an initial save if there is no existing save yet.
-  try {
-    if (!localStorage.getItem(SAVE_KEY)) saveState();
-  } catch(_) {}
+  try { if (!localStorage.getItem(SAVE_KEY)) saveState(); } catch(_) {}
 }
 
 function wipeSaveAndRestart() {
   clearSave();
-  // Reset all mission/collectible state in memory too
   MISSIONS.forEach(m => m.complete = false);
   COLLECTIBLES.forEach(c => c.found = false);
+  unlockedFiles.clear();
   novaRel.visits = 0;
   novaRel.completions = 0;
   Health.current = Health.max;
   Health.render();
   heardLog.length = 0;
-  // Clear ambient queues
   Object.keys(ambientQueues).forEach(k => delete ambientQueues[k]);
   currentLocation = currentHub = currentSubLocation = null;
   appendLog('System: Save data cleared. Starting fresh.', 'log-system');
@@ -1072,43 +1325,39 @@ function wipeSaveAndRestart() {
 window.addEventListener('DOMContentLoaded', () => {
   initJournalTabs();
 
-  // Acknowledge — paper doc to dark monitor screen
   document.getElementById('proceedBtn')?.addEventListener('click', e => {
     e.preventDefault();
     startupScreen.classList.add('hidden');
     loginScreen.classList.remove('hidden');
   });
 
-  // Power On — dark monitor to travel console
+  // Power On — always run boot scroll, then reveal travel console
   document.getElementById('onBtn')?.addEventListener('click', e => {
     e.preventDefault();
     loginScreen.classList.add('hidden');
-    travelScreen.classList.remove('hidden');
-    if (destinationsReady && dialogueReady) {
-      startTravelConsole();
-    } else {
-      appendLog('System: Loading navigation data...', 'log-system');
-      pendingStart = true;
-    }
+    runBootSequence(() => {
+      travelScreen.classList.remove('hidden');
+      if (destinationsReady && dialogueReady) {
+        startTravelConsole();
+      } else {
+        appendLog('System: Loading navigation data...', 'log-system');
+        pendingStart = true;
+      }
+    });
   });
 
   journalToggle?.addEventListener('click', renderJournal);
   document.getElementById('closeJournal')?.addEventListener('click', () => missionLogOverlay.classList.add('hidden'));
 
-  // New Game — wipe save then go straight to monitor screen (let player press power)
   document.getElementById('wipeSaveBtn')?.addEventListener('click', () => {
     wipeSaveAndRestart();
     startupScreen.classList.add('hidden');
     loginScreen.classList.remove('hidden');
   });
 
-  // Show save-wipe button if a save exists — no typewriter, doc is already visible
   initStartupScreen();
 
-  // Safety-net: flush state on tab close
   window.addEventListener('beforeunload', () => {
     if (currentHub !== null) saveState();
   });
-
-
 });
