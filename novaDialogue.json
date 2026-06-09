@@ -123,5 +123,57 @@
       "Nova: Something just decelerated to match our station's drift. No drive signature. No thermal bloom. It just... stopped with us.",
       "Nova: I'm picking up a signal from a direction that doesn't correspond to any known stellar object. It's on our frequency. It's been listening."
     ]
+  },
+  "relationship": {
+    "tiers": [
+      { "minCompletions": 0, "label": "Stranger" },
+      { "minCompletions": 2, "label": "Crewmate" },
+      { "minCompletions": 4, "label": "Trusted" },
+      { "minCompletions": 6, "label": "Bonded" }
+    ],
+    "tierUnlock": {
+      "Crewmate": "Nova: Hey. I've been thinking. We've been through enough now that I feel like I can drop the professional distance. Slightly. Don't push it.",
+      "Trusted": "Nova: I want to say something and I need you to not make it weird. I trust you. Out here, that's not a small thing. That's everything.",
+      "Bonded": "Nova: I've run a lot of simulations about what happens if something goes wrong out here. In all of them, the thing I mind most is not being able to finish this with you. Just so you know."
+    },
+    "idle_Crewmate": [
+      "Nova: You know, most field agents treat me like a dashboard. You actually talk to me. It's... not unwelcome.",
+      "Nova: I've been compiling a personal log of our trips. Off the official record. The real version.",
+      "Nova: I noticed you lingered at that last location longer than the mission required. Curious, or careful?",
+      "Nova: Between us — I don't think ECS is telling us everything about what's down there. Shocking, I know.",
+      "Nova: I've started flagging anomalies they don't ask me to flag. For our records. Not theirs.",
+      "Nova: You ever wonder if the structures know we're poking around? I think about that a lot."
+    ],
+    "idle_Trusted": [
+      "Nova: I've been cross-referencing the transmission logs with our field data. The patterns don't match what ECS says they should. I'm keeping a copy.",
+      "Nova: There's something in the Europa readings that I haven't reported up the chain. I want to understand it first. Tell me if you think that's wrong.",
+      "Nova: I ran the Kilko numbers again last night. The official cause doesn't fit the blast geometry. Someone adjusted the report.",
+      "Nova: I don't say this to most field agents, but I think you're actually good at this. Better than the briefings suggested.",
+      "Nova: The megastructures predate the solar system. I keep running that number and I keep getting the same answer. It doesn't get less unsettling.",
+      "Nova: If something happens to me — to this ship — the secondary archive is under the medical bay floor panel. Password is the date of the Kilko event, backwards."
+    ],
+    "idle_Bonded": [
+      "Nova: I've been thinking about what we're actually doing out here. Not the mission. The real thing. I think we're witnesses. To something nobody's ever seen. That matters.",
+      "Nova: I ran a probability model on our survival odds from the beginning of this assignment to now. I'm going to keep the result to myself. But I'm glad we're still here.",
+      "Nova: You know what I've never told ECS? That I chose to stay assigned to this ship. They think it was random allocation. It wasn't.",
+      "Nova: The structures aren't hostile. I've believed that from the start. They're just... operating at a scale where we're not visible to them. Like trying to get the attention of the sun.",
+      "Nova: Whatever's waiting at the bottom of all this — the real answer — I want to be there when you find it. I've decided that.",
+      "Nova: I think they're lonely. The structures. Built by something that isn't here anymore, running programs for an audience that never came. That's the saddest thing I've ever computed."
+    ],
+    "missionComplete_Crewmate": [
+      "Nova: Good work. And I mean that — I'm not just reading from the standard debrief script.",
+      "Nova: That one wasn't easy. I was monitoring your vitals the whole time. Didn't say anything because I didn't want to break your focus.",
+      "Nova: Filed and logged. For what it's worth, I think we're actually making progress. Real progress."
+    ],
+    "missionComplete_Trusted": [
+      "Nova: Done. I've also filed a separate copy outside the official ECS channel. Just in case.",
+      "Nova: You know what's interesting? Every mission we complete, the transmission frequency from the structures ticks up slightly. I haven't told Command.",
+      "Nova: Mission logged. Off the record — that location felt different this time. Like it knew we were coming."
+    ],
+    "missionComplete_Bonded": [
+      "Nova: Complete. I've been thinking about what this all adds up to. I think we're close to something. The real thing. Not the mission. The answer.",
+      "Nova: Logged. I keep waiting for ECS to pull us off this assignment. They haven't. I'm starting to think they want us to find it too — they're just not saying so.",
+      "Nova: That's done. You know what I notice? You never hesitate anymore. Whatever this is doing to you, it's making you sharper. I don't know if that's good or not."
+    ]
   }
 }
