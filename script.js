@@ -856,8 +856,11 @@ function nextAmbientMessage(key) {
 
 function startAmbientDialogue(key, firstDelay = 8000) {
   clearAmbientTimers();
-  if (!ambientDialogue[key]?.length) return;
+  const pool = ambientDialogue[key];
+  appendLog(`System: [DBG] ambient key="${key}" pool=${pool ? pool.length : 'MISSING'} delay=${firstDelay}ms`, 'log-system');
+  if (!pool?.length) return;
   ambientFirstTimer = setTimeout(() => {
+    appendLog(`System: [DBG] timer fired — currentLocation="${currentLocation}" expected="${key}"`, 'log-system');
     if (currentLocation !== key) return;
     fireAmbientLine(key);
   }, firstDelay);
