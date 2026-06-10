@@ -1226,7 +1226,7 @@ function travelSub(dest, btn, config) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, null);
     createButtons(dest.subDestinations);
-    onArrival(dest.key, false, 18000);
+    onArrival(dest.key, false, 6000);
   }, type === 'drone' ? 2000 : 3000);
 }
 
@@ -1241,7 +1241,7 @@ function travelSubSub(dest, btn, parentDest) {
     if (!dest.subDestinations) dest.subDestinations = defaultSubs(dest);
     endTravel(dest.key, currentHub, parentDest.key);
     createButtons(dest.subDestinations);
-    onArrival(dest.key, false, 18000);
+    onArrival(dest.key, false, 6000);
   }, 2000);
 }
 
