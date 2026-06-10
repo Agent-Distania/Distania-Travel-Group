@@ -470,7 +470,8 @@ Promise.all([
   onDataReady();
 }).catch(err => {
   console.error('Dialogue load failed:', err);
-  appendLog('System: Communication array partially offline.', 'log-system');
+  appendLog(`System: DIALOGUE LOAD ERROR — ${err.message}. Check file names and paths.`, 'log-system');
+  appendLog('System: Ambient NPC dialogue will not function this session.', 'log-system');
   dialogueReady = true;
   onDataReady();
 });
