@@ -464,7 +464,11 @@ Promise.all([
   fetch(`transmissions.json?v=${Date.now()}`).then(r => r.json())
 ]).then(([nova, ambient, trans]) => {
   NovaAI.dialogue = nova;
-  Object.assign(ambientDialogue, ambient);
+  // Sanitise ambient keys on load — strips BOM or stray whitespace that breaks lookup
+  Object.keys(ambient).forEach(k => {
+    const clean = k.replace(/^[\uFEFF\u200B\s]+|[\s]+$/g, '');
+    ambientDialogue[clean] = ambient[k];
+  });
   Object.assign(transmissions, trans);
   dialogueReady = true;
   onDataReady();
@@ -854,19 +858,31 @@ function nextAmbientMessage(key) {
   return ambientQueues[key].pop();
 }
 
+// Normalise a key for ambient lookup — strips BOM, trims whitespace
+function normaliseAmbientKey(key) {
+  if (!key) return key;
+  return key.replace(/^[\uFEFF\u200B\s]+|[\s]+$/g, '');
+}
+
 function startAmbientDialogue(key, firstDelay = 8000) {
   clearAmbientTimers();
-  const pool = ambientDialogue[key];
-  appendLog(`System: [DBG] ambient key="${key}" pool=${pool ? pool.length : 'MISSING'} delay=${firstDelay}ms`, 'log-system');
-  if (!pool?.length) return;
+  // Try direct match first, then normalised match
+  let resolvedKey = null;
+  if (ambientDialogue[key]?.length) {
+    resolvedKey = key;
+  } else {
+    const norm = normaliseAmbientKey(key);
+    const match = Object.keys(ambientDialogue).find(k => normaliseAmbientKey(k) === norm);
+    if (match) resolvedKey = match;
+  }
+  if (!resolvedKey) return;
   ambientFirstTimer = setTimeout(() => {
-    appendLog(`System: [DBG] timer fired — currentLocation="${currentLocation}" expected="${key}"`, 'log-system');
     if (currentLocation !== key) return;
-    fireAmbientLine(key);
+    fireAmbientLine(resolvedKey);
   }, firstDelay);
   ambientTimer = setInterval(() => {
     if (currentLocation !== key) { clearAmbientTimers(); return; }
-    fireAmbientLine(key);
+    fireAmbientLine(resolvedKey);
   }, AMBIENT_INTERVAL);
 }
 
