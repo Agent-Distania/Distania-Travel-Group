@@ -458,27 +458,40 @@ fetch(`destinations.json?v=${Date.now()}`)
     onDataReady();
   });
 
-Promise.all([
-  fetch(`novaDialogue.json?v=${Date.now()}`).then(r => r.json()),
-  fetch(`ambientDialogue.json?v=${Date.now()}`).then(r => r.json()),
-  fetch(`transmissions.json?v=${Date.now()}`).then(r => r.json())
-]).then(([nova, ambient, trans]) => {
-  NovaAI.dialogue = nova;
-  // Sanitise ambient keys on load — strips BOM or stray whitespace that breaks lookup
-  Object.keys(ambient).forEach(k => {
-    const clean = k.replace(/^[\uFEFF\u200B\s]+|[\s]+$/g, '');
-    ambientDialogue[clean] = ambient[k];
-  });
-  Object.assign(transmissions, trans);
+async function loadDialogueFiles() {
+  // Load each file independently so one bad file doesn't break the others
+  try {
+    const nova = await fetch(`novaDialogue.json?v=${Date.now()}`).then(r => r.json());
+    NovaAI.dialogue = nova;
+  } catch(err) {
+    console.error('novaDialogue.json failed:', err);
+    appendLog('System: Nova dialogue offline — ' + err.message, 'log-system');
+  }
+
+  try {
+    const ambient = await fetch(`ambientDialogue.json?v=${Date.now()}`).then(r => r.json());
+    // Sanitise keys — strip BOM or stray whitespace
+    Object.keys(ambient).forEach(k => {
+      const clean = k.replace(/^[\uFEFF\u200B\s]+|[\s]+$/g, '');
+      ambientDialogue[clean] = ambient[k];
+    });
+  } catch(err) {
+    console.error('ambientDialogue.json failed:', err);
+    appendLog('System: Ambient dialogue offline — ' + err.message, 'log-system');
+  }
+
+  try {
+    const trans = await fetch(`transmissions.json?v=${Date.now()}`).then(r => r.json());
+    Object.assign(transmissions, trans);
+  } catch(err) {
+    console.error('transmissions.json failed:', err);
+    appendLog('System: Transmission array offline — ' + err.message, 'log-system');
+  }
+
   dialogueReady = true;
   onDataReady();
-}).catch(err => {
-  console.error('Dialogue load failed:', err);
-  appendLog(`System: DIALOGUE LOAD ERROR — ${err.message}. Check file names and paths.`, 'log-system');
-  appendLog('System: Ambient NPC dialogue will not function this session.', 'log-system');
-  dialogueReady = true;
-  onDataReady();
-});
+}
+loadDialogueFiles();
 
 // ================================================================
 // Fallback Destinations
